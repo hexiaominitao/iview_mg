@@ -21,7 +21,7 @@ export const errorReq = () => {
   })
 }
 
-export const saveErrorLogger = info => {
+export const saveErrorLogger = (info) => {
   return axios.request({
     url: 'save_error_logger',
     data: info,
@@ -47,5 +47,94 @@ export const getTreeSelectData = () => {
   return axios.request({
     url: 'get_tree_select_data',
     method: 'get'
+  })
+}
+
+export const getSampleInfo = () => {
+  return axios.request({
+    url: 'data/get_sample_info',
+    method: 'get'
+  })
+}
+
+export const getSampleInfoById = (mg_id) => {
+  return axios.request({
+    url: 'data/get_sample_info/',
+    method: 'get',
+    params: {
+      mg: mg_id
+    }
+  })
+}
+
+export const getSampleInfoByName = (name) => {
+  return axios.request({
+    url: 'data/get_sample_name/',
+    method: 'get',
+    params: {
+      name: name
+    }
+  })
+}
+
+export const getRunInfo = (page, page_per) => {
+  return axios.request({
+    url: 'data/get_run_info/',
+    method: 'get',
+    params: {
+      page: page,
+      page_per: page_per
+    }
+  })
+}
+
+export const delRunInfo = (id) => {
+  const data = {
+    id
+  }
+  return axios.request({
+    url: 'data/get_run_info/',
+    method: 'post',
+    data
+  })
+}
+
+export const getSeqInfo = (name) => {
+  return axios.request({
+    url: 'data/get_seq_info/',
+    method: 'get',
+    params: {
+      name: name
+    }
+  })
+}
+
+export const startMakeRep = (sams) => {
+  const data = {
+    sams
+  }
+  return axios.request({
+    url: 'data/get_seq_info/',
+    method: 'post',
+    data
+  })
+}
+
+export const getMGId = () => {
+  return axios.request({
+    url: 'data/get_mg_id/',
+    method: 'get'
+  })
+}
+
+export const distillQC = ({ qc_code, targetKey }) => {
+  const data = {
+    qc_code,
+    targetKey
+  }
+  return axios.request({
+    url: 'qc/select/',
+    data,
+    method: 'post'
   })
 }

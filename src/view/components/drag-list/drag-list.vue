@@ -12,7 +12,7 @@
         </drag-list>
 
       </div>
-      <div class="handle-log-box">
+      <!-- <div class="handle-log-box">
         <h3>操作记录</h3>
         <div class="handle-inner-box">
           <p v-for="(item, index) in handleList" :key="`handle_item_${index}`">{{ item }}</p>
@@ -23,13 +23,13 @@
       </div>
       <div class="res-show-box">
         <pre>{{ list2 }}</pre>
-      </div>
+      </div> -->
     </Card>
   </div>
 </template>
 <script>
 import DragList from '_c/drag-list'
-import { getDragList } from '@/api/data'
+// import { getDragList } from '@/api/data'
 export default {
   name: 'drag_list_page',
   components: {
@@ -37,7 +37,7 @@ export default {
   },
   data () {
     return {
-      list1: [],
+      list1: [1, 2, 3],
       list2: [],
       dropConClass: {
         left: ['drop-box', 'left-drop-box'],
@@ -52,10 +52,10 @@ export default {
     }
   },
   mounted () {
-    getDragList().then(res => {
-      this.list1 = res.data
-      this.list2 = [res.data[0]]
-    })
+    // getDragList().then(res => {
+    //   this.list1 = res.data
+    //   this.list2 = [res.data[0]]
+    // })
   }
 }
 </script>

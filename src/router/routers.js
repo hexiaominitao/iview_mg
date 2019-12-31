@@ -10,7 +10,8 @@ import parentView from '@/components/parent-view'
  *         可以传入一个回调函数，参数是当前路由对象，例子看动态路由和带参路由
  *  hideInBread: (false) 设为true后此级路由将不会出现在面包屑中，示例看QQ群路由配置
  *  hideInMenu: (false) 设为true后在左侧菜单不会显示该页面选项
- *  notCache: (false) 设为true后页面在切换标签后不会缓存，如果需要缓存，无需设置这个字段，而且需要设置页面组件name属性和路由配置的name一致
+ *  notCache: (false) 设为true后页面在切换标签后不会缓存，如果需要缓存，无需
+ * 设置这个字段，而且需要设置页面组件name属性和路由配置的name一致
  *  access: (null) 可访问该页面的权限数组，当前路由设置的权限会影响子路由
  *  icon: (-) 该页面在左侧菜单、面包屑和标签导航处显示的图标，如果是自定义图标，需要在图标名称前加下划线'_'
  *  beforeCloseName: (-) 设置该字段，则在关闭当前tab页时会去'@/router/before-close.js'里寻找该字段名对应的方法，作为关闭前的钩子函数
@@ -26,6 +27,15 @@ export default [
       hideInMenu: true
     },
     component: () => import('@/view/login/login.vue')
+  },
+  {
+    path: '/report',
+    name: 'report',
+    meta: {
+      title: '报告',
+      hideInMenu: true
+    },
+    component: () => import('@/view/report/575.vue')
   },
   {
     path: '/',
@@ -50,34 +60,34 @@ export default [
       }
     ]
   },
-  {
-    path: '',
-    name: 'doc',
-    meta: {
-      title: '文档',
-      href: 'https://lison16.github.io/iview-admin-doc/#/',
-      icon: 'ios-book'
-    }
-  },
-  {
-    path: '/join',
-    name: 'join',
-    component: Main,
-    meta: {
-      hideInBread: true
-    },
-    children: [
-      {
-        path: 'join_page',
-        name: 'join_page',
-        meta: {
-          icon: '_qq',
-          title: 'QQ群'
-        },
-        component: () => import('@/view/join-page.vue')
-      }
-    ]
-  },
+  // {
+  //   path: '',
+  //   name: 'doc',
+  //   meta: {
+  //     title: '文档',
+  //     href: 'https://lison16.github.io/iview-admin-doc/#/',
+  //     icon: 'ios-book'
+  //   }
+  // },
+  // {
+  //   path: '/join',
+  //   name: 'join',
+  //   component: Main,
+  //   meta: {
+  //     hideInBread: true
+  //   },
+  //   children: [
+  //     {
+  //       path: 'join_page',
+  //       name: 'join_page',
+  //       meta: {
+  //         icon: '_qq',
+  //         title: 'QQ群'
+  //       },
+  //       component: () => import('@/view/join-page.vue')
+  //     }
+  //   ]
+  // },
   {
     path: '/message',
     name: 'message',
@@ -95,6 +105,299 @@ export default [
           title: '消息中心'
         },
         component: () => import('@/view/single-page/message/index.vue')
+      }
+    ]
+  },
+  {
+    path: '/upload',
+    name: 'upload',
+    meta: {
+      title: '文件上传',
+      icon: 'logo-buffer'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'sample_info',
+        name: 'sample_info',
+        meta: {
+          icon: 'md-arrow-dropdown-circle',
+          title: '样本信息上传'
+        },
+        component: () => import('@/view/row-data-upload/sample-info.vue')
+      },
+      {
+        path: 'run_info',
+        name: 'run_info',
+        meta: {
+          icon: 'md-arrow-dropdown-circle',
+          title: '上机信息上传'
+        },
+        component: () => import('@/view/row-data-upload/run-info.vue')
+      },
+      {
+        path: 'zip_file',
+        name: 'zip_file',
+        meta: {
+          icon: 'md-arrow-dropdown-circle',
+          title: 'Ion Report数据上传'
+        },
+        component: () => import('@/view/row-data-upload/ir_zip_file.vue')
+      }
+    ]
+  },
+  {
+    path: '/sample_detial',
+    name: 'sample_detial',
+    meta: {
+      hideInMenu: true
+    },
+    component: Main,
+    children: [
+      {
+        path: 'sample_mg/:mg_id',
+        name: 'sample_mg',
+        meta: {
+          icon: 'md-flower',
+          title: route => `{{ sample_mg }}-${route.params.mg_id}`,
+          notCache: true,
+          beforeCloseName: 'before_close_normal'
+        },
+        component: () => import('@/view/view-sample/view-by-mg-id.vue')
+      },
+      {
+        path: 'sample_name/:name',
+        name: 'sample_name',
+        meta: {
+          icon: 'md-flower',
+          title: route => `{{ sample_name }}-${route.params.name}`,
+          notCache: true,
+          beforeCloseName: 'before_close_normal'
+        },
+        component: () => import('@/view/view-sample/view-by-name.vue')
+      },
+      {
+        path: 'seq_info/:name',
+        name: 'seq_info',
+        meta: {
+          icon: 'md-flower',
+          title: route => `{{ seq_info }}-${route.params.name}`,
+          notCache: true,
+          beforeCloseName: 'before_close_normal'
+        },
+        component: () => import('@/view/view-run/seq-info.vue')
+      }
+    ]
+  },
+  {
+    path: '/sample',
+    name: 'sample',
+    meta: {
+      title: '信息查看',
+      icon: 'logo-buffer'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'view_sample',
+        name: 'view_sample',
+        meta: {
+          icon: 'md-arrow-dropdown-circle',
+          title: '搜索'
+        },
+        component: () => import('@/view/view-sample/view-sample.vue')
+      },
+      {
+        path: 'all_run',
+        name: 'all_run',
+        meta: {
+          icon: 'md-arrow-dropdown-circle',
+          title: '上机信息'
+        },
+        component: () => import('@/view/view-run/all-run.vue')
+      }
+    ]
+  },
+  {
+    path: '/qc',
+    name: 'qc',
+    meta: {
+      title: '质控信息上传',
+      icon: 'logo-buffer'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'select_sample',
+        name: 'select_sample',
+        meta: {
+          icon: 'md-arrow-dropdown-circle',
+          title: '选择样本'
+        },
+        component: () => import('@/view/qc-upload/select.vue')
+      },
+      {
+        path: 'distill_qc',
+        name: 'distill_qc',
+        meta: {
+          icon: 'md-arrow-dropdown-circle',
+          title: '提取质控'
+        },
+        component: () => import('@/view/qc-upload/distill-qc.vue')
+      }
+    ]
+  },
+  {
+    path: '/admin',
+    name: 'admin',
+    meta: {
+      title: '后台管理',
+      icon: 'logo-buffer'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'user',
+        name: 'admin_user',
+        meta: {
+          icon: 'md-arrow-dropdown-circle',
+          title: '用户'
+        },
+        component: () => import('@/view/admin/admin-user.vue')
+      },
+      {
+        path: 'sample',
+        name: 'admin_sample',
+        meta: {
+          icon: 'md-arrow-dropdown-circle',
+          title: '样本'
+        },
+        component: () => import('@/view/admin/admin-sample.vue')
+      },
+      {
+        path: 'patient',
+        name: 'admin_patient',
+        meta: {
+          icon: 'md-arrow-dropdown-circle',
+          title: '病人'
+        },
+        component: () => import('@/view/admin/admin-patient.vue')
+      },
+      {
+        path: 'template',
+        name: 'admin_report_template',
+        meta: {
+          icon: 'md-arrow-dropdown-circle',
+          title: '模板配置'
+        },
+        component: () => import('@/view/admin/template/admin-report-template.vue')
+      }
+    ]
+  },
+  {
+    path: '/admin/add-template',
+    name: 'add-template',
+    meta: {
+      hideInMenu: true
+    },
+    component: Main,
+    children: [
+      {
+        path: 'template',
+        name: 'admin_template_upload',
+        meta: {
+          icon: 'md-arrow-dropdown-circle',
+          title: '增加配置'
+        },
+        component: () => import('@/view/admin/template/admin-template-upload.vue')
+      }
+    ]
+  },
+  {
+    path: '/report',
+    name: 'report',
+    meta: {
+      title: '报告',
+      icon: 'logo-buffer'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'all-report',
+        name: 'all_report',
+        meta: {
+          icon: 'md-arrow-dropdown-circle',
+          title: '所有报告'
+        },
+        component: () => import('@/view/report/all-report.vue')
+      },
+      {
+        path: 'report-list',
+        name: 'report_list',
+        meta: {
+          icon: 'md-arrow-dropdown-circle',
+          title: '打磨中'
+        },
+        component: () => import('@/view/report/report-list.vue')
+      },
+      {
+        path: '575',
+        name: '575',
+        meta: {
+          icon: 'md-arrow-dropdown-circle',
+          title: '575'
+        },
+        component: () => import('@/view/report/575.vue')
+      },
+      {
+        path: 'mutation-list/:name',
+        name: 'mutation_list',
+        meta: {
+          icon: 'md-flower',
+          title: route => `${route.params.name}-{{ mutation_list }}`,
+          hideInMenu: true
+        },
+        component: () => import('@/view/report/mutation-list.vue')
+      },
+      {
+        path: 'check-mutation/:name',
+        name: 'check_mutation',
+        meta: {
+          icon: 'md-flower',
+          title: route => `${route.params.name}-{{ check_mutation }}`,
+          hideInMenu: true
+        },
+        component: () => import('@/view/report/mutation/check-mutation.vue')
+      },
+      {
+        path: 'rep-mutation/:name',
+        name: 'rep_mutation',
+        meta: {
+          icon: 'md-flower',
+          title: route => `${route.params.name}-{{ rep_mutation }}`,
+          hideInMenu: true
+        },
+        component: () => import('@/view/report/rep-mutation.vue')
+      },
+      {
+        path: 'okr/:name',
+        name: 'okr_edit',
+        meta: {
+          icon: 'md-flower',
+          title: route => `${route.params.name}-{{ okr_edit }}`,
+          hideInMenu: true
+        },
+        component: () => import('@/view/report/okr/okr.vue')
+      },
+      {
+        path: 'ir_list/:name',
+        name: 'ir_list',
+        meta: {
+          icon: 'md-flower',
+          title: route => `${route.params.name}-{{ ir_list }}`,
+          hideInMenu: true
+        },
+        component: () => import('@/view/report/mutation/ir-list.vue')
       }
     ]
   },
@@ -295,64 +598,64 @@ export default [
       }
     ]
   },
-  {
-    path: '/i18n',
-    name: 'i18n',
-    meta: {
-      hideInBread: true
-    },
-    component: Main,
-    children: [
-      {
-        path: 'i18n_page',
-        name: 'i18n_page',
-        meta: {
-          icon: 'md-planet',
-          title: 'i18n - {{ i18n_page }}'
-        },
-        component: () => import('@/view/i18n/i18n-page.vue')
-      }
-    ]
-  },
-  {
-    path: '/error_store',
-    name: 'error_store',
-    meta: {
-      hideInBread: true
-    },
-    component: Main,
-    children: [
-      {
-        path: 'error_store_page',
-        name: 'error_store_page',
-        meta: {
-          icon: 'ios-bug',
-          title: '错误收集'
-        },
-        component: () => import('@/view/error-store/error-store.vue')
-      }
-    ]
-  },
-  {
-    path: '/error_logger',
-    name: 'error_logger',
-    meta: {
-      hideInBread: true,
-      hideInMenu: true
-    },
-    component: Main,
-    children: [
-      {
-        path: 'error_logger_page',
-        name: 'error_logger_page',
-        meta: {
-          icon: 'ios-bug',
-          title: '错误收集'
-        },
-        component: () => import('@/view/single-page/error-logger.vue')
-      }
-    ]
-  },
+  // {
+  //   path: '/i18n',
+  //   name: 'i18n',
+  //   meta: {
+  //     hideInBread: true
+  //   },
+  //   component: Main,
+  //   children: [
+  //     {
+  //       path: 'i18n_page',
+  //       name: 'i18n_page',
+  //       meta: {
+  //         icon: 'md-planet',
+  //         title: 'i18n - {{ i18n_page }}'
+  //       },
+  //       component: () => import('@/view/i18n/i18n-page.vue')
+  //     }
+  //   ]
+  // },
+  // {
+  //   path: '/error_store',
+  //   name: 'error_store',
+  //   meta: {
+  //     hideInBread: true
+  //   },
+  //   component: Main,
+  //   children: [
+  //     {
+  //       path: 'error_store_page',
+  //       name: 'error_store_page',
+  //       meta: {
+  //         icon: 'ios-bug',
+  //         title: '错误收集'
+  //       },
+  //       component: () => import('@/view/error-store/error-store.vue')
+  //     }
+  //   ]
+  // },
+  // {
+  //   path: '/error_logger',
+  //   name: 'error_logger',
+  //   meta: {
+  //     hideInBread: true,
+  //     hideInMenu: true
+  //   },
+  //   component: Main,
+  //   children: [
+  //     {
+  //       path: 'error_logger_page',
+  //       name: 'error_logger_page',
+  //       meta: {
+  //         icon: 'ios-bug',
+  //         title: '错误收集'
+  //       },
+  //       component: () => import('@/view/single-page/error-logger.vue')
+  //     }
+  //   ]
+  // },
   {
     path: '/directive',
     name: 'directive',

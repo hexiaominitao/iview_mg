@@ -1,5 +1,5 @@
 import Main from '@/components/main'
-import parentView from '@/components/parent-view'
+// import parentView from '@/components/parent-view'
 
 /**
  * iview-admin中meta除了原生参数外可配置的参数:
@@ -112,7 +112,7 @@ export default [
     path: '/upload',
     name: 'upload',
     meta: {
-      title: '文件上传',
+      title: '样本信息',
       icon: 'logo-buffer'
     },
     component: Main,
@@ -127,22 +127,13 @@ export default [
         component: () => import('@/view/row-data-upload/sample-info.vue')
       },
       {
-        path: 'run_info',
-        name: 'run_info',
+        path: 'view_sample',
+        name: 'view_sample',
         meta: {
           icon: 'md-arrow-dropdown-circle',
-          title: '上机信息上传'
+          title: '搜索'
         },
-        component: () => import('@/view/row-data-upload/run-info.vue')
-      },
-      {
-        path: 'zip_file',
-        name: 'zip_file',
-        meta: {
-          icon: 'md-arrow-dropdown-circle',
-          title: 'Ion Report数据上传'
-        },
-        component: () => import('@/view/row-data-upload/ir_zip_file.vue')
+        component: () => import('@/view/view-sample/view-sample.vue')
       }
     ]
   },
@@ -160,8 +151,7 @@ export default [
         meta: {
           icon: 'md-flower',
           title: route => `{{ sample_mg }}-${route.params.mg_id}`,
-          notCache: true,
-          beforeCloseName: 'before_close_normal'
+          notCache: true
         },
         component: () => import('@/view/view-sample/view-by-mg-id.vue')
       },
@@ -171,8 +161,7 @@ export default [
         meta: {
           icon: 'md-flower',
           title: route => `{{ sample_name }}-${route.params.name}`,
-          notCache: true,
-          beforeCloseName: 'before_close_normal'
+          notCache: true
         },
         component: () => import('@/view/view-sample/view-by-name.vue')
       },
@@ -182,30 +171,29 @@ export default [
         meta: {
           icon: 'md-flower',
           title: route => `{{ seq_info }}-${route.params.name}`,
-          notCache: true,
-          beforeCloseName: 'before_close_normal'
+          notCache: true
         },
         component: () => import('@/view/view-run/seq-info.vue')
       }
     ]
   },
   {
-    path: '/sample',
-    name: 'sample',
+    path: '/report',
+    name: 'report',
     meta: {
-      title: '信息查看',
+      title: '报告',
       icon: 'logo-buffer'
     },
     component: Main,
     children: [
       {
-        path: 'view_sample',
-        name: 'view_sample',
+        path: 'run_info',
+        name: 'run_info',
         meta: {
           icon: 'md-arrow-dropdown-circle',
-          title: '搜索'
+          title: '上机信息上传'
         },
-        component: () => import('@/view/view-sample/view-sample.vue')
+        component: () => import('@/view/row-data-upload/run-info.vue')
       },
       {
         path: 'all_run',
@@ -215,35 +203,93 @@ export default [
           title: '上机信息'
         },
         component: () => import('@/view/view-run/all-run.vue')
-      }
-    ]
-  },
-  {
-    path: '/qc',
-    name: 'qc',
-    meta: {
-      title: '质控信息上传',
-      icon: 'logo-buffer'
-    },
-    component: Main,
-    children: [
-      {
-        path: 'select_sample',
-        name: 'select_sample',
-        meta: {
-          icon: 'md-arrow-dropdown-circle',
-          title: '选择样本'
-        },
-        component: () => import('@/view/qc-upload/select.vue')
       },
       {
-        path: 'distill_qc',
-        name: 'distill_qc',
+        path: 'all-report',
+        name: 'all_report',
         meta: {
           icon: 'md-arrow-dropdown-circle',
-          title: '提取质控'
+          title: '所有报告'
         },
-        component: () => import('@/view/qc-upload/distill-qc.vue')
+        component: () => import('@/view/report/all-report.vue')
+      },
+      {
+        path: 'report-list',
+        name: 'report_list',
+        meta: {
+          icon: 'md-arrow-dropdown-circle',
+          title: '打磨中'
+        },
+        component: () => import('@/view/report/report-list.vue')
+      },
+      // {
+      //   path: '575',
+      //   name: '575',
+      //   meta: {
+      //     icon: 'md-arrow-dropdown-circle',
+      //     title: '575'
+      //   },
+      //   component: () => import('@/view/report/575.vue')
+      // },
+      {
+        path: 'mutation-list/:name',
+        name: 'mutation_list',
+        meta: {
+          icon: 'md-flower',
+          title: route => `${route.params.name}-{{ mutation_list }}`,
+          hideInMenu: true
+        },
+        component: () => import('@/view/report/mutation-list.vue')
+      },
+      {
+        path: 'check-mutation/:name',
+        name: 'check_mutation',
+        meta: {
+          icon: 'md-flower',
+          title: route => `${route.params.name}-{{ check_mutation }}`,
+          hideInMenu: true
+        },
+        component: () => import('@/view/report/mutation/check-mutation.vue')
+      },
+      {
+        path: 'rep-mutation/:name',
+        name: 'rep_mutation',
+        meta: {
+          icon: 'md-flower',
+          title: route => `${route.params.name}-{{ rep_mutation }}`,
+          hideInMenu: true
+        },
+        component: () => import('@/view/report/rep-mutation.vue')
+      },
+      {
+        path: 'okr/:name',
+        name: 'okr_edit',
+        meta: {
+          icon: 'md-flower',
+          title: route => `${route.params.name}-{{ okr_edit }}`,
+          hideInMenu: true
+        },
+        component: () => import('@/view/report/okr/okr.vue')
+      },
+      {
+        path: 'ir_list/:name',
+        name: 'ir_list',
+        meta: {
+          icon: 'md-flower',
+          title: route => `${route.params.name}-{{ ir_list }}`,
+          hideInMenu: true
+        },
+        component: () => import('@/view/report/mutation/ir-list.vue')
+      },
+      {
+        path: 'zip_file',
+        name: 'zip_file',
+        meta: {
+          icon: 'md-arrow-dropdown-circle',
+          title: 'Ion Report数据上传',
+          hideInMenu: true
+        },
+        component: () => import('@/view/row-data-upload/ir_zip_file.vue')
       }
     ]
   },
@@ -313,459 +359,35 @@ export default [
       }
     ]
   },
-  {
-    path: '/report',
-    name: 'report',
-    meta: {
-      title: '报告',
-      icon: 'logo-buffer'
-    },
-    component: Main,
-    children: [
-      {
-        path: 'all-report',
-        name: 'all_report',
-        meta: {
-          icon: 'md-arrow-dropdown-circle',
-          title: '所有报告'
-        },
-        component: () => import('@/view/report/all-report.vue')
-      },
-      {
-        path: 'report-list',
-        name: 'report_list',
-        meta: {
-          icon: 'md-arrow-dropdown-circle',
-          title: '打磨中'
-        },
-        component: () => import('@/view/report/report-list.vue')
-      },
-      {
-        path: '575',
-        name: '575',
-        meta: {
-          icon: 'md-arrow-dropdown-circle',
-          title: '575'
-        },
-        component: () => import('@/view/report/575.vue')
-      },
-      {
-        path: 'mutation-list/:name',
-        name: 'mutation_list',
-        meta: {
-          icon: 'md-flower',
-          title: route => `${route.params.name}-{{ mutation_list }}`,
-          hideInMenu: true
-        },
-        component: () => import('@/view/report/mutation-list.vue')
-      },
-      {
-        path: 'check-mutation/:name',
-        name: 'check_mutation',
-        meta: {
-          icon: 'md-flower',
-          title: route => `${route.params.name}-{{ check_mutation }}`,
-          hideInMenu: true
-        },
-        component: () => import('@/view/report/mutation/check-mutation.vue')
-      },
-      {
-        path: 'rep-mutation/:name',
-        name: 'rep_mutation',
-        meta: {
-          icon: 'md-flower',
-          title: route => `${route.params.name}-{{ rep_mutation }}`,
-          hideInMenu: true
-        },
-        component: () => import('@/view/report/rep-mutation.vue')
-      },
-      {
-        path: 'okr/:name',
-        name: 'okr_edit',
-        meta: {
-          icon: 'md-flower',
-          title: route => `${route.params.name}-{{ okr_edit }}`,
-          hideInMenu: true
-        },
-        component: () => import('@/view/report/okr/okr.vue')
-      },
-      {
-        path: 'ir_list/:name',
-        name: 'ir_list',
-        meta: {
-          icon: 'md-flower',
-          title: route => `${route.params.name}-{{ ir_list }}`,
-          hideInMenu: true
-        },
-        component: () => import('@/view/report/mutation/ir-list.vue')
-      }
-    ]
-  },
-  {
-    path: '/components',
-    name: 'components',
-    meta: {
-      icon: 'logo-buffer',
-      title: '组件'
-    },
-    component: Main,
-    children: [
-      {
-        path: 'tree_select_page',
-        name: 'tree_select_page',
-        meta: {
-          icon: 'md-arrow-dropdown-circle',
-          title: '树状下拉选择器'
-        },
-        component: () => import('@/view/components/tree-select/index.vue')
-      },
-      {
-        path: 'count_to_page',
-        name: 'count_to_page',
-        meta: {
-          icon: 'md-trending-up',
-          title: '数字渐变'
-        },
-        component: () => import('@/view/components/count-to/count-to.vue')
-      },
-      {
-        path: 'drag_list_page',
-        name: 'drag_list_page',
-        meta: {
-          icon: 'ios-infinite',
-          title: '拖拽列表'
-        },
-        component: () => import('@/view/components/drag-list/drag-list.vue')
-      },
-      {
-        path: 'drag_drawer_page',
-        name: 'drag_drawer_page',
-        meta: {
-          icon: 'md-list',
-          title: '可拖拽抽屉'
-        },
-        component: () => import('@/view/components/drag-drawer')
-      },
-      {
-        path: 'org_tree_page',
-        name: 'org_tree_page',
-        meta: {
-          icon: 'ios-people',
-          title: '组织结构树'
-        },
-        component: () => import('@/view/components/org-tree')
-      },
-      {
-        path: 'tree_table_page',
-        name: 'tree_table_page',
-        meta: {
-          icon: 'md-git-branch',
-          title: '树状表格'
-        },
-        component: () => import('@/view/components/tree-table/index.vue')
-      },
-      {
-        path: 'cropper_page',
-        name: 'cropper_page',
-        meta: {
-          icon: 'md-crop',
-          title: '图片裁剪'
-        },
-        component: () => import('@/view/components/cropper/cropper.vue')
-      },
-      {
-        path: 'tables_page',
-        name: 'tables_page',
-        meta: {
-          icon: 'md-grid',
-          title: '多功能表格'
-        },
-        component: () => import('@/view/components/tables/tables.vue')
-      },
-      {
-        path: 'split_pane_page',
-        name: 'split_pane_page',
-        meta: {
-          icon: 'md-pause',
-          title: '分割窗口'
-        },
-        component: () => import('@/view/components/split-pane/split-pane.vue')
-      },
-      {
-        path: 'markdown_page',
-        name: 'markdown_page',
-        meta: {
-          icon: 'logo-markdown',
-          title: 'Markdown编辑器'
-        },
-        component: () => import('@/view/components/markdown/markdown.vue')
-      },
-      {
-        path: 'editor_page',
-        name: 'editor_page',
-        meta: {
-          icon: 'ios-create',
-          title: '富文本编辑器'
-        },
-        component: () => import('@/view/components/editor/editor.vue')
-      },
-      {
-        path: 'icons_page',
-        name: 'icons_page',
-        meta: {
-          icon: '_bear',
-          title: '自定义图标'
-        },
-        component: () => import('@/view/components/icons/icons.vue')
-      }
-    ]
-  },
-  {
-    path: '/update',
-    name: 'update',
-    meta: {
-      icon: 'md-cloud-upload',
-      title: '数据上传'
-    },
-    component: Main,
-    children: [
-      {
-        path: 'update_table_page',
-        name: 'update_table_page',
-        meta: {
-          icon: 'ios-document',
-          title: '上传Csv'
-        },
-        component: () => import('@/view/update/update-table.vue')
-      },
-      {
-        path: 'update_paste_page',
-        name: 'update_paste_page',
-        meta: {
-          icon: 'md-clipboard',
-          title: '粘贴表格数据'
-        },
-        component: () => import('@/view/update/update-paste.vue')
-      }
-    ]
-  },
-  {
-    path: '/excel',
-    name: 'excel',
-    meta: {
-      icon: 'ios-stats',
-      title: 'EXCEL导入导出'
-    },
-    component: Main,
-    children: [
-      {
-        path: 'upload-excel',
-        name: 'upload-excel',
-        meta: {
-          icon: 'md-add',
-          title: '导入EXCEL'
-        },
-        component: () => import('@/view/excel/upload-excel.vue')
-      },
-      {
-        path: 'export-excel',
-        name: 'export-excel',
-        meta: {
-          icon: 'md-download',
-          title: '导出EXCEL'
-        },
-        component: () => import('@/view/excel/export-excel.vue')
-      }
-    ]
-  },
-  {
-    path: '/tools_methods',
-    name: 'tools_methods',
-    meta: {
-      hideInBread: true
-    },
-    component: Main,
-    children: [
-      {
-        path: 'tools_methods_page',
-        name: 'tools_methods_page',
-        meta: {
-          icon: 'ios-hammer',
-          title: '工具方法',
-          beforeCloseName: 'before_close_normal'
-        },
-        component: () => import('@/view/tools-methods/tools-methods.vue')
-      }
-    ]
-  },
   // {
-  //   path: '/i18n',
-  //   name: 'i18n',
+  //   path: '/qc',
+  //   name: 'qc',
   //   meta: {
-  //     hideInBread: true
+  //     title: '质控信息上传',
+  //     icon: 'logo-buffer'
   //   },
   //   component: Main,
   //   children: [
   //     {
-  //       path: 'i18n_page',
-  //       name: 'i18n_page',
+  //       path: 'select_sample',
+  //       name: 'select_sample',
   //       meta: {
-  //         icon: 'md-planet',
-  //         title: 'i18n - {{ i18n_page }}'
+  //         icon: 'md-arrow-dropdown-circle',
+  //         title: '选择样本'
   //       },
-  //       component: () => import('@/view/i18n/i18n-page.vue')
-  //     }
-  //   ]
-  // },
-  // {
-  //   path: '/error_store',
-  //   name: 'error_store',
-  //   meta: {
-  //     hideInBread: true
-  //   },
-  //   component: Main,
-  //   children: [
+  //       component: () => import('@/view/qc-upload/select.vue')
+  //     },
   //     {
-  //       path: 'error_store_page',
-  //       name: 'error_store_page',
+  //       path: 'distill_qc',
+  //       name: 'distill_qc',
   //       meta: {
-  //         icon: 'ios-bug',
-  //         title: '错误收集'
+  //         icon: 'md-arrow-dropdown-circle',
+  //         title: '提取质控'
   //       },
-  //       component: () => import('@/view/error-store/error-store.vue')
+  //       component: () => import('@/view/qc-upload/distill-qc.vue')
   //     }
   //   ]
   // },
-  // {
-  //   path: '/error_logger',
-  //   name: 'error_logger',
-  //   meta: {
-  //     hideInBread: true,
-  //     hideInMenu: true
-  //   },
-  //   component: Main,
-  //   children: [
-  //     {
-  //       path: 'error_logger_page',
-  //       name: 'error_logger_page',
-  //       meta: {
-  //         icon: 'ios-bug',
-  //         title: '错误收集'
-  //       },
-  //       component: () => import('@/view/single-page/error-logger.vue')
-  //     }
-  //   ]
-  // },
-  {
-    path: '/directive',
-    name: 'directive',
-    meta: {
-      hideInBread: true
-    },
-    component: Main,
-    children: [
-      {
-        path: 'directive_page',
-        name: 'directive_page',
-        meta: {
-          icon: 'ios-navigate',
-          title: '指令'
-        },
-        component: () => import('@/view/directive/directive.vue')
-      }
-    ]
-  },
-  {
-    path: '/multilevel',
-    name: 'multilevel',
-    meta: {
-      icon: 'md-menu',
-      title: '多级菜单'
-    },
-    component: Main,
-    children: [
-      {
-        path: 'level_2_1',
-        name: 'level_2_1',
-        meta: {
-          icon: 'md-funnel',
-          title: '二级-1'
-        },
-        component: () => import('@/view/multilevel/level-2-1.vue')
-      },
-      {
-        path: 'level_2_2',
-        name: 'level_2_2',
-        meta: {
-          access: ['super_admin'],
-          icon: 'md-funnel',
-          showAlways: true,
-          title: '二级-2'
-        },
-        component: parentView,
-        children: [
-          {
-            path: 'level_2_2_1',
-            name: 'level_2_2_1',
-            meta: {
-              icon: 'md-funnel',
-              title: '三级'
-            },
-            component: () => import('@/view/multilevel/level-2-2/level-2-2-1.vue')
-          },
-          {
-            path: 'level_2_2_2',
-            name: 'level_2_2_2',
-            meta: {
-              icon: 'md-funnel',
-              title: '三级'
-            },
-            component: () => import('@/view/multilevel/level-2-2/level-2-2-2.vue')
-          }
-        ]
-      },
-      {
-        path: 'level_2_3',
-        name: 'level_2_3',
-        meta: {
-          icon: 'md-funnel',
-          title: '二级-3'
-        },
-        component: () => import('@/view/multilevel/level-2-3.vue')
-      }
-    ]
-  },
-  {
-    path: '/argu',
-    name: 'argu',
-    meta: {
-      hideInMenu: true
-    },
-    component: Main,
-    children: [
-      {
-        path: 'params/:id',
-        name: 'params',
-        meta: {
-          icon: 'md-flower',
-          title: route => `{{ params }}-${route.params.id}`,
-          notCache: true,
-          beforeCloseName: 'before_close_normal'
-        },
-        component: () => import('@/view/argu-page/params.vue')
-      },
-      {
-        path: 'query',
-        name: 'query',
-        meta: {
-          icon: 'md-flower',
-          title: route => `{{ query }}-${route.query.id}`,
-          notCache: true
-        },
-        component: () => import('@/view/argu-page/query.vue')
-      }
-    ]
-  },
   {
     path: '/401',
     name: 'error_401',

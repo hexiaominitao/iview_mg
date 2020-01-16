@@ -43,7 +43,7 @@ export default {
   org_tree_page: '组织结构树',
   drag_drawer_page: '可拖动抽屉',
   tree_select_page: '树状下拉选择器',
-  upload: '文件上传',
+  upload: '样本信息',
   sample_info: '样本信息上传',
   run_info: '上机信息上传',
   zip_file: 'Ion Report数据上传',

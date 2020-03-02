@@ -17,10 +17,21 @@ export default {
       admin_template_col: [
         {
           title: '项目',
-          key: '项目'
+          key: 'item'
         },
         {
-          title: '预览'
+          title: '适用样本',
+          key: '适用样本'
+        },
+        {
+          title: '检测内容',
+          key: '检测内容',
+          tooltip: true
+        },
+        {
+          title: '检测方法',
+          key: '检测方法',
+          tooltip: true
         },
         {
           title: '导出配置'
@@ -40,6 +51,7 @@ export default {
   },
   mounted () {
     this.getData()
+    console.log('hello')
   }
 }
 </script>

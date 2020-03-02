@@ -69,6 +69,7 @@ export default {
   check_mutation: '突变审核',
   ir_list: 'ir原始数据',
   rep_mutation: '结果解释',
-  okr_edit: '药物信息'
+  okr_edit: '药物信息',
+  report_v2: '报告'
 
 }

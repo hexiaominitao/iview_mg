@@ -341,6 +341,53 @@ export default [
     ]
   },
   {
+    path: '/report_v2',
+    name: 'report_v2',
+    meta: {
+      title: '报告',
+      icon: 'logo-buffer'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'mutation',
+        name: 'mutation-upload',
+        meta: {
+          icon: 'md-arrow-dropdown-circle',
+          title: '突变'
+        },
+        component: () => import('@/view/mutation-report/mutation/mutation-upload.vue')
+      },
+      {
+        path: 'sample',
+        name: 'admin_sample',
+        meta: {
+          icon: 'md-arrow-dropdown-circle',
+          title: '样本'
+        },
+        component: () => import('@/view/admin/admin-sample.vue')
+      },
+      {
+        path: 'patient',
+        name: 'admin_patient',
+        meta: {
+          icon: 'md-arrow-dropdown-circle',
+          title: '病人'
+        },
+        component: () => import('@/view/admin/admin-patient.vue')
+      },
+      {
+        path: 'template',
+        name: 'admin_report_template',
+        meta: {
+          icon: 'md-arrow-dropdown-circle',
+          title: '模板配置'
+        },
+        component: () => import('@/view/admin/template/admin-report-template.vue')
+      }
+    ]
+  },
+  {
     path: '/admin/add-template',
     name: 'add-template',
     meta: {

@@ -218,7 +218,7 @@ export default [
         name: 'report_list',
         meta: {
           icon: 'md-arrow-dropdown-circle',
-          title: '打磨中'
+          title: '报告制作'
         },
         component: () => import('@/view/report/report-list.vue')
       },
@@ -232,44 +232,44 @@ export default [
       //   component: () => import('@/view/report/575.vue')
       // },
       {
-        path: 'mutation-list/:name',
+        path: 'mutation-list/:name/:mg_id',
         name: 'mutation_list',
         meta: {
           icon: 'md-flower',
-          title: route => `${route.params.name}-{{ mutation_list }}`,
+          title: route => `${route.params.mg_id}-{{ mutation_list }}`,
           hideInMenu: true
         },
         component: () => import('@/view/report/mutation-list.vue')
       },
       {
-        path: 'check-mutation/:name',
+        path: 'check-mutation/:name/:mg_id',
         name: 'check_mutation',
         meta: {
           icon: 'md-flower',
-          title: route => `${route.params.name}-{{ check_mutation }}`,
+          title: route => `${route.params.mg_id}-{{ check_mutation }}`,
           hideInMenu: true
         },
         component: () => import('@/view/report/mutation/check-mutation.vue')
       },
       {
-        path: 'rep-mutation/:name',
+        path: 'annotate/:name/:mg_id',
         name: 'rep_mutation',
         meta: {
           icon: 'md-flower',
-          title: route => `${route.params.name}-{{ rep_mutation }}`,
+          title: route => `${route.params.mg_id}-{{ rep_mutation }}`,
           hideInMenu: true
         },
-        component: () => import('@/view/report/rep-mutation.vue')
+        component: () => import('@/view/report/annotate/annotate-first.vue')
       },
       {
-        path: 'okr/:name',
+        path: 'annotate_check/:name/:mg_id',
         name: 'okr_edit',
         meta: {
           icon: 'md-flower',
-          title: route => `${route.params.name}-{{ okr_edit }}`,
+          title: route => `${route.params.mg_id}-{{ okr_edit }}`,
           hideInMenu: true
         },
-        component: () => import('@/view/report/okr/okr.vue')
+        component: () => import('@/view/report/annotate/annotate-check.vue')
       },
       {
         path: 'ir_list/:name',
@@ -306,6 +306,7 @@ export default [
         path: 'user',
         name: 'admin_user',
         meta: {
+          access: ['super_admin'],
           icon: 'md-arrow-dropdown-circle',
           title: '用户'
         },
@@ -337,53 +338,15 @@ export default [
           title: '模板配置'
         },
         component: () => import('@/view/admin/template/admin-report-template.vue')
-      }
-    ]
-  },
-  {
-    path: '/report_v2',
-    name: 'report_v2',
-    meta: {
-      title: '报告',
-      icon: 'logo-buffer'
-    },
-    component: Main,
-    children: [
-      {
-        path: 'mutation',
-        name: 'mutation-upload',
-        meta: {
-          icon: 'md-arrow-dropdown-circle',
-          title: '突变'
-        },
-        component: () => import('@/view/mutation-report/mutation/mutation-upload.vue')
       },
       {
-        path: 'sample',
-        name: 'admin_sample',
+        path: 'admin_okr',
+        name: 'admin_okr',
         meta: {
           icon: 'md-arrow-dropdown-circle',
-          title: '样本'
+          title: 'OKR'
         },
-        component: () => import('@/view/admin/admin-sample.vue')
-      },
-      {
-        path: 'patient',
-        name: 'admin_patient',
-        meta: {
-          icon: 'md-arrow-dropdown-circle',
-          title: '病人'
-        },
-        component: () => import('@/view/admin/admin-patient.vue')
-      },
-      {
-        path: 'template',
-        name: 'admin_report_template',
-        meta: {
-          icon: 'md-arrow-dropdown-circle',
-          title: '模板配置'
-        },
-        component: () => import('@/view/admin/template/admin-report-template.vue')
+        component: () => import('@/view/admin/okr/admin-okr.vue')
       }
     ]
   },

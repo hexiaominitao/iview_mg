@@ -52,8 +52,8 @@ export default {
           key: 'note'
         },
         {
-          title: '报告状态',
-          key: ''
+          title: '状态',
+          key: 'status'
         },
         {
           title: '操作',
@@ -117,21 +117,30 @@ export default {
         content: '<p>承包后其他人将失去承包的机会,请谨慎承包!!!!!</p>',
         onOk: () => {
           const sams = this.selectSam
+          console.log(sams)
           startMakeRep(sams).then(res => {
             this.$Message.success(res.data.msg)
-            if (res.data.err) {
+            if (res.data.errs) {
               this.$Notice.warning({
                 title: '以下样本未生效:',
-                desc: res.data.err,
+                desc: res.data.errs,
                 duration: 0
               })
             }
+            this.getSeq()
           })
           // this.seq_data.splice(index, 1)
         },
         onCancel: () => {
           this.$Message.info('取消')
         }
+      })
+    },
+    getSeq () {
+      getSeqInfo(this.$route.params.name).then(res => {
+        this.seq_data = res.data.seq
+        this.title = res.data.run
+        console.log(res.data.seq)
       })
     }
   },

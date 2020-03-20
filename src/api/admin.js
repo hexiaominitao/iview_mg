@@ -7,6 +7,19 @@ export const getUserData = () => {
   })
 }
 
+export const addUser = (name, mail, passwd) => {
+  const data = {
+    name,
+    mail,
+    passwd
+  }
+  return axios.request({
+    url: 'admin/user/',
+    method: 'post',
+    data
+  })
+}
+
 export const getSampleData = (page, page_per) => {
   return axios.request({
     url: 'admin/sample/',

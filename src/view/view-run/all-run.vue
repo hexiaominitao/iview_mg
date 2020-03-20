@@ -1,5 +1,13 @@
 <template>
   <div>
+    <Row gutter="16" class="heard">
+      <Col span="5"><Input search enter-button placeholder="输入样本编号" /></Col>
+      <Col span="3">
+      <!-- <Select v-model="model1">
+        <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+      </Select> -->
+      </Col>
+    </Row>
     <Table border height='520' :columns='columns' :data='data'>
         <template slot-scope="{ row }" slot="start_T">
           <div>{{ dateToString(row.start_T) }}</div>
@@ -136,3 +144,9 @@ export default {
   }
 }
 </script>
+<style>
+  .heard {
+    margin-bottom: 2%;
+  }
+
+</style>

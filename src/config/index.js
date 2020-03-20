@@ -17,11 +17,11 @@ export default {
    * @description api请求基础路径
    */
   baseUrl: {
-    dev: 'http://127.0.0.1:5000/api/',
+    dev: 'http://192.168.1.34:5000/api/',
     pro: 'https://produce.com'
   },
   UploadUrl: {
-    dev: 'http://127.0.0.1:5000/api/upload/',
+    dev: 'http://192.168.1.34:5000/api/upload/',
     pro: 'https://produce.com'
   },
   /**

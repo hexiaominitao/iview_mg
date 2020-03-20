@@ -62,14 +62,15 @@ export default {
   admin_patient: '病人',
   admin_report_template: '报告模板',
   admin_template_upload: '增加配置',
+  admin_okr: 'OKR',
   all_report: '所有报告',
-  report_list: '打磨中.....',
+  report_list: '报告制作',
   report: 'PGM报告',
-  mutation_list: '突变信息',
-  check_mutation: '突变审核',
+  mutation_list: '突变初审',
+  check_mutation: '突变二审',
   ir_list: 'ir原始数据',
-  rep_mutation: '结果解释',
-  okr_edit: '药物信息',
+  rep_mutation: '突变注释',
+  okr_edit: '注释复核',
   report_v2: '报告'
 
 }

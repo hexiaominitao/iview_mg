@@ -17,12 +17,12 @@ export const getReportList = (mg_id) => {
   })
 }
 
-export const getMutationList = (mg_id) => {
+export const getMutationList = (id) => {
   return axios.request({
     url: 'report/mutation_list/',
     method: 'get',
     params: {
-      mg: mg_id
+      id: id
     }
   })
 }
@@ -82,12 +82,13 @@ export const explanationMuta = (mg_id) => {
   })
 }
 
-export const saveExplanation = (sams) => {
+export const saveExplanation = (sams, cancer) => {
   const data = {
-    sams
+    sams,
+    cancer
   }
   return axios.request({
-    url: 'report/mutation_check/',
+    url: 'report/annotate_mutation/',
     method: 'post',
     data
   })
@@ -103,12 +104,12 @@ export const reportDownload = (mg_id) => {
   })
 }
 
-export const checkMtation = (mg_id) => {
+export const checkMtation = (id) => {
   return axios.request({
-    url: 'report/check_mutation/',
+    url: 'report/edit_mutation/',
     method: 'get',
     params: {
-      mg: mg_id
+      id: id
     }
   })
 }
@@ -119,8 +120,19 @@ export const editMtation = (sams, mg_id) => {
     mg_id
   }
   return axios.request({
-    url: 'report/check_mutation/',
+    url: 'report/edit_mutation/',
     method: 'post',
+    data
+  })
+}
+
+export const deleteMutation = (sams) => {
+  const data = {
+    sams
+  }
+  return axios.request({
+    url: 'report/edit_mutation/',
+    method: 'delete',
     data
   })
 }
@@ -131,6 +143,61 @@ export const getOkrData = (mg_id) => {
     method: 'get',
     params: {
       mg: mg_id
+    }
+  })
+}
+
+export const setReportStage = (id, stage) => {
+  const data = {
+    id,
+    stage
+  }
+  return axios.request({
+    url: 'report/report_stage/',
+    method: 'post',
+    data
+  })
+}
+
+export const getAnnotate = (id) => {
+  return axios.request({
+    url: 'report/annotate_mutation/',
+    method: 'get',
+    params: {
+      id: id
+    }
+  })
+}
+
+export const putAnnotate = (id, cancer) => {
+  return axios.request({
+    url: 'report/annotate_mutation/',
+    method: 'put',
+    params: {
+      id: id,
+      cancer: cancer
+    }
+  })
+}
+
+export const getAnnotateCheck = (id) => {
+  return axios.request({
+    url: 'report/annotate_check/',
+    method: 'get',
+    params: {
+      id: id
+    }
+  })
+}
+
+export const exportReport = (id, item, note) => {
+  return axios.request({
+    url: 'report/export_report/',
+    method: 'post',
+    params: {
+      id: id,
+      item: item,
+      note: note
     }
   })
 }

@@ -1,7 +1,7 @@
 <template>
   <div>
     <h3>所有报告</h3>
-    <Table border height='520' :columns='report_columns' :data="rep_start">
+    <Table border height='520' :columns='report_columns' :data="all_rep">
           <!-- <template slot-scope="{ row, index }" slot="action">
             <Button type="primary" size="small" @click="start">开始打磨</Button>
           </template> -->
@@ -24,15 +24,15 @@ export default {
         },
         {
           title: '检测项目',
-          key: 'seq_item'
+          key: 'rep_code'
         },
         {
-          title: '备注',
-          key: 'note'
+          title: '制作人',
+          key: 'report_user'
         },
         {
           title: '报告状态',
-          key: 'tag'
+          key: 'stage'
         }
       ]
     }
@@ -44,7 +44,7 @@ export default {
     getRepData () {
       getReportStart().then(res => {
         this.rep_start = res.data.sample
-        this.all_rep = res.data.sample
+        this.all_rep = res.data.all_rep
         this.total_rep = res.data.total
       })
     }

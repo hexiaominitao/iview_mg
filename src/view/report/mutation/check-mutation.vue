@@ -14,7 +14,7 @@
       <Col span="2"><Button type="info" @click="submitAllMutation">二审通过</Button></Col>
       <Col span="6">
         <Button type="success" @click="setStage">提交审核结果</Button>
-        <Button type="error" @click="reStage">退回上一步</Button>
+        <!-- <Button type="error" @click="reStage">退回上一步</Button> -->
       </Col>
     </Row>
     <Drawer title="编辑结果" v-model="edit_value" width="720" :mask-closable="false" :styles="styles">

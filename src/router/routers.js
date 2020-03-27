@@ -208,6 +208,7 @@ export default [
         path: 'all-report',
         name: 'all_report',
         meta: {
+          access: ['super_admin'],
           icon: 'md-arrow-dropdown-circle',
           title: '所有报告'
         },

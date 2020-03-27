@@ -17,7 +17,7 @@
         <Button type="success" size="small" @click="preReport(index)">导出word报告</Button>
       </template>
     </Table>
-    <Drawer title="上传结果文件" v-model="edit_val" width="520" :mask-closable="false" :styles="styles">
+    <Drawer title="报告生成" v-model="edit_val" width="520" :mask-closable="false" :styles="styles">
       <Form>
         <FormItem label="报告模板">
           <Select v-model="item" style="width:200px">

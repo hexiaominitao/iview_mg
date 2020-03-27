@@ -39,7 +39,7 @@
 <script>
 import { getAnnotate, putAnnotate, saveExplanation, setReportStage } from '@/api/report'
 export default {
-  name: 'annotate_first',
+  name: 'rep_mutation',
   data () {
     return {
       sample_info: [],

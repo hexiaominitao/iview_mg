@@ -14,7 +14,13 @@
       <Row>
         <Col span="4">癌症类型:</Col>
         <Col span="16">
-        <Select v-model="sample_info.cancer" style="width:200px" @on-change="slectGrade($event, index)">
+        <Select v-model="sample_info.cancer" style="width:200px"
+                @on-change="slectGrade($event, index)"
+                filterable
+                clearable
+                remote
+                :remote-method="remoteMethod1"
+                :loading="loading1">
           <Option v-for="item in cancers" :value="item.value" :key="item.value" >{{ item.label }}</Option>
         </Select>
         </Col>
@@ -23,12 +29,18 @@
     </Card>
     <br>
     <div v-for="mu in mutations" v-bind:key="mu.id">
-      <Card>
-        <Row>
-          <Col span="4"><div>{{ mu.mu_name_usual }}</div></Col>
-          <Col span="20"><Input v-model="mu.annotate_c" maxlength="5000" show-word-limit type="textarea" placeholder="请严肃认真地填写该变异的结果解释..."/></Col>
-        </Row>
-      </Card>
+      <Row type="flex" justify="center" align="middle">
+        <Col span='4'><Card>{{ mu.mu_name_usual }}</Card></Col>
+        <Col span='4'><Card>{{ mu.grade }}</Card></Col>
+        <Col span='16'><Collapse>
+            <Panel>
+              药物
+              <ul v-for="row in mu.drug" v-bind:key="row.id" slot="content" style="list-style-type:none">
+                <li><Card>{{ row.drug }}({{ row.level }}:{{ row.drug_effect }})</Card></li>
+              </ul>
+            </Panel>
+          </Collapse></Col>
+      </Row>
     </div>
     <Row>
       <Col span="4"><Button type="primary" @click="save">保存</Button></Col>
@@ -46,24 +58,8 @@ export default {
       patient_info: [],
       mutations: [],
       annotate_c: '',
-      cancers: [
-        {
-          value: '非小细胞肺癌',
-          label: '非小细胞肺癌'
-        },
-        {
-          value: '小细胞肺癌',
-          label: '小细胞肺癌'
-        },
-        {
-          value: '结直肠癌',
-          label: '结直肠癌'
-        },
-        {
-          value: '乳腺癌',
-          label: '乳腺癌'
-        }
-      ]
+      loading1: false,
+      cancers: []
     }
   },
   methods: {
@@ -73,6 +69,7 @@ export default {
         this.sample_info = res.data.sample_info
         this.patient_info = res.data.patient_info
         this.mutations = res.data.mutation
+        this.cancers = res.data.cancers
         console.log(this.sample_info)
       })
     },
@@ -94,18 +91,28 @@ export default {
     },
     setStage () {
       const id = this.$route.params.name
-      const stage = '注释复核'
+      const stage = '生成报告'
       setReportStage(id, stage).then(res => {
         this.$Message.success(res.data.msg)
         this.getAnnotateDate()
       })
+    },
+    remoteMethod1 (query) {
+      if (query !== '') {
+        this.loading1 = true
+        setTimeout(() => {
+          this.loading1 = false
+          const list = this.cancers
+          this.options1 = list.filter(item => item.label.toLowerCase().indexOf(query.toLowerCase()) > -1)
+        }, 200)
+      } else {
+        this.options1 = []
+      }
     }
+
   },
   mounted () {
     this.getAnnotateDate()
-  },
-  beforeDestroy () {
-    this.saveExp()
   }
 }
 </script>

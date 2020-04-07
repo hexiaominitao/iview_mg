@@ -82,6 +82,7 @@ export const explanationMuta = (mg_id) => {
   })
 }
 
+// 突变注释
 export const saveExplanation = (sams, cancer) => {
   const data = {
     sams,

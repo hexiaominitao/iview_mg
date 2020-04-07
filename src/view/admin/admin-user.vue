@@ -2,7 +2,7 @@
 <div>
   <Button @click="add_val = true">添加用户</Button>
   <Table border :columns='user_col' :data="all_user"></Table>
-  <Drawer v-model="add_val" title="添加用户" width="520">
+  <Drawer v-model="add_val" title="添加用户" width="520" :mask-closable="false">
     <Form>
       <FormItem label="电子邮件">
         <Input type='email' v-model="mail" placeholder="电子邮件">

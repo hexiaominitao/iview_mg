@@ -11,6 +11,8 @@
     "test:e2e": "vue-cli-service test:e2e"
   },
   "dependencies": {
+    "@handsontable-pro/vue": "^3.1.1",
+    "@handsontable/vue": "^4.1.1",
     "axios": "^0.18.0",
     "clipboard": "^2.0.0",
     "codemirror": "^5.38.0",
@@ -18,6 +20,7 @@
     "cropperjs": "^1.2.2",
     "dayjs": "^1.7.7",
     "echarts": "^4.0.4",
+    "handsontable": "^7.4.2",
     "html2canvas": "^1.0.0-rc.5",
     "iview-area": "^1.5.17",
     "js-cookie": "^2.2.0",
@@ -44,6 +47,7 @@
     "@vue/test-utils": "^1.0.0-beta.10",
     "chai": "^4.1.2",
     "eslint-plugin-cypress": "^2.0.1",
+    "expose-loader": "^0.7.5",
     "less": "^2.7.3",
     "less-loader": "^4.0.5",
     "lint-staged": "^6.0.0",

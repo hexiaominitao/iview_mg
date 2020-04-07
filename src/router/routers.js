@@ -109,6 +109,23 @@ export default [
     ]
   },
   {
+    path: '/input',
+    name: 'input',
+    component: Main,
+    children: [
+      {
+        path: '/input_test',
+        name: 'input_test',
+        meta: {
+          icon: 'md-arrow-dropdown-circle',
+          title: '测试',
+          access: ['admin']
+        },
+        component: () => import('@/view/report/mutation/mutation-filter.vue')
+      }
+    ]
+  },
+  {
     path: '/upload',
     name: 'upload',
     meta: {
@@ -232,16 +249,6 @@ export default [
       //   },
       //   component: () => import('@/view/report/575.vue')
       // },
-      {
-        path: 'mutation-list/:name/:mg_id',
-        name: 'mutation_list',
-        meta: {
-          icon: 'md-flower',
-          title: route => `${route.params.mg_id}-{{ mutation_list }}`,
-          hideInMenu: true
-        },
-        component: () => import('@/view/report/mutation-list.vue')
-      },
       {
         path: 'check-mutation/:name/:mg_id',
         name: 'check_mutation',

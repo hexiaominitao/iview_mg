@@ -10,14 +10,16 @@
       </template>
       <template slot-scope="{ row, index }" slot="actions">
         <!-- <Button type="primary" size="small" @click="startRun(index)">突变初审</Button> -->
-        <Button type="success" size="small" @click="reStartRun(index)">突变二审</Button>
+        <Button type="success" size="small" @click="reStartRun(index)">突变审核</Button>
         <Button type="info" size="small" @click="conRun(index)">突变注释</Button>
         <!-- <Button type="primary" size="small">审核解释</Button> -->
         <!-- <Button type="info" size="small" @click="toOkr(index)">注释复核</Button> -->
         <Button type="success" size="small" @click="preReport(index)">导出word报告</Button>
       </template>
     </Table>
-    <Drawer title="报告生成" v-model="edit_val" width="520" :mask-closable="false" :styles="styles">
+    <Drawer :title="rep_code_mg" v-model="edit_val" width="520" :mask-closable="false" :styles="styles">
+      <p></p>
+      <br>
       <Form>
         <FormItem label="报告模板">
           <Select v-model="item" style="width:200px">
@@ -45,7 +47,8 @@
 import {
   getReportStart,
   getReportList,
-  exportReport
+  exportReport,
+  setReportStage
 } from '@/api/report'
 import { templateItem } from '@/api/config'
 import config from '@/config'
@@ -63,6 +66,7 @@ export default {
       item: '',
       note: 0,
       edit_id: '',
+      rep_code_mg: '',
       action_ir: UploadUrl + 'mutation_upload/',
       styles: {
         height: 'calc(100% - 55px)',
@@ -145,7 +149,7 @@ export default {
           mg_id: mg_id
         },
         meta: {
-          title: `${mg_id}-突变二审`
+          title: `${mg_id}-突变审核`
         }
       })
     },
@@ -180,8 +184,11 @@ export default {
     preReport (index) {
       this.edit_val = true
       this.edit_id = this.rep_start1[index].id
+      this.rep_code_mg = this.rep_start1[index].mg_id
     },
     downloadApi () {
+      const stage = '制作完成'
+      setReportStage(this.edit_id, stage).then(res => { })
       exportReport(this.edit_id, this.item, this.note).then(res => {
         this.$Message.info(res.data.msg)
       })

@@ -67,7 +67,7 @@ export default {
   report_list: '报告制作',
   report: 'PGM报告',
   mutation_list: '突变初审',
-  check_mutation: '突变二审',
+  check_mutation: '突变审核',
   ir_list: 'ir原始数据',
   rep_mutation: '突变注释',
   okr_edit: '注释复核',

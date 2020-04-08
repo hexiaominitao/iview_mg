@@ -94,7 +94,7 @@ export const delRunInfo = (id) => {
   }
   return axios.request({
     url: 'data/get_run_info/',
-    method: 'post',
+    method: 'delete',
     data
   })
 }

@@ -8,6 +8,11 @@
           <Button icon="ios-cloud-upload-outline" @click="repId(index)">上传结果</Button>
         </Upload>
       </template>
+      <template slot-scope="{ row, index }" slot="upload_ir">
+        <Upload multiple :action="action_ir_re" :data=fileData :show-upload-list="false">
+          <Button icon="ios-cloud-upload-outline" @click="repIdIr(index)">上传结果</Button>
+        </Upload>
+      </template>
       <template slot-scope="{ row, index }" slot="actions">
         <!-- <Button type="primary" size="small" @click="startRun(index)">突变初审</Button> -->
         <Button type="success" size="small" @click="reStartRun(index)">突变审核</Button>
@@ -68,6 +73,7 @@ export default {
       edit_id: '',
       rep_code_mg: '',
       action_ir: UploadUrl + 'mutation_upload/',
+      action_ir_re: UploadUrl + 'ir_upload/',
       styles: {
         height: 'calc(100% - 55px)',
         overflow: 'auto',
@@ -97,6 +103,10 @@ export default {
           slot: 'upload'
         },
         {
+          title: 'ir',
+          slot: 'upload_ir'
+        },
+        {
           title: '操作',
           width: 400,
           slot: 'actions'
@@ -111,6 +121,9 @@ export default {
   },
   methods: {
     repId (index) {
+      this.fileData.name = this.rep_start1[index].id
+    },
+    repIdIr (index) {
       this.fileData.name = this.rep_start1[index].id
     },
     start () {

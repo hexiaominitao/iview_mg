@@ -260,6 +260,16 @@ export default [
         component: () => import('@/view/report/mutation/check-mutation.vue')
       },
       {
+        path: 'ir-mutation/:name/:mg_id',
+        name: 'ir_mutation',
+        meta: {
+          icon: 'md-flower',
+          title: route => `${route.params.mg_id}-{{ ir_mutation }}`,
+          hideInMenu: true
+        },
+        component: () => import('@/view/report/mutation/mutation-first.vue')
+      },
+      {
         path: 'annotate/:name/:mg_id',
         name: 'rep_mutation',
         meta: {

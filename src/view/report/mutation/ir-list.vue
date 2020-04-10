@@ -12,7 +12,6 @@
   </div>
 </template>
 <script>
-import { getIRList } from '@/api/report'
 export default {
   name: 'ir_list',
   data () {
@@ -23,12 +22,6 @@ export default {
   },
   methods: {
     getIrData () {
-      const mg_id = this.$route.params.name
-      getIRList(mg_id).then(res => {
-        this.$Message.info(res.data.msg)
-        console.log(res.data)
-        this.allIrList = res.data.all_ir_list
-      })
     }
   },
   mounted () {

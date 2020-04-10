@@ -138,3 +138,13 @@ export const distillQC = ({ qc_code, targetKey }) => {
     method: 'post'
   })
 }
+
+export const getIRList = (id) => {
+  return axios.request({
+    url: 'data/irlist/',
+    method: 'get',
+    params: {
+      id: id
+    }
+  })
+}

@@ -40,6 +40,7 @@ export default {
         rowHeaders: true,
         dropdownMenu: ['filter_by_condition', 'filter_by_value', 'filter_action_bar'],
         filters: true,
+        readOnly: true,
         contextMenu: { // 自定义右键菜单，可汉化，默认布尔值
           items: {
             'copy': {

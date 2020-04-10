@@ -3,17 +3,13 @@
     <h3>制作列表</h3>
     <!-- <Button type="info" @click="upload_ir_result">上传突变结果文件</Button> -->
     <Table border height='520' :columns='report_columns1' :data="rep_start1">
-      <template slot-scope="{ row, index }" slot="upload">
-        <Upload :action="action_ir" :data=fileData :show-upload-list="false">
-          <Button icon="ios-cloud-upload-outline" @click="repId(index)">上传结果</Button>
-        </Upload>
-      </template>
       <template slot-scope="{ row, index }" slot="upload_ir">
         <Upload multiple :action="action_ir_re" :data=fileData :show-upload-list="false">
           <Button icon="ios-cloud-upload-outline" @click="repIdIr(index)">上传结果</Button>
         </Upload>
       </template>
       <template slot-scope="{ row, index }" slot="actions">
+        <Button type="primary" size="small" @click="IrEdit(index)">原始结果</Button>
         <!-- <Button type="primary" size="small" @click="startRun(index)">突变初审</Button> -->
         <Button type="success" size="small" @click="reStartRun(index)">突变审核</Button>
         <Button type="info" size="small" @click="conRun(index)">突变注释</Button>
@@ -51,7 +47,6 @@
 <script>
 import {
   getReportStart,
-  getReportList,
   exportReport,
   setReportStage
 } from '@/api/report'
@@ -100,10 +95,6 @@ export default {
         },
         {
           title: '上传',
-          slot: 'upload'
-        },
-        {
-          title: 'ir',
           slot: 'upload_ir'
         },
         {
@@ -135,21 +126,18 @@ export default {
         this.total_rep1 = res.data.total
       })
     },
-    startRun (index) {
+    IrEdit (index) {
       const mg_id = this.rep_start1[index].mg_id
       const id = this.rep_start1[index].id
       this.$router.push({
-        name: `mutation_list`,
+        name: `ir_mutation`,
         params: {
           name: id,
           mg_id: mg_id
         },
         meta: {
-          title: `${mg_id}-突变初审`
+          title: `${mg_id}-ir结果`
         }
-      })
-      getReportList(mg_id).then(res => {
-        this.$Message.success(res.data.msg)
       })
     },
     reStartRun (index) {

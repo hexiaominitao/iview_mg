@@ -51,16 +51,6 @@ export const delteMutation = (sams, mg_id) => {
   })
 }
 
-export const getIRList = (mg_id) => {
-  return axios.request({
-    url: 'report/irlist/',
-    method: 'get',
-    params: {
-      mg: mg_id
-    }
-  })
-}
-
 export const aDDIrList = (sams) => {
   const data = {
     sams

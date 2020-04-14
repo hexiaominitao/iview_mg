@@ -126,6 +126,22 @@ export default [
     ]
   },
   {
+    path: '/okr',
+    name: 'okr',
+    component: Main,
+    children: [
+      {
+        path: '/okr_575',
+        name: 'okr_575',
+        meta: {
+          icon: 'md-arrow-dropdown-circle',
+          title: '575OKR'
+        },
+        component: () => import('@/view/report/okr/okr-575.vue')
+      }
+    ]
+  },
+  {
     path: '/upload',
     name: 'upload',
     meta: {
@@ -142,6 +158,16 @@ export default [
           title: '样本信息上传'
         },
         component: () => import('@/view/row-data-upload/sample-info.vue')
+      },
+      {
+        path: '/sample_info_record',
+        name: 'sample_info_record',
+        meta: {
+          icon: 'md-arrow-dropdown-circle',
+          title: '测试',
+          access: ['admin']
+        },
+        component: () => import('@/view/row-data-upload/sample-info-record.vue')
       },
       {
         path: 'view_sample',

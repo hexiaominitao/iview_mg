@@ -71,6 +71,7 @@ export default {
   ir_list: 'ir原始数据',
   rep_mutation: '突变注释',
   okr_edit: '注释复核',
-  report_v2: '报告'
+  report_v2: '报告',
+  sample_info_record: '样本信息录入'
 
 }

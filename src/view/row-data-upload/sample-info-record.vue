@@ -26,64 +26,120 @@
             <div v-else>{{ row.mg_id }}</div>
         </template>
         <template slot-scope="{ row, index }" slot="action">
-            <Button type="primary" size="small" style="margin-right: 5px" @click="value_form = true">编辑</Button>
+          <Button type="primary" size="small" style="margin-right: 5px" @click="edit_pat_info(index)">患者信息</Button>
+            <Button type="primary" size="small" style="margin-right: 5px" @click="edit_add_info(index)">样本信息</Button>
             <Button @click="row.edit_able = true" type="primary" size="small" style="margin-right: 5px">行内编辑</Button>
             <Button @click="row.edit_able = false" type="error" size="small" style="margin-right: 5px">取消</Button>
             <!-- <Button type="error" size="small" @click="remove(index)">Delete</Button> -->
         </template>
     </Table>
         <Drawer
-            title="Create"
+            title="样本信息"
             v-model="value_form"
             width="720"
             :mask-closable="false"
             :styles="styles"
         >
-            <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
-        <FormItem label="Name" prop="name">
-            <Input v-model="formValidate.name" placeholder="Enter your name"></Input>
+        <Card>
+          <Row>
+            <Col span="12">迈景编号：{{ formValidate.mg_id }}</Col>
+            <Col span="12">申请单号：{{ formValidate.req_mg }}</Col>
+          </Row>
+        </Card>
+        <br/>
+            <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="100">
+        <FormItem label="门诊号/住院号" prop="outpatient_id">
+            <Input v-model="formValidate.outpatient_id" placeholder="输入门诊号/住院号" style="width: 200px"></Input>
         </FormItem>
-        <FormItem label="E-mail" prop="mail">
-            <Input v-model="formValidate.mail" placeholder="Enter your e-mail"></Input>
+        <FormItem label="医生" prop="doctor">
+            <Input v-model="formValidate.doctor" placeholder="医生" style="width: 200px"></Input>
         </FormItem>
-        <FormItem label="City" prop="city">sample
-            <Select v-model="formValidate.city" placeholder="Select your city">
+        <FormItem label="医院" prop="hosptial">
+            <Select v-model="formValidate.hosptial" placeholder="选择医院">
                 <Option value="beijing">New York</Option>
                 <Option value="shanghai">London</Option>
                 <Option value="shenzhen">Sydney</Option>
             </Select>
         </FormItem>
-        <FormItem label="Date">
+        <FormItem label="科室" prop="room">
+            <Input v-model="formValidate.room" placeholder="科室" style="width: 200px"></Input>
+        </FormItem>
+        <FormItem label="病理号" prop="pnumber">
+          <Input v-model="formValidate.pnumber" placeholder="病理号" style="width: 200px" />
+        </FormItem>
+        <FormItem label="癌症类型" prop="cancer_d">
+          <Input v-model="formValidate.cancer_d" placeholder="癌症类型" style="width: 200px" />
+        </FormItem>
+        <Row>
+          <Col span="12">
+            <FormItem label="原发部位" prop="original">
+          <Input v-model="formValidate.original" placeholder="原发部位" style="width: 200px" />
+        </FormItem>
+          </Col>
+          <Col span="12">
+            <FormItem label="转移部位" prop="metastasis">
+          <Input v-model="formValidate.metastasis" placeholder="转移部位" style="width: 200px" />
+        </FormItem>
+          </Col>
+        </Row>
+        <FormItem label="病理诊断">
             <Row>
                 <Col span="11">
-                    <FormItem prop="date">
-                        <DatePicker type="date" placeholder="Select date" v-model="formValidate.date"></DatePicker>
+                    <FormItem prop="pathological">
+                      <Input v-model="formValidate.pathological" placeholder="病理诊断" style="width: 200px" />
                     </FormItem>
                 </Col>
-                <Col span="2" style="text-align: center">-</Col>
+                <Col span="2" style="text-align: center">日期</Col>
                 <Col span="11">
-                    <FormItem prop="time">
-                        <TimePicker type="time" placeholder="Select time" v-model="formValidate.time"></TimePicker>
+                    <FormItem  prop="pathological_date">
+                        <DatePicker type="date" placeholder="eg:2020-02-31" v-model="formValidate.pathological_date"></DatePicker>
                     </FormItem>
                 </Col>
             </Row>
         </FormItem>
-        <FormItem label="Gender" prop="gender">
-            <RadioGroup v-model="formValidate.gender">
-                <Radio label="male">Male</Radio>
-                <Radio label="female">Female</Radio>
-            </RadioGroup>
+        <FormItem label="治疗信息">
+          <FormItem label="靶向治疗">
+            <Select v-model="formValidate.targeted_info.is_treat">
+                <Option value="false">无</Option>
+                <Option value="未知">未知</Option>
+                <Option value="有">有</Option>
+            </Select>
+            <div v-if="formValidate.targeted_info.is_treat">hello</div>
+          </FormItem>
+          <FormItem label="化疗治疗"></FormItem>
+          <FormItem label="放疗治疗"></FormItem>
         </FormItem>
-        <FormItem label="Hobby" prop="interest">
-            <CheckboxGroup v-model="formValidate.interest">
-                <Checkbox label="Eat"></Checkbox>
-                <Checkbox label="Sleep"></Checkbox>
-                <Checkbox label="Run"></Checkbox>
-                <Checkbox label="Movie"></Checkbox>
+        <FormItem label="项目类型" prop="seq_type">
+            <CheckboxGroup v-model="formValidate.seq_type">
+                <Checkbox label="临床"></Checkbox>
+                <Checkbox label="科研"></Checkbox>
             </CheckboxGroup>
         </FormItem>
-        <FormItem label="Desc" prop="desc">
-            <Input v-model="formValidate.desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter something..."></Input>
+        <FormItem label="样本类型" prop="sample_type">
+            <Select v-model="formValidate.sample_type">
+                <Option value="beijing">New York</Option>
+                <Option value="shanghai">London</Option>
+                <Option value="shenzhen">Sydney</Option>
+            </Select>
+        </FormItem>
+        <FormItem label="采样方式" prop="mth">
+            <Select v-model="formValidate.mth">
+                <Option value="beijing">New York</Option>
+                <Option value="shanghai">London</Option>
+                <Option value="shenzhen">Sydney</Option>
+            </Select>
+        </FormItem>
+        <FormItem label="采样部位" prop="mth_position">
+          <Input v-model="formValidate.mth_position" placeholder="采样部位" style="width: 200px" />
+        </FormItem>
+        <FormItem label="采样时间" prop="Tytime">
+          <DatePicker type="date" placeholder="eg:2020-02-31" v-model="formValidate.Tytime"></DatePicker>
+        </FormItem>
+        <FormItem label="数量" prop="sample_count">
+          <Input v-model="formValidate.sample_count" placeholder="数量" style="width: 200px" />
+        </FormItem>
+        <FormItem label="备注" prop="note">
+            <Input v-model="formValidate.note" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="输入些什么"></Input>
         </FormItem>
     </Form>
     <div>
@@ -114,7 +170,7 @@ export default {
         {
           title: 'Action',
           slot: 'action',
-          width: 250,
+          width: 300,
           align: 'center'
         }
       ],
@@ -130,14 +186,79 @@ export default {
         position: 'static'
       },
       formValidate: {
-        name: '',
-        mail: '',
-        city: '',
-        gender: '',
-        interest: [],
-        date: '',
-        time: '',
-        desc: ''
+        // test
+        // name: '',
+        // mail: '',
+        // city: '',
+        // gender: '',
+        // interest: [],
+        // date: '',
+        // time: '',
+        // desc: '',
+        // test
+        p_name: '',
+        p_age: '',
+        p_gender: '',
+        p_nation: '',
+        p_origo: '',
+        p_contact: '',
+        p_ID_number: '',
+        p_address: '',
+        mg_id: '',
+        pi_name: '',
+        sales: '',
+        req_mg: '',
+        outpatient_id: '',
+        doctor: '',
+        hosptial: '',
+        room: '',
+        pnumber: '',
+        cancer_d: '',
+        original: '',
+        metastasis: '',
+        pathological: '',
+        pathological_date: '',
+        seq_type: [],
+        sample_type: '',
+        mth: '',
+        mth_position: '',
+        Tytime: '',
+        sample_count: '',
+        note: '',
+        seq_items: [],
+        send_methods: [],
+        family_info: {
+          relationship: '',
+          age: '',
+          diseases: ''
+        },
+        targeted_info: {
+          is_treat: false,
+          name: '',
+          star_time: '',
+          end_time: '',
+          effect: ''
+        },
+        chem_info: {
+          is_treat: '',
+          name: '',
+          star_time: '',
+          end_time: '',
+          effect: ''
+        },
+        radio_info: {
+          is_treat: '',
+          name: '',
+          star_time: '',
+          end_time: '',
+          effect: ''
+        },
+        send_method: {
+          the_way: '',
+          to: '',
+          phone_n: '',
+          addr: ''
+        }
       },
       ruleValidate: {
         name: [
@@ -187,9 +308,19 @@ export default {
     getDataSample () {
       getrSampleRecord(1, 10).then(res => {
         this.data_sample = res.data.sample
-        console.log(res.data.test)
+        console.log(res.data.data_sample)
       })
+    },
+    // 打开编辑框
+    edit_add_info (index) {
+      this.value_form = true
+      const current_row = this.data_sample[index]
+      this.formValidate.mg_id = current_row.mg_id
+      this.formValidate.req_mg = current_row.req_mg
     }
+  },
+  mounted () {
+    this.getDataSample()
   }
 }
 </script>

@@ -10,3 +10,10 @@ export const getrSampleRecord = (page, page_per) => {
     }
   })
 }
+
+export const getrSampleRecordConfig = () => {
+  return axios.request({
+    url: '/sample_record_config/',
+    method: 'get'
+  })
+}

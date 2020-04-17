@@ -365,6 +365,15 @@ export default [
         component: () => import('@/view/admin/admin-patient.vue')
       },
       {
+        path: 'record',
+        name: 'admin_record',
+        meta: {
+          icon: 'md-arrow-dropdown-circle',
+          title: '录入配置'
+        },
+        component: () => import('@/view/admin/sample-record/index.vue')
+      },
+      {
         path: 'template',
         name: 'admin_report_template',
         meta: {

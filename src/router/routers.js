@@ -170,6 +170,16 @@ export default [
         component: () => import('@/view/row-data-upload/sample-info-record.vue')
       },
       {
+        path: '/sample_info_rec',
+        name: 'sample_info_rec',
+        meta: {
+          icon: 'md-arrow-dropdown-circle',
+          title: '测试1',
+          access: ['admin']
+        },
+        component: () => import('@/view/row-data-upload/sample-info-rec.vue')
+      },
+      {
         path: 'view_sample',
         name: 'view_sample',
         meta: {

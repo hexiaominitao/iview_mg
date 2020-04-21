@@ -19,10 +19,10 @@
         <div v-else>{{ row.mg_id }}</div>
       </template>
       <template slot-scope="{ row, index }" slot="action">
-        <Button type="primary" size="small" style="margin-right: 5px" @click="edit_pat_info(index)">患者信息</Button>
+        <Button type="primary" size="small" style="margin-right: 5px" @click="edit_pat_info(index)">基本信息</Button>
         <Button type="primary" size="small" style="margin-right: 5px" @click="edit_add_info(index)">样本信息</Button>
-        <Button @click="row.edit_able = true" type="primary" size="small" style="margin-right: 5px">行内编辑</Button>
-        <Button @click="row.edit_able = false" type="error" size="small" style="margin-right: 5px">取消</Button>
+        <!-- <Button @click="row.edit_able = true" type="primary" size="small" style="margin-right: 5px">行内编辑</Button>
+        <Button @click="row.edit_able = false" type="error" size="small" style="margin-right: 5px">取消</Button> -->
         <!-- <Button type="error" size="small" @click="remove(index)">Delete</Button> -->
       </template>
     </Table>
@@ -40,8 +40,8 @@
           <Input v-model="sampleInfoForm.patient_info.name" placeholder="姓名" style="width: 200px"></Input>
         </FormItem>
         <FormItem label="身份证号" prop="patient_info.ID_number">
-          <Input v-model="sampleInfoForm.patient_info.ID_number" placeholder="身份证号" style="width: 200px"
-          @on-blur="calAge"
+          <Input v-model="sampleInfoForm.patient_info.ID_number" placeholder="身份证号" style="width: 250px"
+          @on-blur="calAge" maxlength="18" show-word-limit
           ></Input>
         </FormItem>
         <FormItem label="年龄" prop="patient_info.age">
@@ -85,7 +85,7 @@
         <Button style="margin-right: 8px" @click="value_pat = false">Cancel</Button>
     </Drawer>
     <!-- 样本信息 -->
-    <Drawer title="样本信息" v-model="value_form" width="720" :mask-closable="false" :styles="styles">
+    <Drawer title="样本信息" v-model="value_form" width="1020" :mask-closable="false" :styles="styles">
       <Card>
         <Row>
           <Col span="12">迈景编号：{{ sampleInfoForm.mg_id }}</Col>
@@ -350,16 +350,17 @@ export default {
       action_sample: UploadUrl + 'sample_record/',
       columns_sample: [{
         title: '迈景编号',
-        slot: 'mg_id'
+        slot: 'mg_id',
+        width: 200
       },
       {
         title: '申请单号',
-        key: 'req_mg'
+        key: 'req_mg',
+        width: 200
       },
       {
         title: 'Action',
         slot: 'action',
-        width: 300,
         align: 'center'
       }
       ],

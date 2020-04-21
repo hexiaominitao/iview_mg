@@ -26,7 +26,7 @@
         </Col>
       </Row>
     </Card>
-    <Table :data="table_data" :columns="columns_con"></Table>
+    <Table :data="my_data" :columns="columns_con"></Table>
   </div>
 </template>
 <script>
@@ -53,11 +53,19 @@ export default {
         {
           title: '代码',
           key: 'code'
+        },
+        {
+          title: '状态',
+          key: 'status'
+        },
+        {
+          title: '电话',
+          key: 'phone'
         }
       ],
       sample_type: [],
       sales: [],
-      search_item: '销售',
+      search_item: 'sales',
       table_data: [],
       my_data: []
     }
@@ -72,23 +80,22 @@ export default {
     },
     searchItem (value) {
       const item = this.search_item
-      if (item === '销售') {
+      if (item === 'sales') {
         this.table_data = this.sales
-      } else if (item === '医院') {
+      } else if (item === 'hospital') {
         this.table_data = this.hospital
       } else {
         this.table_data = this.sample_type
       }
-      this.$Message.info(value)
       if (value !== '') {
         this.my_data = this.table_data.filter(item => item.name.indexOf(value) > -1)
       } else {
-        this.my_data = []
+        this.my_data = this.table_data
       }
     }
   },
   mounted () {
-
+    this.getSHT()
   }
 }
 </script>

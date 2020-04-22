@@ -359,6 +359,11 @@ export default {
         width: 200
       },
       {
+        title: '销售',
+        key: 'sales',
+        width: 200
+      },
+      {
         title: 'Action',
         slot: 'action',
         align: 'center'

@@ -1,13 +1,40 @@
 <template>
   <div>
-    <Button @click="val_edit = true">编辑</Button>
-    <Drawer title="样本信息录入" v-model="val_edit" width="1020" :mask-closable="false">
+    <Button @click="valeu_upload = true" type="primary">文件上传</Button>
+    <Button @click="getDataSample" type="success">刷新</Button>
+    <Button @click="addSample">添加</Button>
+    <Drawer title="文件上传" v-model="valeu_upload" width="720" :mask-closable="false">
+      <Upload multiple type="drag" :action="action_sample" @on-success="uploadSuccess">
+        <div style="padding: 20px 0">
+          <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
+          <p>点击或拖拽上传</p>
+        </div>
+      </Upload>
+      <Button style="margin-right: 8px" @click="valeu_upload = false">关闭</Button>
+    </Drawer>
+    <Table border :columns="columns_sample" :data="data_sample">
+      <template slot-scope="{ row }" slot="mg_id">
+        <div v-if="row.edit_able">
+          <Input v-model="row.mg_id" placeholder="输入迈景编号" style="width:100px"></Input>
+        </div>
+        <div v-else>{{ row.mg_id }}</div>
+      </template>
+      <template slot-scope="{ row, index }" slot="action">
+        <Button type="primary" size="small" style="margin-right: 5px" @click="edit_sample_info(index)">编辑</Button>
+        <!-- <Button type="primary" size="small" style="margin-right: 5px" @click="edit_add_info(index)">样本信息</Button> -->
+        <!-- <Button @click="row.edit_able = true" type="primary" size="small" style="margin-right: 5px">行内编辑</Button>
+        <Button @click="row.edit_able = false" type="error" size="small" style="margin-right: 5px">取消</Button> -->
+        <!-- <Button type="error" size="small" @click="remove(index)">Delete</Button> -->
+      </template>
+    </Table>
+    <Drawer title="样本信息录入" v-model="val_edit" width="1100" :mask-closable="false">
+      <Button @click="handleReset('formValidate')">重置</Button>
       <Form ref="sampleInfoForm" :model="sampleInfoForm" :label-width="100">
       <Card>
         <p slot="title">受检者信息</p>
           <Row>
             <Col span='8'>
-            <FormItem label="姓名" prop="patient_info.name" :rules="ruleValidate.patient_info.name">
+            <FormItem label="姓名" :prop="'patient_info.name'" :rules="ruleValidate.patient_info.name">
               <Input v-model="sampleInfoForm.patient_info.name" placeholder="姓名" style="width: 200px" clearable></Input>
             </FormItem>
             </Col>
@@ -50,23 +77,23 @@
             </Col>
           </Row>
           <Row>
-            <Col span='4'>
+            <Col span='8'>
             <FormItem label="民族">
-              <Select v-model="sampleInfoForm.patient_info.nation" filterable style="width: 100px">
+              <Select v-model="sampleInfoForm.patient_info.nation" filterable clearable style="width: 150px">
                 <Option v-for="item in nation_data" :value="item.name" :key="item.index">{{ item.name }}</Option>
               </Select>
             </FormItem>
             </Col>
-            <Col span='7'>
+            <Col span='12'>
             <FormItem label="籍贯">
               <Input v-model="sampleInfoForm.patient_info.origo" placeholder="籍贯" style="width: 200px"></Input>
             </FormItem>
             </Col>
-            <Col span='12'>
+            <!-- <Col span='12'>
             <FormItem label="地址" prop="patient_info.address">
               <Input v-model="sampleInfoForm.patient_info.address" placeholder="地址"></Input>
             </FormItem>
-            </Col>
+            </Col> -->
           </Row>
           <Row>
             <Col span="6">
@@ -78,7 +105,7 @@
               </Select>
             </FormItem>
             </Col>
-            <Col span="18" v-if="sampleInfoForm.send_methods.the_way === '客户'">
+            <Col span="18" v-if="reportSend">
             <Row>
               <Col span="8">
               <FormItem label="收件人">
@@ -124,7 +151,7 @@
             </Col>
             <Col span='5'>
             <FormItem label="门诊/住院号" prop="outpatient_id">
-              <Input v-model="sampleInfoForm.outpatient_id" placeholder="输入门诊号/住院号"></Input>
+              <Input v-model="sampleInfoForm.outpatient_id" placeholder="门诊/住院号"></Input>
             </FormItem>
             </Col>
           </Row>
@@ -352,15 +379,22 @@
             <FormItem v-for="(item, index) in sampleInfoForm.samplinfos.items" :key="index">
               <Row>
                 <Col span="8">
+                  <FormItem label="样本编号">
+                  <Input v-model="item.code" placeholder="样本编号" style="width: 100px"></Input>
+                </FormItem>
+                </Col>
+                <Col span="8">
                 <FormItem label="样本类型" prop="item.sample_type">
                   <Select v-model="item.sample_type" style="width: 120px" clearable>
                     <Option v-for="(item_type, index_type) in sampleType" :key="index_type" :value="item_type.name">{{ item_type.name }}</Option>
                   </Select>
                 </FormItem>
                 </Col>
+              </Row>
+              <Row>
                 <Col span="8">
                 <FormItem label="样本数量">
-                  <Input v-model="item.counts" style="width: 100px"></Input>
+                  <Input v-model="item.counts" placeholder="样本数量" style="width: 100px"></Input>
                 </FormItem>
                 </Col>
                 <Col span="8">
@@ -372,20 +406,25 @@
                   </Select>
                 </FormItem>
                 </Col>
-              </Row>
-              <Row>
-                <Col span="10">
+                <Col span="8">
                 <FormItem label="采样部位" prop='item.mth_position'>
-                  <Input v-model="item.mth_position" placeholder="采样部位" style="width: 180px" />
+                  <Input v-model="item.mth_position" placeholder="采样部位" style="width: 120px" />
                 </FormItem>
                 </Col>
+              </Row>
+              <Row>
                 <Col span="10">
                 <FormItem label="采样时间" prop='item.Tytime'>
                   <DatePicker type="date" placeholder="选择时间" v-model="item.Tytime">
                   </DatePicker>
                 </FormItem>
                 </Col>
-                <Col span="4">
+                <Col span="12">
+                  <FormItem label="样本备注" prop="item.note">
+                    <Input v-model="item.note" type="textarea" :autosize="true" placeholder="样本备注" style="width: 180px"/>
+                  </FormItem>
+                </Col>
+                <Col span="2">
                 <Button size="small" type="error" @click="sampleRemove(index)">删除</Button>
                 </Col>
               </Row>
@@ -394,7 +433,7 @@
         </Row>
       </Card>
       <Card>
-        <p sloat="title">申请检测项目</p>
+        <p slot="title">申请检测项目</p>
             <FormItem label="检测项目">
                 <Select v-model="sampleInfoForm.seq_type" multiple filterable>
                   <Option v-for="item in seq_items" :value="item.name" :key="item.name">{{ item.name }}
@@ -407,6 +446,7 @@
         </FormItem>
       </Card>
       <Button @click="submit">提交</Button>
+      <!-- <Button @click="handleReset('formValidate')">重置</Button> -->
       <Button @click="val_edit = false">关闭</Button>
       </Form>
     </Drawer>
@@ -414,13 +454,36 @@
 </template>
 <script>
 import {
-  getrSampleRecordConfig
+  getrSampleRecord, getrSampleRecordConfig
 } from '@/api/sample_record'
+import config from '@/config'
+const UploadUrl = process.env.NODE_ENV === 'development' ? config.UploadUrl.dev : config.UploadUrl.pro
 export default {
   name: 'sample_info_rec',
   data () {
     return {
       val_edit: false,
+      action_sample: UploadUrl + 'sample_record/',
+      columns_sample: [{
+        title: '迈景编号',
+        slot: 'mg_id',
+        width: 200
+      },
+      {
+        title: '申请单号',
+        key: 'req_mg',
+        width: 200
+      },
+      {
+        title: '销售',
+        key: 'sales',
+        width: 200
+      },
+      {
+        title: 'Action',
+        slot: 'action',
+        align: 'center'
+      }],
       test_date: '',
       sample_types: [],
       sample_type: [],
@@ -472,7 +535,99 @@ export default {
             mth: '',
             mth_position: '',
             Tytime: '',
-            counts: ''
+            counts: '',
+            code: '',
+            note: ''
+          }]
+        },
+        note: '',
+        seq_items: [],
+        send_methods: {
+          the_way: '',
+          to: '',
+          phone_n: '',
+          addr: ''
+        },
+        family_info: {
+          is_treat: '',
+          items: [{
+            relationship: '',
+            age: '',
+            diseases: ''
+          }]
+        },
+        targeted_info: {
+          is_treat: '',
+          items: [{
+            name: '',
+            treat_date: '',
+            effect: ''
+          }]
+        },
+        chem_info: {
+          is_treat: '',
+          items: [{
+            name: '',
+            treat_date: '',
+            effect: ''
+          }]
+        },
+        radio_info: {
+          is_treat: '',
+          items: [{
+            name: '',
+            treat_date: '',
+            effect: ''
+          }]
+        },
+        send_method: {
+          the_way: '',
+          to: '',
+          phone_n: '',
+          addr: ''
+        },
+        smoke_info: {
+          is_smoke: '',
+          smoke: ''
+        }
+      },
+      FormSample: {
+        age: '',
+        age_v: '岁',
+        patient_info: {
+          name: '',
+          age: '',
+          gender: '',
+          nation: '',
+          origo: '',
+          contact: '',
+          ID_number: '',
+          address: ''
+        },
+        mg_id: '',
+        pi_name: '',
+        sales: '',
+        req_mg: '',
+        outpatient_id: '',
+        doctor: '',
+        hosptial: '',
+        room: '',
+        pnumber: '',
+        cancer_d: '',
+        original: '',
+        metastasis: '',
+        pathological: '',
+        pathological_date: '',
+        seq_type: [],
+        samplinfos: {
+          items: [{
+            sample_type: '',
+            mth: '',
+            mth_position: '',
+            Tytime: '',
+            counts: '',
+            code: '',
+            note: ''
           }]
         },
         note: '',
@@ -805,6 +960,13 @@ export default {
       } else {
         return false
       }
+    },
+    reportSend () {
+      if (this.sampleInfoForm.send_methods.the_way === '销售' || this.sampleInfoForm.send_methods.the_way === '客户') {
+        return true
+      } else {
+        return false
+      }
     }
   },
   methods: {
@@ -926,6 +1088,17 @@ export default {
         this.seq_items = res.data.seq_items
       })
     },
+    edit_sample_info (index) {
+      this.val_edit = true
+      this.handleReset(formValidate)
+    },
+    // 获取数据
+    getDataSample () {
+      getrSampleRecord(1, 10).then(res => {
+        this.data_sample = res.data.sample
+        console.log(res.data.data_sample)
+      })
+    },
     getSampleType (query) {
       if (query !== '') {
         this.loading_type = true
@@ -942,11 +1115,21 @@ export default {
         this.sample_type = []
       }
     },
+    addSample () {
+      this.sampleInfoForm = this.FormSample
+      this.val_edit = true
+    },
     submit () {
       console.log(this.sampleInfoForm.samplinfos)
+    },
+    handleReset (name) {
+      this.$nextTick(() => {
+        this.$refs[name].resetFields()
+      })
     }
   },
   mounted () {
+    this.getDataSample()
     this.getSHT()
   }
 }

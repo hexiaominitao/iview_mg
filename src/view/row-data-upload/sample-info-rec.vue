@@ -4,7 +4,7 @@
     <Button @click="getDataSample" type="success">刷新</Button>
     <Button @click="addSample">添加</Button>
     <Drawer title="文件上传" v-model="valeu_upload" width="720" :mask-closable="false">
-      <Upload multiple type="drag" :action="action_sample" @on-success="uploadSuccess">
+      <Upload multiple type="drag" :action="action_sample">
         <div style="padding: 20px 0">
           <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
           <p>点击或拖拽上传</p>
@@ -33,13 +33,25 @@
       <Card>
         <p slot="title">受检者信息</p>
           <Row>
+            <Col span="12">
+              <FormItem label="申请单号" :prop="'patient_info.req_mg'">
+              <Input v-model="sampleInfoForm.patient_info.req_mg" placeholder="申请单号" style="width: 200px" clearable></Input>
+            </FormItem>
+            </Col>
+            <Col span="12">
+              <FormItem label="迈景编号" :prop="'patient_info.mg_id'">
+              <Input v-model="sampleInfoForm.patient_info.mg_id" placeholder="申请单号" style="width: 200px" clearable></Input>
+            </FormItem>
+            </Col>
+          </Row>
+          <Row>
             <Col span='8'>
             <FormItem label="姓名" :prop="'patient_info.name'" :rules="ruleValidate.patient_info.name">
               <Input v-model="sampleInfoForm.patient_info.name" placeholder="姓名" style="width: 200px" clearable></Input>
             </FormItem>
             </Col>
             <Col span='8'>
-            <FormItem label="性别" prop="patient_info.gender" :rules="ruleValidate.patient_info.gender">
+            <FormItem label="性别" :prop="'patient_info.gender'" :rules="ruleValidate.patient_info.gender">
               <RadioGroup v-model="sampleInfoForm.patient_info.gender">
                 <Radio label="男">男</Radio>
                 <Radio label="女">女</Radio>
@@ -48,7 +60,7 @@
             </FormItem>
             </Col>
             <Col span="8">
-            <FormItem label="联系方式" prop="patient_info.contact">
+            <FormItem label="联系方式" :prop="'patient_info.contact'">
               <Input v-model="sampleInfoForm.patient_info.contact" placeholder="联系方式" style="width: 200px"
                 maxlength="11" clearable></Input>
             </FormItem>
@@ -56,36 +68,34 @@
           </Row>
           <Row>
             <Col span='12'>
-            <FormItem label="身份证号" prop="patient_info.ID_number">
+            <FormItem label="身份证号" :prop="'patient_info.ID_number'">
               <Input v-model="sampleInfoForm.patient_info.ID_number" placeholder="身份证号" style="width: 250px"
                 @on-blur="calAge" maxlength="18" show-word-limit></Input>
             </FormItem>
             </Col>
             <Col span='12'>
-            <FormItem label="年龄" prop="patient_info.age">
+            <FormItem label="年龄" :prop="'patient_info.age'" >
               <div v-if="sampleInfoForm.patient_info.ID_number">{{ sampleInfoForm.patient_info.age }}</div>
               <div v-else>
-                <FormItem>
                   <Input v-model="sampleInfoForm.age" placeholder="年龄" style="width: 200px" @on-blur="setAge"></Input>
                   <RadioGroup v-model="sampleInfoForm.age_v">
                     <Radio label="岁">岁</Radio>
                     <Radio label="个月">个月</Radio>
                   </RadioGroup>
-                </FormItem>
               </div>
             </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span='8'>
-            <FormItem label="民族">
+            <FormItem label="民族" :prop="'patient_info.nation'">
               <Select v-model="sampleInfoForm.patient_info.nation" filterable clearable style="width: 150px">
                 <Option v-for="item in nation_data" :value="item.name" :key="item.index">{{ item.name }}</Option>
               </Select>
             </FormItem>
             </Col>
             <Col span='12'>
-            <FormItem label="籍贯">
+            <FormItem label="籍贯" :prop="'patient_info.nation'">
               <Input v-model="sampleInfoForm.patient_info.origo" placeholder="籍贯" style="width: 200px"></Input>
             </FormItem>
             </Col>
@@ -97,7 +107,7 @@
           </Row>
           <Row>
             <Col span="6">
-            <FormItem label="报告寄送(纸)">
+            <FormItem label="报告寄送(纸)" :prop="'patient_info.the_way'">
               <Select v-model="sampleInfoForm.send_methods.the_way" style="width: 60px">
                 <Option value="无需">无需</Option>
                 <Option value="销售">销售</Option>
@@ -108,18 +118,18 @@
             <Col span="18" v-if="reportSend">
             <Row>
               <Col span="8">
-              <FormItem label="收件人">
+              <FormItem label="收件人" :prop="'patient_info.to'">
                 <Input v-model="sampleInfoForm.send_methods.to" placeholder="收件人" style="width: 100px" />
               </FormItem>
               </Col>
               <Col span="8">
-              <FormItem label="联系电话">
-                <Input v-model="sampleInfoForm.send_methods.to" placeholder="联系电话" style="width: 100px" />
+              <FormItem label="联系电话" :prop="'patient_info.phone_n'">
+                <Input v-model="sampleInfoForm.send_methods.phone_n" placeholder="联系电话" style="width: 100px" />
               </FormItem>
               </Col>
             </Row>
-            <FormItem label="地址">
-              <Input v-model="sampleInfoForm.send_methods.to" placeholder="地址" style="width: 240px" />
+            <FormItem label="地址" :prop="'send_methods.addr'">
+              <Input v-model="sampleInfoForm.send_methods.addr" placeholder="地址" style="width: 240px" />
             </FormItem>
             </Col>
           </Row>
@@ -130,7 +140,6 @@
           <Col span='12'>
           </Col>
         </Row>
-          <Row>
             <Col span='7'>
             <FormItem label="送检机构" prop="hosptial">
               <Select v-model="sampleInfoForm.hosptial" placeholder="送检医院/单位全称" filterable clearable
@@ -463,6 +472,7 @@ export default {
   data () {
     return {
       val_edit: false,
+      valeu_upload: false,
       action_sample: UploadUrl + 'sample_record/',
       columns_sample: [{
         title: '迈景编号',
@@ -501,96 +511,7 @@ export default {
       }
       ],
       hospitals: [],
-      sampleInfoForm: {
-        age: '',
-        age_v: '岁',
-        patient_info: {
-          name: '',
-          age: '',
-          gender: '',
-          nation: '',
-          origo: '',
-          contact: '',
-          ID_number: '',
-          address: ''
-        },
-        mg_id: '',
-        pi_name: '',
-        sales: '',
-        req_mg: '',
-        outpatient_id: '',
-        doctor: '',
-        hosptial: '',
-        room: '',
-        pnumber: '',
-        cancer_d: '',
-        original: '',
-        metastasis: '',
-        pathological: '',
-        pathological_date: '',
-        seq_type: [],
-        samplinfos: {
-          items: [{
-            sample_type: '',
-            mth: '',
-            mth_position: '',
-            Tytime: '',
-            counts: '',
-            code: '',
-            note: ''
-          }]
-        },
-        note: '',
-        seq_items: [],
-        send_methods: {
-          the_way: '',
-          to: '',
-          phone_n: '',
-          addr: ''
-        },
-        family_info: {
-          is_treat: '',
-          items: [{
-            relationship: '',
-            age: '',
-            diseases: ''
-          }]
-        },
-        targeted_info: {
-          is_treat: '',
-          items: [{
-            name: '',
-            treat_date: '',
-            effect: ''
-          }]
-        },
-        chem_info: {
-          is_treat: '',
-          items: [{
-            name: '',
-            treat_date: '',
-            effect: ''
-          }]
-        },
-        radio_info: {
-          is_treat: '',
-          items: [{
-            name: '',
-            treat_date: '',
-            effect: ''
-          }]
-        },
-        send_method: {
-          the_way: '',
-          to: '',
-          phone_n: '',
-          addr: ''
-        },
-        smoke_info: {
-          is_smoke: '',
-          smoke: ''
-        }
-      },
+      sampleInfoForm: {},
       FormSample: {
         age: '',
         age_v: '岁',
@@ -970,6 +891,17 @@ export default {
     }
   },
   methods: {
+    validateAge (value) {
+      if (!Number.isInteger(value)) {
+        callback(new Error('年龄必须是数字'))
+      } else {
+        if (value > 150) {
+          callback(new Error('年龄不能大于150岁'))
+        } else {
+          callback()
+        }
+      }
+    },
     setAge () {
       this.sampleInfoForm.patient_info.age = this.sampleInfoForm.age + this.sampleInfoForm.age_v
     },
@@ -1116,11 +1048,13 @@ export default {
       }
     },
     addSample () {
+      this.sampleInfoForm = {}
       this.sampleInfoForm = this.FormSample
+      this.sampleInfoForm.req_mg = ''
       this.val_edit = true
     },
     submit () {
-      console.log(this.sampleInfoForm.samplinfos)
+      console.log(this.FormSample)
     },
     handleReset (name) {
       this.$nextTick(() => {
@@ -1129,6 +1063,7 @@ export default {
     }
   },
   mounted () {
+    this.sampleInfoForm = this.FormSample
     this.getDataSample()
     this.getSHT()
   }

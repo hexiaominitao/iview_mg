@@ -28,19 +28,21 @@
       </template>
     </Table>
     <Drawer title="样本信息录入" v-model="val_edit" width="1100" :mask-closable="false">
-      <Button @click="handleReset('formValidate')">重置</Button>
+      <Button @click="handleReset">重置</Button>
       <Form ref="sampleInfoForm" :model="sampleInfoForm" :label-width="100">
-      <Card>
-        <p slot="title">受检者信息</p>
+        <Card>
+          <p slot="title">受检者信息</p>
           <Row>
             <Col span="12">
-              <FormItem label="申请单号" :prop="'patient_info.req_mg'">
-              <Input v-model="sampleInfoForm.patient_info.req_mg" placeholder="申请单号" style="width: 200px" clearable></Input>
+            <FormItem label="申请单号" :prop="'patient_info.req_mg'">
+              <Input v-model="sampleInfoForm.patient_info.req_mg" placeholder="申请单号" style="width: 200px"
+                clearable></Input>
             </FormItem>
             </Col>
             <Col span="12">
-              <FormItem label="迈景编号" :prop="'patient_info.mg_id'">
-              <Input v-model="sampleInfoForm.patient_info.mg_id" placeholder="申请单号" style="width: 200px" clearable></Input>
+            <FormItem label="迈景编号" :prop="'patient_info.mg_id'">
+              <Input v-model="sampleInfoForm.patient_info.mg_id" placeholder="申请单号" style="width: 200px"
+                clearable></Input>
             </FormItem>
             </Col>
           </Row>
@@ -68,21 +70,19 @@
           </Row>
           <Row>
             <Col span='12'>
-            <FormItem label="身份证号" :prop="'patient_info.ID_number'">
+            <FormItem label="身份证号" :prop="'patient_info.ID_number'" :rules="ruleValidate.patient_info.ID_number">
               <Input v-model="sampleInfoForm.patient_info.ID_number" placeholder="身份证号" style="width: 250px"
                 @on-blur="calAge" maxlength="18" show-word-limit></Input>
             </FormItem>
             </Col>
             <Col span='12'>
-            <FormItem label="年龄" :prop="'patient_info.age'" >
-              <div v-if="sampleInfoForm.patient_info.ID_number">{{ sampleInfoForm.patient_info.age }}</div>
-              <div v-else>
-                  <Input v-model="sampleInfoForm.age" placeholder="年龄" style="width: 200px" @on-blur="setAge"></Input>
-                  <RadioGroup v-model="sampleInfoForm.age_v">
-                    <Radio label="岁">岁</Radio>
-                    <Radio label="个月">个月</Radio>
-                  </RadioGroup>
-              </div>
+            <div v-if="sampleInfoForm.patient_info.ID_number">{{ sampleInfoForm.patient_info.age }}</div>
+            <FormItem label="年龄" prop="age" :rules="ruleValidate.age" v-else >
+                <Input v-model="sampleInfoForm.age" placeholder="年龄" style="width: 200px" number @on-blur="setAge"></Input>
+                <RadioGroup v-model="sampleInfoForm.age_v">
+                  <Radio label="岁">岁</Radio>
+                  <Radio label="个月">个月</Radio>
+                </RadioGroup>
             </FormItem>
             </Col>
           </Row>
@@ -103,7 +103,7 @@
             <FormItem label="地址" prop="patient_info.address">
               <Input v-model="sampleInfoForm.patient_info.address" placeholder="地址"></Input>
             </FormItem>
-            </Col> -->
+            </Co<Col> -->
           </Row>
           <Row>
             <Col span="6">
@@ -133,61 +133,66 @@
             </FormItem>
             </Col>
           </Row>
-      </Card>
-      <Card>
-        <p slot="title">受检者就诊信息</p>
-        <Row>
-          <Col span='12'>
+        </Card>
+        <Card>
+          <p slot="title">受检者就诊信息</p>
+          <Row>
+            <Col span='12'>
+            </Col>
+          </Row>
+          <Row></Row>
+          <Col span='7'>
+          <FormItem label="送检机构" prop="hosptial">
+            <Select v-model="sampleInfoForm.hosptial" placeholder="送检医院/单位全称" filterable clearable style="width: 200px">
+              <Option v-for="item in hospitals" :value="item.name" :key="item.id">{{ item.label }}</Option>
+            </Select>
+          </FormItem>
           </Col>
-        </Row>
-            <Col span='7'>
-            <FormItem label="送检机构" prop="hosptial">
-              <Select v-model="sampleInfoForm.hosptial" placeholder="送检医院/单位全称" filterable clearable
-                style="width: 200px">
-                <Option v-for="item in hospitals" :value="item.name" :key="item.id">{{ item.label }}</Option>
+          <Col span='6'>
+          <FormItem label="科室" prop="room">
+            <Input v-model="sampleInfoForm.room" placeholder="科室"></Input>
+          </FormItem>
+          </Col>
+          <Col span='6'>
+          <FormItem label="送检医生" prop="doctor">
+            <Input v-model="sampleInfoForm.doctor" placeholder="医生姓名"></Input>
+          </FormItem>
+          </Col>
+          <Col span='5'>
+          <FormItem label="门诊/住院号" prop="outpatient_id">
+            <Input v-model="sampleInfoForm.outpatient_id" placeholder="门诊/住院号"></Input>
+          </FormItem>
+          </Col>
+          </Row>
+          <Row>
+            <Col span='6'>
+            <FormItem label="肿瘤类型" prop="cancer_d">
+              <Select v-model="sampleInfoForm.cancer_d" filterable allow-create clearable @on-create="cancerAdd"
+                style="width: 160px">
+                <Option v-for="item in cancers" :value="item.name" :key="item.name">{{ item.name }}
+                </Option>
               </Select>
             </FormItem>
             </Col>
             <Col span='6'>
-            <FormItem label="科室" prop="room">
-              <Input v-model="sampleInfoForm.room" placeholder="科室"></Input>
+            <FormItem prop="cancer_d">
+              <Input v-model="sampleInfoForm.cancer_d" placeholder="肿瘤类型" style="width: 160px" />
             </FormItem>
             </Col>
             <Col span='6'>
-            <FormItem label="送检医生" prop="doctor">
-              <Input v-model="sampleInfoForm.doctor" placeholder="医生姓名"></Input>
-            </FormItem>
-            </Col>
-            <Col span='5'>
-            <FormItem label="门诊/住院号" prop="outpatient_id">
-              <Input v-model="sampleInfoForm.outpatient_id" placeholder="门诊/住院号"></Input>
-            </FormItem>
-            </Col>
-          </Row>
-          <Row>
-            <Col span='8'>
-            <FormItem label="肿瘤类型" prop="cancer_d">
-              <Select v-model="sampleInfoForm.cancer_d" filterable allow-create clearable @on-create="cancerAdd"
-                    style="width: 160px">
-                    <Option v-for="item in cancers" :value="item.name" :key="item.name">{{ item.name }}
-                    </Option>
-                  </Select>
-            </FormItem>
-            </Col>
-            <Col span='8'>
             <FormItem label="原发部位" prop="original">
-              <Input v-model="sampleInfoForm.original" placeholder="原发部位" style="width: 200px" />
+              <Input v-model="sampleInfoForm.original" placeholder="原发部位" style="width: 160px" />
             </FormItem>
             </Col>
-            <Col span='8'>
+            <Col span='6'>
             <FormItem label="转移部位" prop="metastasis">
-              <Input v-model="sampleInfoForm.metastasis" placeholder="转移部位" style="width: 200px" />
+              <Input v-model="sampleInfoForm.metastasis" placeholder="转移部位" style="width: 160px" />
             </FormItem>
             </Col>
           </Row>
           <FormItem label="病理诊断">
             <Row>
-              <Col span="8">
+              <Col span="6">
               <FormItem prop="pathological">
                 <Input v-model="sampleInfoForm.pathological" placeholder="病理诊断" />
               </FormItem>
@@ -206,13 +211,12 @@
               </Col>
             </Row>
           </FormItem>
-      </Card>
-      <Card>
-        <p slot="title">受检者目前治疗方案</p>
-          <FormItem label="治疗信息">
+        </Card>
+        <Card>
+          <p slot="title">受检者目前治疗方案</p>
             <Row>
               <Col span="6">
-              <FormItem label="靶向治疗">
+              <FormItem label="靶向治疗" :prop="'targeted_info.is_treat'">
                 <Select v-model="sampleInfoForm.targeted_info.is_treat" style="width: 60px">
                   <Option value="false">无</Option>
                   <Option value="未知">未知</Option>
@@ -224,31 +228,31 @@
               <Button type="success" size="small" @click="targetedInfoAdd">添加</Button>
               </Col>
               <Col span="16" v-if="val_target1">
-              <FormItem v-for="(item, index) in sampleInfoForm.targeted_info.items" :key="index">
+              <div v-for="(item, index) in sampleInfoForm.targeted_info.items" :key="index">
                 <Row>
                   <Col span="18">
-                    <FormItem label="药物名称" prop='item.name'>
-                  <Input v-model="item.name" placeholder="治疗效果" style="width: 200px" />
-                </FormItem>
-                <FormItem label="起止时间" prop='item.end_time' >
-                  <DatePicker type="daterange" split-panels placeholder="选择时间段" v-model="item.treat_date">
-                  </DatePicker>
-                </FormItem>
-                <FormItem label="治疗效果" prop='item.effect'>
-                  <Input v-model="item.effect" placeholder="治疗效果" style="width: 200px" />
-                </FormItem>
+                  <FormItem label="药物名称" :prop="'targeted_info.items.' + index + '.name'">
+                    <Input v-model="item.name" placeholder="治疗效果" style="width: 200px" />
+                  </FormItem>
+                  <d label="起止时间" :prop="'targeted_info.items.' + index + '.treat_date'">
+                    <DatePicker type="daterange" split-panels placeholder="选择时间段" v-model="item.treat_date">
+                    </DatePicker>
+                  </d>
+                  <FormItem label="治疗效果" :prop="'targeted_info.items.' + index + '.effect'">
+                    <Input v-model="item.effect" placeholder="治疗效果" style="width: 200px" />
+                  </FormItem>
                   </Col>
                   <Col span="6">
                     <Button size="small" type="error" @click="targetedInfoRemove(index)">删除</Button>
                   </Col>
                 </Row>
-                <br/>
-              </FormItem>
+                <br />
+              </div>
               </Col>
             </Row>
             <Row>
               <Col span="6">
-              <FormItem label="化疗治疗">
+              <FormItem label="化疗治疗" :prop="'chem_info.is_treat'">
                 <Select v-model="sampleInfoForm.chem_info.is_treat" style="width: 60px">
                   <Option value="false">无</Option>
                   <Option value="未知">未知</Option>
@@ -257,34 +261,34 @@
               </FormItem>
               </Col>
               <Col span="2" v-if="val_chem1">
-              <Button type="success" size="small"  @click="chemInfoAdd">添加</Button>
+              <Button type="success" size="small" @click="chemInfoAdd">添加</Button>
               </Col>
               <Col span="16" v-if="val_chem1">
-              <FormItem v-for="(item, index) in sampleInfoForm.chem_info.items" :key="index">
+              <div v-for="(item, index) in sampleInfoForm.chem_info.items" :key="index">
                 <Row>
                   <Col span="18">
-                    <FormItem label="药物名称" prop='item.name'>
-                  <Input v-model="item.name" placeholder="治疗效果" style="width: 200px" />
-                </FormItem>
-                <FormItem label="起止时间" prop='item.end_time' >
-                  <DatePicker type="daterange" split-panels placeholder="选择时间段" v-model="item.treat_date">
-                  </DatePicker>
-                </FormItem>
-                <FormItem label="治疗效果" prop='item.effect'>
-                  <Input v-model="item.effect" placeholder="治疗效果" style="width: 200px" />
-                </FormItem>
+                  <FormItem label="药物名称" :prop="'chem_info.items.' + index + '.name'">
+                    <Input v-model="item.name" placeholder="治疗效果" style="width: 200px" />
+                  </FormItem>
+                  <FormItem label="起止时间" :prop="'chem_info.items.' + index + '.treat_date'">
+                    <DatePicker type="daterange" split-panels placeholder="选择时间段" v-model="item.treat_date">
+                    </DatePicker>
+                  </FormItem>
+                  <FormItem label="治疗效果" :prop="'chem_info.items.' + index + '.effect'">
+                    <Input v-model="item.effect" placeholder="治疗效果" style="width: 200px" />
+                  </FormItem>
                   </Col>
                   <Col span="6">
-                    <Button size="small" type="error" @click="chemInfoRemove(index)">删除</Button>
+                  <Button size="small" type="error" @click="chemInfoRemove(index)">删除</Button>
                   </Col>
                 </Row>
-                <br/>
-              </FormItem>
+                <br />
+              </div>
               </Col>
             </Row>
             <Row>
               <Col span="6">
-              <FormItem label="放疗治疗">
+              <FormItem label="放疗治疗" :prop="'radio_info.is_treat'">
                 <Select v-model="sampleInfoForm.radio_info.is_treat" style="width: 60px">
                   <Option value="false">无</Option>
                   <Option value="未知">未知</Option>
@@ -293,38 +297,37 @@
               </FormItem>
               </Col>
               <Col span="2" v-if="val_radio1">
-              <Button type="success" size="small"  @click="radioInfoAdd">添加</Button>
+              <Button type="success" size="small" @click="radioInfoAdd">添加</Button>
               </Col>
               <Col span="16" v-if="val_radio1">
-              <FormItem v-for="(item, index) in sampleInfoForm.radio_info.items" :key="index">
+              <div v-for="(item, index) in sampleInfoForm.radio_info.items" :key="index">
                 <Row>
                   <Col span="18">
-                    <FormItem label="药物名称" prop='item.name'>
-                  <Input v-model="item.name" placeholder="治疗效果" style="width: 200px" />
-                </FormItem>
-                <FormItem label="起止时间" prop='item.end_time' >
-                  <DatePicker type="daterange" split-panels placeholder="选择时间段" v-model="item.treat_date">
-                  </DatePicker>
-                </FormItem>
-                <FormItem label="治疗效果" prop='item.effect'>
-                  <Input v-model="item.effect" placeholder="治疗效果" style="width: 200px" />
-                </FormItem>
+                  <FormItem label="药物名称" :prop="'radio_info.items.' + index + '.name'">
+                    <Input v-model="item.name" placeholder="治疗效果" style="width: 200px" />
+                  </FormItem>
+                  <FormItem label="起止时间" :prop="'radio_info.items.' + index + '.treat_date'">
+                    <DatePicker type="daterange" split-panels placeholder="选择时间段" v-model="item.treat_date">
+                    </DatePicker>
+                  </FormItem>
+                  <FormItem label="治疗效果" :prop="'radio_info.items.' + index + '.effect'">
+                    <Input v-model="item.effect" placeholder="治疗效果" style="width: 200px" />
+                  </FormItem>
                   </Col>
                   <Col span="6">
-                    <Button size="small" type="error" @click="radioInfoRemove(index)">删除</Button>
+                  <Button size="small" type="error" @click="radioInfoRemove(index)">删除</Button>
                   </Col>
                 </Row>
-                <br/>
-              </FormItem>
-              </Col>
+                <br />
+                </div>
+                </Col>
             </Row>
-          </FormItem>
-      </Card>
-      <Card>
-        <p slot="title">受检者家族史及吸烟史</p>
+        </Card>
+        <Card>
+          <p slot="title">受检者家族史及吸烟史</p>
           <Row>
             <Col span="6">
-            <FormItem label="家族史">
+            <FormItem label="家族史" :prop="'family_info.is_treat'">
               <Select v-model="sampleInfoForm.family_info.is_treat" style="width: 60px">
                 <Option value="false">无</Option>
                 <Option value="有">有</Option>
@@ -332,82 +335,83 @@
             </FormItem>
             </Col>
             <Col span="2" style="text-align: center" v-if="val_famil">
-            <Button type="success" size="small"  @click="familyAdd">添加</Button>
+            <Button type="success" size="small" @click="familyAdd">添加</Button>
             </Col>
             <Col span="16" v-if="val_famil">
-            <FormItem v-for="(item, index) in sampleInfoForm.family_info.items" :key="index">
+            <div v-for="(item, index) in sampleInfoForm.family_info.items" :key="index">
               <Row>
                 <Col span='12'>
-                <FormItem label="血亲" prop='item.relationship' :label-width="40">
+                <FormItem label="血亲" :prop="'targeted_info.items.' + index + '.relationship'" :label-width="40">
                   <Input v-model="item.relationship" placeholder="血亲" style="width: 80px" />
                 </FormItem>
                 </Col>
                 <Col span='12'>
-                <FormItem label="年龄" prop='item.age' :label-width="40">
+                <FormItem label="年龄" :prop="'targeted_info.items.' + index + '.age'" :label-width="40">
                   <Input v-model="item.age" placeholder="年龄" style="width: 80px" />
                 </FormItem>
                 </Col>
               </Row>
               <Row>
                 <Col span="20">
-                <FormItem label="疾病" prop='item.diseases' :label-width="40">
+                <FormItem label="疾病" :prop="'targeted_info.items.' + index + '.diseases'" :label-width="40">
                   <Input v-model="item.diseases" placeholder="疾病" style="width: 240px" />
                 </FormItem>
                 </Col>
                 <Col span="4">
-                <Button type="error" size="small"  @click="familyRemove(index)">删除</Button>
+                <Button type="error" size="small" @click="familyRemove(index)">删除</Button>
                 </Col>
               </Row>
-            </FormItem>
+            </div>
             </Col>
           </Row>
           <Row>
-            <FormItem label="吸烟史">
-              <Row>
-                <Col span="6">
-                <Select v-model="sampleInfoForm.smoke_info.is_smoke" style="width: 60px">
-                  <Option value="无">无</Option>
-                  <Option value="未知">未知</Option>
-                  <Option value="有">有</Option>
-                </Select>
-                </Col>
-                <Col span="18" v-if="sampleInfoForm.smoke_info.is_smoke === '有'">
-                <Input v-model="sampleInfoForm.smoke_info.smoke" placeholder="吸烟时间" style="width: 80px" /> 年
-                </Col>
-              </Row>
+            <Col span="6">
+            <FormItem label="吸烟史" :prop="'smoke_info.is_smoke'">
+              <Select v-model="sampleInfoForm.smoke_info.is_smoke" style="width: 60px">
+                <Option value="无">无</Option>
+                <Option value="未知">未知</Option>
+                <Option value="有">有</Option>
+              </Select>
             </FormItem>
+            </Col>
+            <Col span="18" v-if="sampleInfoForm.smoke_info.is_smoke === '有'">
+            <FormItem label="吸烟时间" :prop="'smoke_info.smoke'">
+              <Input v-model="sampleInfoForm.smoke_info.smoke" placeholder="吸烟时间" style="width: 80px" /> 年
+            </FormItem>
+            </Col>
           </Row>
-      </Card>
-      <Card>
-        <p slot="title">样本类型和数量</p>
-        <Row>
-          <Col span="2">
-          <Button type="success" size="small"  @click="sampleAdd">添加样本</Button>
-          </Col>
-          <Col span="20">
-            <FormItem v-for="(item, index) in sampleInfoForm.samplinfos.items" :key="index">
+        </Card>
+        <Card>
+          <p slot="title">样本类型和数量</p>
+          <Row>
+            <Col span="2">
+            <Button type="success" size="small" @click="sampleAdd">添加样本</Button>
+            </Col>
+            <Col span="20">
+            <div v-for="(item, index) in sampleInfoForm.samplinfos.items" :key="index">
               <Row>
                 <Col span="8">
-                  <FormItem label="样本编号">
+                <FormItem label="样本编号" :prop="'samplinfos.items.' + index + '.code'">
                   <Input v-model="item.code" placeholder="样本编号" style="width: 100px"></Input>
                 </FormItem>
                 </Col>
                 <Col span="8">
-                <FormItem label="样本类型" prop="item.sample_type">
+                <FormItem label="样本类型" :prop="'samplinfos.items.' + index + '.sample_type'">
                   <Select v-model="item.sample_type" style="width: 120px" clearable>
-                    <Option v-for="(item_type, index_type) in sampleType" :key="index_type" :value="item_type.name">{{ item_type.name }}</Option>
+                    <Option v-for="(item_type, index_type) in sampleType" :key="index_type" :value="item_type.name">
+                      {{ item_type.name }}</Option>
                   </Select>
                 </FormItem>
                 </Col>
               </Row>
               <Row>
                 <Col span="8">
-                <FormItem label="样本数量">
+                <FormItem label="样本数量" :prop="'samplinfos.items.' + index + '.counts'">
                   <Input v-model="item.counts" placeholder="样本数量" style="width: 100px"></Input>
                 </FormItem>
                 </Col>
                 <Col span="8">
-                <FormItem label="采样方式">
+                <FormItem label="采样方式" :prop="'samplinfos.items.' + index + '.mth'">
                   <Select v-model="item.mth" filterable allow-create clearable @on-create="methodAdd"
                     style="width: 120px">
                     <Option v-for="item_m in mth_type" :value="item_m.name" :key="item_m.name">{{ item_m.name }}
@@ -416,63 +420,83 @@
                 </FormItem>
                 </Col>
                 <Col span="8">
-                <FormItem label="采样部位" prop='item.mth_position'>
+                <FormItem label="采样部位" :prop="'samplinfos.items.' + index + '.mth_position'">
                   <Input v-model="item.mth_position" placeholder="采样部位" style="width: 120px" />
                 </FormItem>
                 </Col>
               </Row>
               <Row>
                 <Col span="10">
-                <FormItem label="采样时间" prop='item.Tytime'>
+                <FormItem label="采样时间" :prop="'samplinfos.items.' + index + '.Tytime'">
                   <DatePicker type="date" placeholder="选择时间" v-model="item.Tytime">
                   </DatePicker>
                 </FormItem>
                 </Col>
                 <Col span="12">
-                  <FormItem label="样本备注" prop="item.note">
-                    <Input v-model="item.note" type="textarea" :autosize="true" placeholder="样本备注" style="width: 180px"/>
-                  </FormItem>
+                <FormItem label="样本备注" :prop="'samplinfos.items.' + index + '.note'">
+                  <Input v-model="item.note" type="textarea" :autosize="true" placeholder="样本备注" style="width: 180px" />
+                </FormItem>
                 </Col>
                 <Col span="2">
                 <Button size="small" type="error" @click="sampleRemove(index)">删除</Button>
                 </Col>
               </Row>
-            </FormItem>
-          </Col>
-        </Row>
-      </Card>
-      <Card>
-        <p slot="title">申请检测项目</p>
-            <FormItem label="检测项目">
-                <Select v-model="sampleInfoForm.seq_type" multiple filterable>
-                  <Option v-for="item in seq_items" :value="item.name" :key="item.name">{{ item.name }}
-                    </Option>
-                </Select>
-            </FormItem>
-            <FormItem label="备注" prop="note">
-          <Input v-model="sampleInfoForm.note" type="textarea" :autosize="{minRows: 2,maxRows: 5}"
-            placeholder="输入些什么"></Input>
-        </FormItem>
-      </Card>
-      <Button @click="submit">提交</Button>
-      <!-- <Button @click="handleReset('formValidate')">重置</Button> -->
-      <Button @click="val_edit = false">关闭</Button>
+            </div>
+            </Col>
+          </Row>
+        </Card>
+        <Card>
+          <p slot="title">申请检测项目</p>
+          <FormItem label="检测项目" prop="seq_type">
+            <Select v-model="sampleInfoForm.seq_type" multiple filterable>
+              <Option v-for="item in seq_items" :value="item.name" :key="item.name">{{ item.name }}
+              </Option>
+            </Select>
+          </FormItem>
+          <FormItem label="备注" prop="note">
+            <Input v-model="sampleInfoForm.note" type="textarea" :autosize="{minRows: 2,maxRows: 5}"
+              placeholder="输入些什么"></Input>
+          </FormItem>
+        </Card>
+        <Button @click="submit">提交</Button>
+        <Button @click="handleReset">重置</Button>
+        <Button @click="val_edit = false">关闭</Button>
       </Form>
     </Drawer>
   </div>
 </template>
 <script>
 import {
-  getrSampleRecord, getrSampleRecordConfig
+  getrSampleRecord,
+  getrSampleRecordConfig
 } from '@/api/sample_record'
 import config from '@/config'
 const UploadUrl = process.env.NODE_ENV === 'development' ? config.UploadUrl.dev : config.UploadUrl.pro
 export default {
   name: 'sample_info_rec',
   data () {
+    const validateAge = (rule, value, callback) => {
+      if (!Number.isInteger(value)) {
+        callback(new Error('年龄必须是数字'))
+      } else {
+        if (value > 150) {
+          callback(new Error('年龄不能大于150岁'))
+        } else {
+          callback()
+        }
+      }
+    }
+    const validateID = (rule, value, callback) => {
+      if (value.length !== 18) {
+        callback(new Error('身份证号必须为18位'))
+      } else {
+        callback()
+      }
+    }
     return {
       val_edit: false,
       valeu_upload: false,
+      data_sample: [],
       action_sample: UploadUrl + 'sample_record/',
       columns_sample: [{
         title: '迈景编号',
@@ -493,7 +517,8 @@ export default {
         title: 'Action',
         slot: 'action',
         align: 'center'
-      }],
+      }
+      ],
       test_date: '',
       sample_types: [],
       sample_type: [],
@@ -511,8 +536,7 @@ export default {
       }
       ],
       hospitals: [],
-      sampleInfoForm: {},
-      FormSample: {
+      sampleInfoForm: {
         age: '',
         age_v: '岁',
         patient_info: {
@@ -603,6 +627,9 @@ export default {
         }
       },
       ruleValidate: {
+        age: [
+          { validator: validateAge, trigger: 'blur' }
+        ],
         patient_info: {
           name: [{
             'required': true,
@@ -613,7 +640,10 @@ export default {
             required: true,
             message: '请选择一个性别',
             trigger: 'change'
-          }]
+          }],
+          ID_number: [
+            { validator: validateID, trigger: 'blur' }
+          ]
         }
       },
       nation_data: [{
@@ -850,7 +880,9 @@ export default {
   computed: {
     sampleType () {
       const list = this.sample_types.map(item => {
-        return { name: item.name }
+        return {
+          name: item.name
+        }
       })
       return list
     },
@@ -891,17 +923,6 @@ export default {
     }
   },
   methods: {
-    validateAge (value) {
-      if (!Number.isInteger(value)) {
-        callback(new Error('年龄必须是数字'))
-      } else {
-        if (value > 150) {
-          callback(new Error('年龄不能大于150岁'))
-        } else {
-          callback()
-        }
-      }
-    },
     setAge () {
       this.sampleInfoForm.patient_info.age = this.sampleInfoForm.age + this.sampleInfoForm.age_v
     },
@@ -1028,7 +1049,6 @@ export default {
     getDataSample () {
       getrSampleRecord(1, 10).then(res => {
         this.data_sample = res.data.sample
-        console.log(res.data.data_sample)
       })
     },
     getSampleType (query) {
@@ -1048,22 +1068,16 @@ export default {
       }
     },
     addSample () {
-      this.sampleInfoForm = {}
-      this.sampleInfoForm = this.FormSample
-      this.sampleInfoForm.req_mg = ''
       this.val_edit = true
     },
     submit () {
-      console.log(this.FormSample)
+      console.log(this.sampleInfoForm)
     },
     handleReset (name) {
-      this.$nextTick(() => {
-        this.$refs[name].resetFields()
-      })
+      this.$refs.sampleInfoForm.resetFields()
     }
   },
   mounted () {
-    this.sampleInfoForm = this.FormSample
     this.getDataSample()
     this.getSHT()
   }

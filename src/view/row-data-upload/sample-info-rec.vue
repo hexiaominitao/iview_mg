@@ -34,14 +34,14 @@
           <p slot="title">受检者信息</p>
           <Row>
             <Col span="12">
-            <FormItem label="申请单号" :prop="'patient_info.req_mg'">
-              <Input v-model="sampleInfoForm.patient_info.req_mg" placeholder="申请单号" style="width: 200px"
-                clearable></Input>
+            <FormItem label="申请单号" prop="req_mg" :rules="ruleValidate.req_mg">
+              <Input v-model="sampleInfoForm.req_mg" placeholder="申请单号" style="width: 200px"
+                clearable @on-blur='getSale'></Input>
             </FormItem>
             </Col>
             <Col span="12">
-            <FormItem label="迈景编号" :prop="'patient_info.mg_id'">
-              <Input v-model="sampleInfoForm.patient_info.mg_id" placeholder="申请单号" style="width: 200px"
+            <FormItem label="迈景编号" prop="mg_id" :rules="ruleValidate.mg_id">
+              <Input v-model="sampleInfoForm.mg_id" placeholder="迈景编号" style="width: 200px"
                 clearable></Input>
             </FormItem>
             </Col>
@@ -77,7 +77,7 @@
             </Col>
             <Col span='12'>
             <div v-if="sampleInfoForm.patient_info.ID_number">{{ sampleInfoForm.patient_info.age }}</div>
-            <FormItem label="年龄" prop="age" :rules="ruleValidate.age" v-else >
+            <FormItem label="年龄" prop="age" :rules="ruleValidate.age" v-else>
                 <Input v-model="sampleInfoForm.age" placeholder="年龄" style="width: 200px" number @on-blur="setAge"></Input>
                 <RadioGroup v-model="sampleInfoForm.age_v">
                   <Radio label="岁">岁</Radio>
@@ -108,7 +108,7 @@
           <Row>
             <Col span="6">
             <FormItem label="报告寄送(纸)" :prop="'patient_info.the_way'">
-              <Select v-model="sampleInfoForm.send_methods.the_way" style="width: 60px">
+              <Select v-model="sampleInfoForm.send_methods.the_way" @on-change="setSendWay" style="width: 60px">
                 <Option value="无需">无需</Option>
                 <Option value="销售">销售</Option>
                 <Option value="客户">客户</Option>
@@ -140,7 +140,7 @@
             <Col span='12'>
             </Col>
           </Row>
-          <Row></Row>
+          <Row>
           <Col span='7'>
           <FormItem label="送检机构" prop="hosptial">
             <Select v-model="sampleInfoForm.hosptial" placeholder="送检医院/单位全称" filterable clearable style="width: 200px">
@@ -164,6 +164,7 @@
           </FormItem>
           </Col>
           </Row>
+          </Row>
           <Row>
             <Col span='6'>
             <FormItem label="肿瘤类型" prop="cancer_d">
@@ -174,11 +175,11 @@
               </Select>
             </FormItem>
             </Col>
-            <Col span='6'>
+            <!-- <Col span='6'  v-if="other_cancer">
             <FormItem prop="cancer_d">
               <Input v-model="sampleInfoForm.cancer_d" placeholder="肿瘤类型" style="width: 160px" />
             </FormItem>
-            </Col>
+            </Col> -->
             <Col span='6'>
             <FormItem label="原发部位" prop="original">
               <Input v-model="sampleInfoForm.original" placeholder="原发部位" style="width: 160px" />
@@ -204,11 +205,6 @@
                 </DatePicker>
               </FormItem>
               </Col>
-              <Col span="8">
-              <FormItem label="病理号" prop="pnumber">
-                <Input v-model="sampleInfoForm.pnumber" placeholder="病理号" style="width: 160px" />
-              </FormItem>
-              </Col>
             </Row>
           </FormItem>
         </Card>
@@ -216,9 +212,9 @@
           <p slot="title">受检者目前治疗方案</p>
             <Row>
               <Col span="6">
-              <FormItem label="靶向治疗" :prop="'targeted_info.is_treat'">
-                <Select v-model="sampleInfoForm.targeted_info.is_treat" style="width: 60px">
-                  <Option value="false">无</Option>
+              <FormItem label="靶向治疗" :prop="'patient_info.targeted_info'">
+                <Select v-model="sampleInfoForm.patient_info.targeted_info" style="width: 60px">
+                  <Option value="无">无</Option>
                   <Option value="未知">未知</Option>
                   <Option value="有">有</Option>
                 </Select>
@@ -228,17 +224,17 @@
               <Button type="success" size="small" @click="targetedInfoAdd">添加</Button>
               </Col>
               <Col span="16" v-if="val_target1">
-              <div v-for="(item, index) in sampleInfoForm.targeted_info.items" :key="index">
-                <Row>
+              <div v-for="(item, index) in sampleInfoForm.treat_info" :key="index">
+                <Row v-if="item.item === '靶向治疗'">
                   <Col span="18">
-                  <FormItem label="药物名称" :prop="'targeted_info.items.' + index + '.name'">
-                    <Input v-model="item.name" placeholder="治疗效果" style="width: 200px" />
+                  <FormItem label="药物名称" :prop="'treat_info.' + index + '.name'">
+                    <Input v-model="item.name" placeholder="药物名称" style="width: 200px" />
                   </FormItem>
-                  <d label="起止时间" :prop="'targeted_info.items.' + index + '.treat_date'">
+                  <FormItem label="起止时间" :prop="'treat_info.' + index + '.treat_date'">
                     <DatePicker type="daterange" split-panels placeholder="选择时间段" v-model="item.treat_date">
                     </DatePicker>
-                  </d>
-                  <FormItem label="治疗效果" :prop="'targeted_info.items.' + index + '.effect'">
+                  </FormItem>
+                  <FormItem label="治疗效果" :prop="'treat_info.' + index + '.effect'">
                     <Input v-model="item.effect" placeholder="治疗效果" style="width: 200px" />
                   </FormItem>
                   </Col>
@@ -252,9 +248,9 @@
             </Row>
             <Row>
               <Col span="6">
-              <FormItem label="化疗治疗" :prop="'chem_info.is_treat'">
-                <Select v-model="sampleInfoForm.chem_info.is_treat" style="width: 60px">
-                  <Option value="false">无</Option>
+              <FormItem label="化疗治疗" :prop="'patient_info.chem_info'">
+                <Select v-model="sampleInfoForm.patient_info.chem_info" style="width: 60px">
+                  <Option value="无">无</Option>
                   <Option value="未知">未知</Option>
                   <Option value="有">有</Option>
                 </Select>
@@ -264,22 +260,22 @@
               <Button type="success" size="small" @click="chemInfoAdd">添加</Button>
               </Col>
               <Col span="16" v-if="val_chem1">
-              <div v-for="(item, index) in sampleInfoForm.chem_info.items" :key="index">
-                <Row>
+              <div v-for="(item, index) in sampleInfoForm.treat_info" :key="index">
+                <Row v-if="item.item === '化疗治疗'">
                   <Col span="18">
-                  <FormItem label="药物名称" :prop="'chem_info.items.' + index + '.name'">
-                    <Input v-model="item.name" placeholder="治疗效果" style="width: 200px" />
+                  <FormItem label="药物名称" :prop="'treat_info.' + index + '.name'">
+                    <Input v-model="item.name" placeholder="药物名称" style="width: 200px" />
                   </FormItem>
-                  <FormItem label="起止时间" :prop="'chem_info.items.' + index + '.treat_date'">
+                  <FormItem label="起止时间" :prop="'treat_info.' + index + '.treat_date'">
                     <DatePicker type="daterange" split-panels placeholder="选择时间段" v-model="item.treat_date">
                     </DatePicker>
                   </FormItem>
-                  <FormItem label="治疗效果" :prop="'chem_info.items.' + index + '.effect'">
+                  <FormItem label="治疗效果" :prop="'treat_info.' + index + '.effect'">
                     <Input v-model="item.effect" placeholder="治疗效果" style="width: 200px" />
                   </FormItem>
                   </Col>
                   <Col span="6">
-                  <Button size="small" type="error" @click="chemInfoRemove(index)">删除</Button>
+                    <Button size="small" type="error" @click="targetedInfoRemove(index)">删除</Button>
                   </Col>
                 </Row>
                 <br />
@@ -288,9 +284,9 @@
             </Row>
             <Row>
               <Col span="6">
-              <FormItem label="放疗治疗" :prop="'radio_info.is_treat'">
-                <Select v-model="sampleInfoForm.radio_info.is_treat" style="width: 60px">
-                  <Option value="false">无</Option>
+              <FormItem label="放疗治疗" :prop="'patient_info.radio_info'">
+                <Select v-model="sampleInfoForm.patient_info.radio_info" style="width: 60px">
+                  <Option value="无">无</Option>
                   <Option value="未知">未知</Option>
                   <Option value="有">有</Option>
                 </Select>
@@ -300,26 +296,26 @@
               <Button type="success" size="small" @click="radioInfoAdd">添加</Button>
               </Col>
               <Col span="16" v-if="val_radio1">
-              <div v-for="(item, index) in sampleInfoForm.radio_info.items" :key="index">
-                <Row>
+              <div v-for="(item, index) in sampleInfoForm.treat_info" :key="index">
+                <Row v-if="item.item === '放疗治疗'">
                   <Col span="18">
-                  <FormItem label="药物名称" :prop="'radio_info.items.' + index + '.name'">
-                    <Input v-model="item.name" placeholder="治疗效果" style="width: 200px" />
+                  <FormItem label="药物名称" :prop="'treat_info.' + index + '.name'">
+                    <Input v-model="item.name" placeholder="药物名称" style="width: 200px" />
                   </FormItem>
-                  <FormItem label="起止时间" :prop="'radio_info.items.' + index + '.treat_date'">
+                  <FormItem label="起止时间" :prop="'treat_info.' + index + '.treat_date'">
                     <DatePicker type="daterange" split-panels placeholder="选择时间段" v-model="item.treat_date">
                     </DatePicker>
                   </FormItem>
-                  <FormItem label="治疗效果" :prop="'radio_info.items.' + index + '.effect'">
+                  <FormItem label="治疗效果" :prop="'treat_info.' + index + '.effect'">
                     <Input v-model="item.effect" placeholder="治疗效果" style="width: 200px" />
                   </FormItem>
                   </Col>
                   <Col span="6">
-                  <Button size="small" type="error" @click="radioInfoRemove(index)">删除</Button>
+                    <Button size="small" type="error" @click="targetedInfoRemove(index)">删除</Button>
                   </Col>
                 </Row>
                 <br />
-                </div>
+              </div>
                 </Col>
             </Row>
         </Card>
@@ -327,9 +323,9 @@
           <p slot="title">受检者家族史及吸烟史</p>
           <Row>
             <Col span="6">
-            <FormItem label="家族史" :prop="'family_info.is_treat'">
-              <Select v-model="sampleInfoForm.family_info.is_treat" style="width: 60px">
-                <Option value="false">无</Option>
+            <FormItem label="家族史" :prop="'patient_info.have_family'">
+              <Select v-model="sampleInfoForm.patient_info.have_family" style="width: 60px">
+                <Option value="无">无</Option>
                 <Option value="有">有</Option>
               </Select>
             </FormItem>
@@ -338,22 +334,22 @@
             <Button type="success" size="small" @click="familyAdd">添加</Button>
             </Col>
             <Col span="16" v-if="val_famil">
-            <div v-for="(item, index) in sampleInfoForm.family_info.items" :key="index">
+            <div v-for="(item, index) in sampleInfoForm.family_info" :key="index">
               <Row>
                 <Col span='12'>
-                <FormItem label="血亲" :prop="'targeted_info.items.' + index + '.relationship'" :label-width="40">
+                <FormItem label="血亲" :prop="'family_info.' + index + '.relationship'" :label-width="40">
                   <Input v-model="item.relationship" placeholder="血亲" style="width: 80px" />
                 </FormItem>
                 </Col>
                 <Col span='12'>
-                <FormItem label="年龄" :prop="'targeted_info.items.' + index + '.age'" :label-width="40">
+                <FormItem label="年龄" :prop="'family_info.' + index + '.age'" :label-width="40">
                   <Input v-model="item.age" placeholder="年龄" style="width: 80px" />
                 </FormItem>
                 </Col>
               </Row>
               <Row>
                 <Col span="20">
-                <FormItem label="疾病" :prop="'targeted_info.items.' + index + '.diseases'" :label-width="40">
+                <FormItem label="疾病" :prop="'family_info.' + index + '.diseases'" :label-width="40">
                   <Input v-model="item.diseases" placeholder="疾病" style="width: 240px" />
                 </FormItem>
                 </Col>
@@ -388,30 +384,35 @@
             <Button type="success" size="small" @click="sampleAdd">添加样本</Button>
             </Col>
             <Col span="20">
-            <div v-for="(item, index) in sampleInfoForm.samplinfos.items" :key="index">
+            <div v-for="(item, index) in sampleInfoForm.samplinfos" :key="index">
               <Row>
                 <Col span="8">
-                <FormItem label="样本编号" :prop="'samplinfos.items.' + index + '.code'">
+                <FormItem label="样本编号" :prop="'samplinfos.' + index + '.code'">
                   <Input v-model="item.code" placeholder="样本编号" style="width: 100px"></Input>
                 </FormItem>
                 </Col>
                 <Col span="8">
-                <FormItem label="样本类型" :prop="'samplinfos.items.' + index + '.sample_type'">
+                <FormItem label="样本类型" :prop="'samplinfos.' + index + '.sample_type'">
                   <Select v-model="item.sample_type" style="width: 120px" clearable>
                     <Option v-for="(item_type, index_type) in sampleType" :key="index_type" :value="item_type.name">
                       {{ item_type.name }}</Option>
                   </Select>
                 </FormItem>
                 </Col>
+                <Col span="8">
+              <FormItem label="病理号" :prop="'samplinfos.' + index + '.pnumber'">
+                <Input v-model="item.pnumber" placeholder="病理号" style="width: 160px" />
+              </FormItem>
+              </Col>
               </Row>
               <Row>
                 <Col span="8">
-                <FormItem label="样本数量" :prop="'samplinfos.items.' + index + '.counts'">
+                <FormItem label="样本数量" :prop="'samplinfos.' + index + '.counts'">
                   <Input v-model="item.counts" placeholder="样本数量" style="width: 100px"></Input>
                 </FormItem>
                 </Col>
                 <Col span="8">
-                <FormItem label="采样方式" :prop="'samplinfos.items.' + index + '.mth'">
+                <FormItem label="采样方式" :prop="'samplinfos.' + index + '.mth'">
                   <Select v-model="item.mth" filterable allow-create clearable @on-create="methodAdd"
                     style="width: 120px">
                     <Option v-for="item_m in mth_type" :value="item_m.name" :key="item_m.name">{{ item_m.name }}
@@ -420,20 +421,20 @@
                 </FormItem>
                 </Col>
                 <Col span="8">
-                <FormItem label="采样部位" :prop="'samplinfos.items.' + index + '.mth_position'">
+                <FormItem label="采样部位" :prop="'samplinfos.' + index + '.mth_position'">
                   <Input v-model="item.mth_position" placeholder="采样部位" style="width: 120px" />
                 </FormItem>
                 </Col>
               </Row>
               <Row>
                 <Col span="10">
-                <FormItem label="采样时间" :prop="'samplinfos.items.' + index + '.Tytime'">
+                <FormItem label="采样时间" :prop="'samplinfos.' + index + '.Tytime'">
                   <DatePicker type="date" placeholder="选择时间" v-model="item.Tytime">
                   </DatePicker>
                 </FormItem>
                 </Col>
                 <Col span="12">
-                <FormItem label="样本备注" :prop="'samplinfos.items.' + index + '.note'">
+                <FormItem label="样本备注" :prop="'samplinfos.' + index + '.note'">
                   <Input v-model="item.note" type="textarea" :autosize="true" placeholder="样本备注" style="width: 180px" />
                 </FormItem>
                 </Col>
@@ -458,7 +459,8 @@
               placeholder="输入些什么"></Input>
           </FormItem>
         </Card>
-        <Button @click="submit">提交</Button>
+        <Button @click="updata" v-if="val_put">更新</Button>
+        <Button @click="submit" v-else>提交</Button>
         <Button @click="handleReset">重置</Button>
         <Button @click="val_edit = false">关闭</Button>
       </Form>
@@ -468,7 +470,9 @@
 <script>
 import {
   getrSampleRecord,
-  getrSampleRecordConfig
+  getrSampleRecordConfig,
+  saveSampleRecord,
+  updataSampleRecord
 } from '@/api/sample_record'
 import config from '@/config'
 const UploadUrl = process.env.NODE_ENV === 'development' ? config.UploadUrl.dev : config.UploadUrl.pro
@@ -493,10 +497,29 @@ export default {
         callback()
       }
     }
+    const validateReq = (rule, value, callback) => {
+      const sam = this.samples.filter(item => item.req_mg.indexOf(value) > -1)
+      if (sam.length > 0) {
+        callback(new Error('存在相同的申请单号，请注意！！！'))
+      } else {
+        callback()
+      }
+    }
+    const validateMgid = (rule, value, callback) => {
+      const sam = this.samples.filter(item => item.mg_id.indexOf(value) > -1)
+      if (sam.length > 0) {
+        callback(new Error('存在相同的迈景编号，请注意！！！'))
+      } else {
+        callback()
+      }
+    }
     return {
       val_edit: false,
+      val_put: false,
       valeu_upload: false,
       data_sample: [],
+      sales: [],
+      samples: [],
       action_sample: UploadUrl + 'sample_record/',
       columns_sample: [{
         title: '迈景编号',
@@ -547,8 +570,13 @@ export default {
           origo: '',
           contact: '',
           ID_number: '',
-          address: ''
+          address: '',
+          targeted_info: '',
+          chem_info: '',
+          radio_info: '',
+          have_family: ''
         },
+        sale_info: {},
         mg_id: '',
         pi_name: '',
         sales: '',
@@ -557,24 +585,24 @@ export default {
         doctor: '',
         hosptial: '',
         room: '',
-        pnumber: '',
         cancer_d: '',
         original: '',
         metastasis: '',
         pathological: '',
         pathological_date: '',
         seq_type: [],
-        samplinfos: {
-          items: [{
+        samplinfos: [
+          {
             sample_type: '',
+            pnumber: '',
             mth: '',
             mth_position: '',
             Tytime: '',
             counts: '',
             code: '',
             note: ''
-          }]
-        },
+          }
+        ],
         note: '',
         seq_items: [],
         send_methods: {
@@ -583,44 +611,24 @@ export default {
           phone_n: '',
           addr: ''
         },
-        family_info: {
-          is_treat: '',
-          items: [{
+        family_info: [
+          {
             relationship: '',
             age: '',
             diseases: ''
-          }]
-        },
-        targeted_info: {
-          is_treat: '',
-          items: [{
+          }
+        ],
+        treat_info: [
+          {
+            item: '',
             name: '',
             treat_date: '',
             effect: ''
-          }]
-        },
-        chem_info: {
-          is_treat: '',
-          items: [{
-            name: '',
-            treat_date: '',
-            effect: ''
-          }]
-        },
-        radio_info: {
-          is_treat: '',
-          items: [{
-            name: '',
-            treat_date: '',
-            effect: ''
-          }]
-        },
-        send_method: {
-          the_way: '',
-          to: '',
-          phone_n: '',
-          addr: ''
-        },
+          }
+        ],
+        targeted_info: '',
+        chem_info: '',
+        radio_info: '',
         smoke_info: {
           is_smoke: '',
           smoke: ''
@@ -629,6 +637,12 @@ export default {
       ruleValidate: {
         age: [
           { validator: validateAge, trigger: 'blur' }
+        ],
+        req_mg: [
+          { validator: validateReq, trigger: 'blur' }
+        ],
+        mg_id: [
+          { validator: validateMgid, trigger: 'blur' }
         ],
         patient_info: {
           name: [{
@@ -646,234 +660,235 @@ export default {
           ]
         }
       },
-      nation_data: [{
-        id: 1,
-        name: '汉族'
-      },
-      {
-        id: 57,
-        name: '未知'
-      },
-      {
-        id: 2,
-        name: '蒙古族'
-      },
-      {
-        id: 3,
-        name: '回族'
-      },
-      {
-        id: 4,
-        name: '藏族'
-      },
-      {
-        id: 5,
-        name: '维吾尔族'
-      },
-      {
-        id: 6,
-        name: '苗族'
-      },
-      {
-        id: 7,
-        name: '彝族'
-      },
-      {
-        id: 8,
-        name: '壮族'
-      },
-      {
-        id: 9,
-        name: '布依族'
-      },
-      {
-        id: 10,
-        name: '朝鲜族'
-      },
-      {
-        id: 11,
-        name: '满族'
-      },
-      {
-        id: 12,
-        name: '侗族'
-      },
-      {
-        id: 13,
-        name: '瑶族'
-      },
-      {
-        id: 14,
-        name: '白族'
-      },
-      {
-        id: 15,
-        name: '土家族'
-      },
-      {
-        id: 16,
-        name: '哈尼族'
-      },
-      {
-        id: 17,
-        name: '哈萨克族'
-      },
-      {
-        id: 18,
-        name: '傣族'
-      },
-      {
-        id: 19,
-        name: '黎族'
-      },
-      {
-        id: 20,
-        name: '傈僳族'
-      },
-      {
-        id: 21,
-        name: '佤族'
-      },
-      {
-        id: 22,
-        name: '畲族'
-      },
-      {
-        id: 23,
-        name: '高山族'
-      },
-      {
-        id: 24,
-        name: '拉祜族'
-      },
-      {
-        id: 25,
-        name: '水族'
-      },
-      {
-        id: 26,
-        name: '东乡族'
-      },
-      {
-        id: 27,
-        name: '纳西族'
-      },
-      {
-        id: 28,
-        name: '景颇族'
-      },
-      {
-        id: 29,
-        name: '柯尔克孜族'
-      },
-      {
-        id: 30,
-        name: '土族'
-      },
-      {
-        id: 31,
-        name: '达翰尔族'
-      },
-      {
-        id: 32,
-        name: '么佬族'
-      },
-      {
-        id: 33,
-        name: '羌族'
-      },
-      {
-        id: 34,
-        name: '布朗族'
-      },
-      {
-        id: 35,
-        name: '撒拉族'
-      },
-      {
-        id: 36,
-        name: '毛南族'
-      },
-      {
-        id: 37,
-        name: '仡佬族'
-      },
-      {
-        id: 38,
-        name: '锡伯族'
-      },
-      {
-        id: 39,
-        name: '阿昌族'
-      },
-      {
-        id: 40,
-        name: '普米族'
-      },
-      {
-        id: 41,
-        name: '塔吉克族'
-      },
-      {
-        id: 42,
-        name: '怒族'
-      },
-      {
-        id: 43,
-        name: '乌孜别克族'
-      },
-      {
-        id: 44,
-        name: '俄罗斯族'
-      },
-      {
-        id: 45,
-        name: '鄂温克族'
-      },
-      {
-        id: 46,
-        name: '德昂族'
-      },
-      {
-        id: 47,
-        name: '保安族'
-      },
-      {
-        id: 48,
-        name: '裕固族'
-      },
-      {
-        id: 49,
-        name: '京族'
-      },
-      {
-        id: 50,
-        name: '塔塔尔族'
-      },
-      {
-        id: 51,
-        name: '独龙族'
-      },
-      {
-        id: 52,
-        name: '鄂伦春族'
-      },
-      {
-        id: 53,
-        name: '赫哲族'
-      },
-      {
-        id: 54,
-        name: '门巴族'
-      },
-      {
-        id: 55,
-        name: '珞巴族'
-      },
-      {
-        id: 56,
-        name: '基诺族'
-      }
+      nation_data: [
+        {
+          id: 1,
+          name: '汉族'
+        },
+        {
+          id: 57,
+          name: '未知'
+        },
+        {
+          id: 2,
+          name: '蒙古族'
+        },
+        {
+          id: 3,
+          name: '回族'
+        },
+        {
+          id: 4,
+          name: '藏族'
+        },
+        {
+          id: 5,
+          name: '维吾尔族'
+        },
+        {
+          id: 6,
+          name: '苗族'
+        },
+        {
+          id: 7,
+          name: '彝族'
+        },
+        {
+          id: 8,
+          name: '壮族'
+        },
+        {
+          id: 9,
+          name: '布依族'
+        },
+        {
+          id: 10,
+          name: '朝鲜族'
+        },
+        {
+          id: 11,
+          name: '满族'
+        },
+        {
+          id: 12,
+          name: '侗族'
+        },
+        {
+          id: 13,
+          name: '瑶族'
+        },
+        {
+          id: 14,
+          name: '白族'
+        },
+        {
+          id: 15,
+          name: '土家族'
+        },
+        {
+          id: 16,
+          name: '哈尼族'
+        },
+        {
+          id: 17,
+          name: '哈萨克族'
+        },
+        {
+          id: 18,
+          name: '傣族'
+        },
+        {
+          id: 19,
+          name: '黎族'
+        },
+        {
+          id: 20,
+          name: '傈僳族'
+        },
+        {
+          id: 21,
+          name: '佤族'
+        },
+        {
+          id: 22,
+          name: '畲族'
+        },
+        {
+          id: 23,
+          name: '高山族'
+        },
+        {
+          id: 24,
+          name: '拉祜族'
+        },
+        {
+          id: 25,
+          name: '水族'
+        },
+        {
+          id: 26,
+          name: '东乡族'
+        },
+        {
+          id: 27,
+          name: '纳西族'
+        },
+        {
+          id: 28,
+          name: '景颇族'
+        },
+        {
+          id: 29,
+          name: '柯尔克孜族'
+        },
+        {
+          id: 30,
+          name: '土族'
+        },
+        {
+          id: 31,
+          name: '达翰尔族'
+        },
+        {
+          id: 32,
+          name: '么佬族'
+        },
+        {
+          id: 33,
+          name: '羌族'
+        },
+        {
+          id: 34,
+          name: '布朗族'
+        },
+        {
+          id: 35,
+          name: '撒拉族'
+        },
+        {
+          id: 36,
+          name: '毛南族'
+        },
+        {
+          id: 37,
+          name: '仡佬族'
+        },
+        {
+          id: 38,
+          name: '锡伯族'
+        },
+        {
+          id: 39,
+          name: '阿昌族'
+        },
+        {
+          id: 40,
+          name: '普米族'
+        },
+        {
+          id: 41,
+          name: '塔吉克族'
+        },
+        {
+          id: 42,
+          name: '怒族'
+        },
+        {
+          id: 43,
+          name: '乌孜别克族'
+        },
+        {
+          id: 44,
+          name: '俄罗斯族'
+        },
+        {
+          id: 45,
+          name: '鄂温克族'
+        },
+        {
+          id: 46,
+          name: '德昂族'
+        },
+        {
+          id: 47,
+          name: '保安族'
+        },
+        {
+          id: 48,
+          name: '裕固族'
+        },
+        {
+          id: 49,
+          name: '京族'
+        },
+        {
+          id: 50,
+          name: '塔塔尔族'
+        },
+        {
+          id: 51,
+          name: '独龙族'
+        },
+        {
+          id: 52,
+          name: '鄂伦春族'
+        },
+        {
+          id: 53,
+          name: '赫哲族'
+        },
+        {
+          id: 54,
+          name: '门巴族'
+        },
+        {
+          id: 55,
+          name: '珞巴族'
+        },
+        {
+          id: 56,
+          name: '基诺族'
+        }
       ]
     }
   },
@@ -887,42 +902,65 @@ export default {
       return list
     },
     val_target1 () {
-      if (this.sampleInfoForm.targeted_info.is_treat === '有') {
+      if (this.sampleInfoForm.patient_info.targeted_info === '有') {
         return true
       } else {
         return false
       }
     },
     val_chem1 () {
-      if (this.sampleInfoForm.chem_info.is_treat === '有') {
+      if (this.sampleInfoForm.patient_info.chem_info === '有') {
         return true
       } else {
         return false
       }
     },
     val_radio1 () {
-      if (this.sampleInfoForm.radio_info.is_treat === '有') {
+      if (this.sampleInfoForm.patient_info.radio_info === '有') {
         return true
       } else {
         return false
       }
     },
     val_famil () {
-      if (this.sampleInfoForm.family_info.is_treat === '有') {
+      if (this.sampleInfoForm.patient_info.have_family === '有') {
+        return true
+      } else {
+        return false
+      }
+    },
+    other_cancer () {
+      if (this.cancers.indexOf(this.sampleInfoForm.cancer_d) > -1 || this.sampleInfoForm.cancer_d === '其他') {
         return true
       } else {
         return false
       }
     },
     reportSend () {
-      if (this.sampleInfoForm.send_methods.the_way === '销售' || this.sampleInfoForm.send_methods.the_way === '客户') {
-        return true
-      } else {
+      if (this.sampleInfoForm.send_methods.the_way === '无需' || this.sampleInfoForm.send_methods.the_way === '') {
         return false
+      } else {
+        return true
       }
     }
   },
   methods: {
+    getSale () {
+      const code = this.sampleInfoForm.req_mg.slice(4, 8)
+      const sale = this.sales.filter(item => item.code.indexOf(code) > -1)
+      this.sale_info = sale[0]
+    },
+    setSendWay (val) {
+      if (val === '销售') {
+        this.sampleInfoForm.send_methods.to = this.sale_info.name
+        this.sampleInfoForm.send_methods.phone_n = this.sale_info.phone
+        this.sampleInfoForm.send_methods.addr = this.sale_info.address
+      } else {
+        this.sampleInfoForm.send_methods.to = ''
+        this.sampleInfoForm.send_methods.phone_n = ''
+        this.sampleInfoForm.send_methods.addr = ''
+      }
+    },
     setAge () {
       this.sampleInfoForm.patient_info.age = this.sampleInfoForm.age + this.sampleInfoForm.age_v
     },
@@ -935,10 +973,10 @@ export default {
     getAge (identityCard) {
       var len = (identityCard + '').length
       if (len === 0) {
-        return 0
+        return ''
       } else {
         if ((len !== 15) && (len !== 18)) {
-          return 0
+          return ''
         }
       }
       var strBirthday = ''
@@ -968,40 +1006,37 @@ export default {
     },
     targetedInfoAdd () {
       this.index++
-      this.sampleInfoForm.targeted_info.items.push({
+      this.sampleInfoForm.treat_info.push({
+        item: '靶向治疗',
         name: '',
         treat_date: '',
         effect: ''
       })
     },
     targetedInfoRemove (index) {
-      this.sampleInfoForm.targeted_info.items.splice(index, index)
+      this.sampleInfoForm.treat_info.splice(index, index)
     },
     chemInfoAdd () {
       this.index++
-      this.sampleInfoForm.chem_info.items.push({
+      this.sampleInfoForm.treat_info.push({
+        item: '化疗治疗',
         name: '',
         treat_date: '',
         effect: ''
       })
-    },
-    chemInfoRemove (index) {
-      this.sampleInfoForm.chem_info.items.splice(index, index)
     },
     radioInfoAdd () {
       this.index++
-      this.sampleInfoForm.radio_info.items.push({
+      this.sampleInfoForm.treat_info.push({
+        item: '放疗治疗',
         name: '',
         treat_date: '',
         effect: ''
       })
     },
-    radioInfoRemove (index) {
-      this.sampleInfoForm.radio_info.items.splice(index, index)
-    },
     familyAdd () {
       this.index++
-      this.sampleInfoForm.family_info.items.push({
+      this.sampleInfoForm.family_info.push({
         relationship: '',
         age: '',
         diseases: ''
@@ -1012,12 +1047,15 @@ export default {
     },
     sampleAdd () {
       this.index++
-      this.sampleInfoForm.samplinfos.items.push({
+      this.sampleInfoForm.samplinfos.push({
         sample_type: '',
+        pnumber: '',
         mth: '',
         mth_position: '',
         Tytime: '',
-        counts: ''
+        counts: '',
+        code: '',
+        note: ''
       })
     },
     sampleRemove (index) {
@@ -1038,12 +1076,18 @@ export default {
         this.hospitals = res.data.hospital
         this.sample_types = res.data.type
         this.cancers = res.data.cancers
+        this.sales = res.data.sales
+        this.samples = res.data.samples
+        console.log(this.samples)
         this.seq_items = res.data.seq_items
       })
     },
     edit_sample_info (index) {
+      // this.handleReset()
       this.val_edit = true
-      this.handleReset(formValidate)
+      this.val_put = true
+      this.sampleInfoForm = this.data_sample[index]
+      console.log(this.sampleInfoForm)
     },
     // 获取数据
     getDataSample () {
@@ -1068,12 +1112,23 @@ export default {
       }
     },
     addSample () {
+      // this.handleReset()
       this.val_edit = true
+      this.val_put = false
     },
     submit () {
-      console.log(this.sampleInfoForm)
+      const samples = [this.sampleInfoForm]
+      saveSampleRecord(samples).then(res => {
+        this.$Message.info(res.data.msg)
+      })
     },
-    handleReset (name) {
+    updata () {
+      const samples = [this.sampleInfoForm]
+      updataSampleRecord(samples).then(res => {
+        this.$Message.info(res.data.msg)
+      })
+    },
+    handleReset () {
       this.$refs.sampleInfoForm.resetFields()
     }
   },

@@ -18,7 +18,7 @@ export default {
    */
   baseUrl: {
     dev: 'http://192.168.1.34:5000/api/',
-    pro: 'http://192.168.1.103:5002/api/'
+    pro: 'http://192.168.1.34:5000/api/'
   },
   UploadUrl: {
     dev: 'http://192.168.1.34:5000/api/upload/',

@@ -27,8 +27,8 @@
         <!-- <Button type="error" size="small" @click="remove(index)">Delete</Button> -->
       </template>
     </Table>
-    <Drawer title="样本信息录入" v-model="val_edit" width="1100" :mask-closable="false">
-      <Button @click="handleReset">重置</Button>
+    <Drawer title="样本信息录入" v-model="val_edit" width="1100" :mask-closable="false" @on-close='getDataSample'>
+      <Button type="error" @click="handleReset">重置</Button>
       <Form ref="sampleInfoForm" :model="sampleInfoForm" :label-width="100">
         <Card>
           <p slot="title">受检者信息</p>
@@ -231,7 +231,7 @@
                     <Input v-model="item.name" placeholder="药物名称" style="width: 200px" />
                   </FormItem>
                   <FormItem label="起止时间" :prop="'treat_info.' + index + '.treat_date'">
-                    <DatePicker type="daterange" split-panels placeholder="选择时间段" v-model="item.treat_date">
+                    <DatePicker type="daterange" format="yyyy-MM-dd" split-panels placeholder="选择时间段" v-model="item.treat_date">
                     </DatePicker>
                   </FormItem>
                   <FormItem label="治疗效果" :prop="'treat_info.' + index + '.effect'">
@@ -267,7 +267,7 @@
                     <Input v-model="item.name" placeholder="药物名称" style="width: 200px" />
                   </FormItem>
                   <FormItem label="起止时间" :prop="'treat_info.' + index + '.treat_date'">
-                    <DatePicker type="daterange" split-panels placeholder="选择时间段" v-model="item.treat_date">
+                    <DatePicker type="daterange" format="yyyy-MM-dd" split-panels placeholder="选择时间段" v-model="item.treat_date">
                     </DatePicker>
                   </FormItem>
                   <FormItem label="治疗效果" :prop="'treat_info.' + index + '.effect'">
@@ -303,7 +303,7 @@
                     <Input v-model="item.name" placeholder="药物名称" style="width: 200px" />
                   </FormItem>
                   <FormItem label="起止时间" :prop="'treat_info.' + index + '.treat_date'">
-                    <DatePicker type="daterange" split-panels placeholder="选择时间段" v-model="item.treat_date">
+                    <DatePicker type="daterange" format="yyyy-MM-dd" split-panels placeholder="选择时间段" v-model="item.treat_date">
                     </DatePicker>
                   </FormItem>
                   <FormItem label="治疗效果" :prop="'treat_info.' + index + '.effect'">
@@ -429,7 +429,7 @@
               <Row>
                 <Col span="10">
                 <FormItem label="采样时间" :prop="'samplinfos.' + index + '.Tytime'">
-                  <DatePicker type="date" placeholder="选择时间" v-model="item.Tytime">
+                  <DatePicker type="date" format="yyyy-MM-dd" placeholder="选择时间" v-model="item.Tytime">
                   </DatePicker>
                 </FormItem>
                 </Col>
@@ -459,10 +459,9 @@
               placeholder="输入些什么"></Input>
           </FormItem>
         </Card>
-        <Button @click="updata" v-if="val_put">更新</Button>
-        <Button @click="submit" v-else>提交</Button>
-        <Button @click="handleReset">重置</Button>
-        <Button @click="val_edit = false">关闭</Button>
+        <Button  type="success" @click="updata" v-if="val_put">更新</Button>
+        <Button type="success" @click="submit" v-else>提交</Button>
+        <Button style="margin-left: 8px" type="error" @click="handleReset">重置</Button>
       </Form>
     </Drawer>
   </div>

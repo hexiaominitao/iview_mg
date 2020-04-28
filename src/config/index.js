@@ -18,11 +18,11 @@ export default {
    */
   baseUrl: {
     dev: 'http://192.168.1.34:5000/api/',
-    pro: 'http://192.168.1.103:5002/api/'
+    pro: ''
   },
   UploadUrl: {
     dev: 'http://192.168.1.34:5000/api/upload/',
-    pro: 'http://192.168.1.103:5002/api/upload/'
+    pro: 'upload/'
   },
   /**
    * @description 默认打开的首页的路由name值，默认为home

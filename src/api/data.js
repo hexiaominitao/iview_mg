@@ -139,12 +139,23 @@ export const distillQC = ({ qc_code, targetKey }) => {
   })
 }
 
-export const getIRList = (id) => {
+export const getOkrCancers = () => {
   return axios.request({
-    url: 'data/irlist/',
-    method: 'get',
-    params: {
-      id: id
-    }
+    url: 'data/okr/',
+    method: 'get'
+  })
+}
+
+export const getOkrFiles = () => {
+  return axios.request({
+    url: 'data/okrfile/',
+    method: 'get'
+  })
+}
+
+export const clearFile = () => {
+  return axios.request({
+    url: 'data/okrfile/',
+    method: 'delete'
   })
 }

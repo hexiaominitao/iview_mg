@@ -108,20 +108,36 @@ export default [
       }
     ]
   },
+  // {
+  //   path: '/input',
+  //   name: 'input',
+  //   component: Main,
+  //   children: [
+  //     {
+  //       path: '/input_test',
+  //       name: 'input_test',
+  //       meta: {
+  //         icon: 'md-arrow-dropdown-circle',
+  //         title: '测试',
+  //         access: ['admin']
+  //       },
+  //       component: () => import('@/view/report/mutation/mutation-filter.vue')
+  //     }
+  //   ]
+  // },
   {
-    path: '/input',
-    name: 'input',
+    path: '/okr',
+    name: 'okr',
     component: Main,
     children: [
       {
-        path: '/input_test',
-        name: 'input_test',
+        path: '/okr_575',
+        name: 'okr_575',
         meta: {
           icon: 'md-arrow-dropdown-circle',
-          title: '测试',
-          access: ['admin']
+          title: '575OKR'
         },
-        component: () => import('@/view/report/mutation/mutation-filter.vue')
+        component: () => import('@/view/report/okr/okr-575.vue')
       }
     ]
   },
@@ -142,6 +158,25 @@ export default [
           title: '样本信息上传'
         },
         component: () => import('@/view/row-data-upload/sample-info.vue')
+      },
+      // {
+      //   path: '/sample_info_record',
+      //   name: 'sample_info_record',
+      //   meta: {
+      //     icon: 'md-arrow-dropdown-circle',
+      //     title: '测试',
+      //     access: ['admin']
+      //   },
+      //   component: () => import('@/view/row-data-upload/sample-info-record.vue')
+      // },
+      {
+        path: '/sample_info_rec',
+        name: 'sample_info_rec',
+        meta: {
+          icon: 'md-arrow-dropdown-circle',
+          title: '测试1'
+        },
+        component: () => import('@/view/row-data-upload/sample-info-rec.vue')
       },
       {
         path: 'view_sample',
@@ -347,6 +382,15 @@ export default [
           title: '病人'
         },
         component: () => import('@/view/admin/admin-patient.vue')
+      },
+      {
+        path: 'record',
+        name: 'admin_record',
+        meta: {
+          icon: 'md-arrow-dropdown-circle',
+          title: '录入配置'
+        },
+        component: () => import('@/view/admin/sample-record/index.vue')
       },
       {
         path: 'template',

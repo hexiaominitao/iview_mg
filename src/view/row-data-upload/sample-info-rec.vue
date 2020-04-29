@@ -497,19 +497,27 @@ export default {
       }
     }
     const validateReq = (rule, value, callback) => {
-      const sam = this.samples.filter(item => item.req_mg.indexOf(value) > -1)
-      if (sam.length > 0) {
-        callback(new Error('存在相同的申请单号，请注意！！！'))
+      if (value === '') {
+        callback(new Error('请填写申请单号！！！！！！！'))
       } else {
-        callback()
+        const sam = this.samples.filter(item => item.req_mg.indexOf(value) > -1)
+        if (sam.length > 0) {
+          callback(new Error('存在相同的申请单号，请注意！！！'))
+        } else {
+          callback()
+        }
       }
     }
     const validateMgid = (rule, value, callback) => {
-      const sam = this.samples.filter(item => item.mg_id.indexOf(value) > -1)
-      if (sam.length > 0) {
-        callback(new Error('存在相同的迈景编号，请注意！！！'))
+      if (value === '') {
+        callback(new Error('请填写迈景编号！！！！！！！'))
       } else {
-        callback()
+        const sam = this.samples.filter(item => item.mg_id.indexOf(value) > -1)
+        if (sam.length > 0) {
+          callback(new Error('存在相同的迈景编号，请注意！！！'))
+        } else {
+          callback()
+        }
       }
     }
     return {

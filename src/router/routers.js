@@ -108,23 +108,23 @@ export default [
       }
     ]
   },
-  {
-    path: '/input',
-    name: 'input',
-    component: Main,
-    children: [
-      {
-        path: '/input_test',
-        name: 'input_test',
-        meta: {
-          icon: 'md-arrow-dropdown-circle',
-          title: '测试',
-          access: ['admin']
-        },
-        component: () => import('@/view/report/mutation/mutation-filter.vue')
-      }
-    ]
-  },
+  // {
+  //   path: '/input',
+  //   name: 'input',
+  //   component: Main,
+  //   children: [
+  //     {
+  //       path: '/input_test',
+  //       name: 'input_test',
+  //       meta: {
+  //         icon: 'md-arrow-dropdown-circle',
+  //         title: '测试',
+  //         access: ['admin']
+  //       },
+  //       component: () => import('@/view/report/mutation/mutation-filter.vue')
+  //     }
+  //   ]
+  // },
   {
     path: '/okr',
     name: 'okr',
@@ -159,16 +159,16 @@ export default [
         },
         component: () => import('@/view/row-data-upload/sample-info.vue')
       },
-      {
-        path: '/sample_info_record',
-        name: 'sample_info_record',
-        meta: {
-          icon: 'md-arrow-dropdown-circle',
-          title: '测试',
-          access: ['admin']
-        },
-        component: () => import('@/view/row-data-upload/sample-info-record.vue')
-      },
+      // {
+      //   path: '/sample_info_record',
+      //   name: 'sample_info_record',
+      //   meta: {
+      //     icon: 'md-arrow-dropdown-circle',
+      //     title: '测试',
+      //     access: ['admin']
+      //   },
+      //   component: () => import('@/view/row-data-upload/sample-info-record.vue')
+      // },
       {
         path: '/sample_info_rec',
         name: 'sample_info_rec',

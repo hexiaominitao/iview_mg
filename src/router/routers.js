@@ -174,8 +174,7 @@ export default [
         name: 'sample_info_rec',
         meta: {
           icon: 'md-arrow-dropdown-circle',
-          title: '测试1',
-          access: ['admin']
+          title: '测试1'
         },
         component: () => import('@/view/row-data-upload/sample-info-rec.vue')
       },

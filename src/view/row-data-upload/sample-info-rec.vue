@@ -1050,7 +1050,7 @@ export default {
       })
     },
     familyRemove (index) {
-      this.sampleInfoForm.family_info.items.splice(index, index)
+      this.sampleInfoForm.family_info.splice(index, index)
     },
     sampleAdd () {
       this.index++
@@ -1066,7 +1066,7 @@ export default {
       })
     },
     sampleRemove (index) {
-      this.sampleInfoForm.samplinfos.items.splice(index, index)
+      this.sampleInfoForm.samplinfos.splice(index, index)
     },
     methodAdd (val) {
       this.mth_type.push({

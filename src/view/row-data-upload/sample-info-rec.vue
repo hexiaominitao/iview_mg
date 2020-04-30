@@ -1101,22 +1101,24 @@ export default {
         this.sample_types = res.data.type
         this.cancers = res.data.cancers
         this.sales = res.data.sales
-        this.samples = res.data.samples
+        // this.samples = res.data.samples
         console.log(this.samples)
         this.seq_items = res.data.seq_items
       })
     },
     edit_sample_info (index) {
       // this.handleReset()
+      // console.log(this.samples)
       this.val_edit = true
       this.val_put = true
       this.sampleInfoForm = this.data_sample[index]
-      console.log(this.sampleInfoForm)
+      // console.log(this.data_sample[index])
     },
     // 获取数据
     getDataSample () {
       getrSampleRecord(1, 10).then(res => {
         this.per_sample = res.data.sample
+        this.samples = res.data.all_sample
       })
     },
     getSampleType (query) {

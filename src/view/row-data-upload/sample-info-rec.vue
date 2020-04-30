@@ -1117,7 +1117,7 @@ export default {
     // 获取数据
     getDataSample () {
       getrSampleRecord(1, 10).then(res => {
-        this.per_sample = res.data.sample
+        this.data_sample = res.data.sample
         this.samples = res.data.all_sample
       })
     },
@@ -1165,8 +1165,6 @@ export default {
         } else if (item === 'req_mg') {
           this.data_sample = this.samples.filter(item => item.req_mg.indexOf(value) > -1)
         }
-      } else {
-        this.data_sample = this.per_sample
       }
     }
   },

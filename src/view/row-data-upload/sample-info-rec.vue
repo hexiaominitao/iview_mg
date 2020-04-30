@@ -12,6 +12,19 @@
       </Upload>
       <Button style="margin-right: 8px" @click="valeu_upload = false">关闭</Button>
     </Drawer>
+    <Card>
+      <Row>
+        <Col span="4">
+          <Select v-model="search_item">
+              <Option value="mg_id">迈景编号</Option>
+              <Option value="req_mg">申请单号</Option>
+            </Select>
+        </Col>
+        <Col span="20">
+          <Input search enter-button placeholder="输入销售名称/医院名称/样本类型" @on-search="searchItem"/>
+        </Col>
+      </Row>
+    </Card>
     <Table border :columns="columns_sample" :data="data_sample">
       <template slot-scope="{ row }" slot="mg_id">
         <div v-if="row.edit_able">
@@ -231,7 +244,7 @@
                     <Input v-model="item.name" placeholder="药物名称" style="width: 200px" />
                   </FormItem>
                   <FormItem label="起止时间" :prop="'treat_info.' + index + '.treat_date'">
-                    <DatePicker type="daterange" format="yyyy-MM-dd" split-panels placeholder="选择时间段" v-model="item.treat_date">
+                    <DatePicker type="daterange" split-panels placeholder="选择时间段" v-model="item.treat_date">
                     </DatePicker>
                   </FormItem>
                   <FormItem label="治疗效果" :prop="'treat_info.' + index + '.effect'">
@@ -267,7 +280,7 @@
                     <Input v-model="item.name" placeholder="药物名称" style="width: 200px" />
                   </FormItem>
                   <FormItem label="起止时间" :prop="'treat_info.' + index + '.treat_date'">
-                    <DatePicker type="daterange" format="yyyy-MM-dd" split-panels placeholder="选择时间段" v-model="item.treat_date">
+                    <DatePicker type="daterange" split-panels placeholder="选择时间段" v-model="item.treat_date">
                     </DatePicker>
                   </FormItem>
                   <FormItem label="治疗效果" :prop="'treat_info.' + index + '.effect'">
@@ -303,7 +316,7 @@
                     <Input v-model="item.name" placeholder="药物名称" style="width: 200px" />
                   </FormItem>
                   <FormItem label="起止时间" :prop="'treat_info.' + index + '.treat_date'">
-                    <DatePicker type="daterange" format="yyyy-MM-dd" split-panels placeholder="选择时间段" v-model="item.treat_date">
+                    <DatePicker type="daterange" split-panels placeholder="选择时间段" v-model="item.treat_date">
                     </DatePicker>
                   </FormItem>
                   <FormItem label="治疗效果" :prop="'treat_info.' + index + '.effect'">
@@ -429,7 +442,7 @@
               <Row>
                 <Col span="10">
                 <FormItem label="采样时间" :prop="'samplinfos.' + index + '.Tytime'">
-                  <DatePicker type="date" format="yyyy-MM-dd" placeholder="选择时间" v-model="item.Tytime">
+                  <DatePicker type="date" placeholder="选择时间" v-model="item.Tytime">
                   </DatePicker>
                 </FormItem>
                 </Col>
@@ -526,7 +539,9 @@ export default {
       valeu_upload: false,
       data_sample: [],
       sales: [],
+      per_sample: [],
       samples: [],
+      search_item: 'req_mg',
       action_sample: UploadUrl + 'sample_record/',
       columns_sample: [{
         title: '迈景编号',
@@ -1099,7 +1114,7 @@ export default {
     // 获取数据
     getDataSample () {
       getrSampleRecord(1, 10).then(res => {
-        this.data_sample = res.data.sample
+        this.per_sample = res.data.sample
       })
     },
     getSampleType (query) {
@@ -1137,6 +1152,18 @@ export default {
     },
     handleReset () {
       this.$refs.sampleInfoForm.resetFields()
+    },
+    searchItem (value) {
+      const item = this.search_item
+      if (value !== '') {
+        if (item === 'mg_id') {
+          this.data_sample = this.samples.filter(item => item.mg_id.indexOf(value) > -1)
+        } else if (item === 'req_mg') {
+          this.data_sample = this.samples.filter(item => item.req_mg.indexOf(value) > -1)
+        }
+      } else {
+        this.data_sample = this.per_sample
+      }
     }
   },
   mounted () {

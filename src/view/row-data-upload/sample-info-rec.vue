@@ -12,7 +12,8 @@
       </Upload>
       <Button style="margin-right: 8px" @click="valeu_upload = false">关闭</Button>
     </Drawer>
-    <Card>
+    <br>
+    <div>
       <Row>
         <Col span="4">
           <Select v-model="search_item">
@@ -24,7 +25,8 @@
           <Input search enter-button placeholder="输入销售名称/医院名称/样本类型" @on-search="searchItem"/>
         </Col>
       </Row>
-    </Card>
+    </div>
+    <br>
     <Table border :columns="columns_sample" :data="data_sample">
       <template slot-scope="{ row }" slot="mg_id">
         <div v-if="row.edit_able">

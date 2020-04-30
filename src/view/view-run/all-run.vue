@@ -16,7 +16,8 @@
           <div>{{ dateToString(row.end_T) }}</div>
         </template>
         <template slot-scope="{ row, index }" slot="action">
-          <Button type="error" size="small" @click="remove1(index)">删除</Button>
+          <Button type="success" size="small" @click="startReport(index)">生成报告</Button>
+          <Button style="margin-left: 8px" type="error" size="small" @click="remove1(index)">删除</Button>
         </template>
       </Table>
     <Page :total="total" size="small" :page-size="page_per" show-elevator show-sizer
@@ -25,7 +26,7 @@
   </div>
 </template>
 <script>
-import { getRunInfo, delRunInfo } from '@/api/data'
+import { getRunInfo, delRunInfo, reportStart } from '@/api/data'
 export default {
   name: 'all_run',
   data () {
@@ -136,6 +137,12 @@ export default {
       getRunInfo(1, 10).then(res => {
         this.data = res.data.run
         this.total = res.data.total
+      })
+    },
+    startReport (index) {
+      const id = this.data[index].id
+      reportStart(id).then(res => {
+        this.$Message.info(res.data.msg)
       })
     }
   },

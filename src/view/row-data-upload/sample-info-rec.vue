@@ -4,7 +4,9 @@
     <Button @click="getDataSample" type="success">刷新</Button>
     <Button @click="addSample">添加</Button>
     <Drawer title="文件上传" v-model="valeu_upload" width="720" :mask-closable="false">
-      <Upload multiple type="drag" :action="action_sample">
+      <Upload multiple type="drag" :action="action_sample"
+      :on-success="handSuccess"
+        :on-error="handErro">
         <div style="padding: 20px 0">
           <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
           <p>点击或拖拽上传</p>
@@ -1137,6 +1139,16 @@ export default {
     },
     handleReset () {
       this.$refs.sampleInfoForm.resetFields()
+    },
+    handSuccess (res, file, fileList) {
+      // this.$Message.info(res.msg)
+      this.$Notice.info({
+        duration: 30,
+        desc: res.msg
+      })
+    },
+    handErro (errors, file, fileList) {
+      this.$Message.error('文件存在问题检查文件内容，再重试')
     }
   },
   mounted () {

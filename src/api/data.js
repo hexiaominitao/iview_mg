@@ -99,6 +99,17 @@ export const delRunInfo = (id) => {
   })
 }
 
+export const reportStart = (id) => {
+  const data = {
+    id
+  }
+  return axios.request({
+    url: 'data/get_run_info/',
+    method: 'post',
+    data
+  })
+}
+
 export const getSeqInfo = (name) => {
   return axios.request({
     url: 'data/get_seq_info/',

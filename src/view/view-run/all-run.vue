@@ -16,7 +16,7 @@
           <div>{{ dateToString(row.end_T) }}</div>
         </template>
         <template slot-scope="{ row, index }" slot="action">
-          <Button type="success" size="small" @click="startReport(index)">生成报告</Button>
+          <Button type="success" size="small" @click="startReport(index)">保存结果</Button>
           <Button style="margin-left: 8px" type="error" size="small" @click="remove1(index)">删除</Button>
         </template>
       </Table>

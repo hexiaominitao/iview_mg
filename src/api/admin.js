@@ -7,11 +7,12 @@ export const getUserData = () => {
   })
 }
 
-export const addUser = (name, mail, passwd) => {
+export const addUser = (name, mail, passwd, role) => {
   const data = {
     name,
     mail,
-    passwd
+    passwd,
+    role
   }
   return axios.request({
     url: 'admin/user/',

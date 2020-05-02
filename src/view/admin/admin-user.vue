@@ -2,7 +2,7 @@
 <div>
   <Button @click="add_val = true">添加用户</Button>
   <Table border :columns='user_col' :data="all_user">
-    <template slot-scope="{ row, index }" slot="role">
+    <!-- <template slot-scope="{ row, index }" slot="role">
         <div v-if="row.edit_able">
           <Select v-model="sampleInfoForm.seq_type" multiple filterable>
               <Option v-for="item in seq_items" :value="item.name" :key="item.name">{{ item.name }}
@@ -10,7 +10,7 @@
             </Select>
         </div>
         <div v-else>{{ row.mg_id }}</div>
-      </template>
+      </template> -->
       <template slot-scope="{ row, index }" slot="action">
         <Button type="info" size="small" @click="editRole(index)">编辑</Button>
       </template>
@@ -22,6 +22,12 @@
           <span slot="append">@maijinggene.com</span>
         </Input>
       </FormItem>
+      <FormItem label="角色" >
+                  <Select v-model="role" clearable>
+                    <Option v-for="(item_type, index_type) in roles" :key="index_type" :value="item_type.name">
+                      {{ item_type.name }}</Option>
+                  </Select>
+                </FormItem>
       <FormItem label="用户名称">
         <Input v-model="name" placeholder="请输入用户名"/>
       </FormItem>
@@ -42,6 +48,8 @@ export default {
   data () {
     return {
       add_val: false,
+      edit_user: false,
+      role: '',
       name: '',
       passwd: '',
       roles: [],
@@ -58,7 +66,7 @@ export default {
         },
         {
           title: '权限',
-          slot: 'role'
+          key: 'roles'
         },
         {
           title: '操作',
@@ -69,7 +77,7 @@ export default {
   },
   methods: {
     submit () {
-      addUser(this.name, this.mail + '@maijinggene.com', this.passwd).then(res => {
+      addUser(this.name, this.mail + '@maijinggene.com', this.passwd, this.role).then(res => {
         this.$Message.info(res.data.msg)
       })
       this.add_val = false
@@ -85,11 +93,15 @@ export default {
       getRole().then(res => {
         this.roles = res.data.roles
       })
+    },
+    editRole (index) {
+      this.edit_user = true
     }
 
   },
   mounted () {
     this.getUser()
+    this.getRoles()
   }
 }
 </script>

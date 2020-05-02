@@ -10,11 +10,11 @@
     <Table border height='520' :columns='seq_columns' :data='seq_data'
         @on-selection-change='selectRep'>
       <template slot-scope="{ row, index }" slot="action">
-        <Button type="primary" size="small" @click="remove(index)">承包</Button>
+        <Button type="primary" size="small" @click="remove(index)">保存结果</Button>
         <!-- <Button type="error" size="small" @click="remove(index)">终止</Button> -->
       </template>
     </Table>
-    <Button type="primary" @click="startRep">承包</Button>
+    <Button type="primary" @click="startRep">保存所有结果</Button>
     <!-- <Button type="error" @click="remove(index)">终止</Button> -->
   </div>
 </template>
@@ -129,7 +129,7 @@ export default {
             }
             this.getSeq()
           })
-          // this.seq_data.splice(index, 1)
+          this.seq_data.splice(index, 1)
         },
         onCancel: () => {
           this.$Message.info('取消')

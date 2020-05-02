@@ -234,7 +234,8 @@ export default [
     name: 'report',
     meta: {
       title: '报告',
-      icon: 'logo-buffer'
+      icon: 'logo-buffer',
+      access: ['admin', 'rep', 'rep_admin']
     },
     component: Main,
     children: [
@@ -351,7 +352,8 @@ export default [
     name: 'admin',
     meta: {
       title: '后台管理',
-      icon: 'logo-buffer'
+      icon: 'logo-buffer',
+      access: ['admin']
     },
     component: Main,
     children: [

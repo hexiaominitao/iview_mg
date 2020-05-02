@@ -2,27 +2,30 @@
   <div>
     <h3>制作列表</h3>
     <!-- <Button type="info" @click="upload_ir_result">上传突变结果文件</Button> -->
-    <Table border height='520' :columns='report_columns1' :data="rep_start1">
-      <template slot-scope="{ row, index }" slot="upload_ir">
-        <Upload multiple :action="action_ir_re" :data=fileData :show-upload-list="false">
-          <Button icon="ios-cloud-upload-outline" @click="repIdIr(index)">上传结果</Button>
+    <Table border height='520' :columns='report_columns1' :data="rep_start1" @on-selection-change='selectRep'>
+      <!-- <template slot-scope="{ row, index }" slot="upload">
+        <Upload :action="action_ir" :data=fileData :show-upload-list="false">
+          <Button icon="ios-cloud-upload-outline" @click="repId(index)">上传结果</Button>
         </Upload>
-      </template>
+      </template> -->
       <template slot-scope="{ row, index }" slot="actions">
-        <Button type="primary" size="small" @click="IrEdit(index)">原始结果</Button>
         <!-- <Button type="primary" size="small" @click="startRun(index)">突变初审</Button> -->
         <Button type="success" size="small" @click="reStartRun(index)">突变审核</Button>
-        <Button type="info" size="small" @click="conRun(index)">突变注释</Button>
+        <!-- <Button type="info" size="small" @click="conRun(index)">突变注释</Button> -->
         <!-- <Button type="primary" size="small">审核解释</Button> -->
         <!-- <Button type="info" size="small" @click="toOkr(index)">注释复核</Button> -->
         <Button type="success" size="small" @click="preReport(index)">导出word报告</Button>
       </template>
     </Table>
+    <Button @click="createAll">生成所有报告</Button>
+    <Button @click="downloadAll">下载所有报告</Button>
+    <Card><p>注意：请先生成报告再下载！！！</p></Card>
     <Drawer :title="rep_code_mg" v-model="edit_val" width="520" :mask-closable="false" :styles="styles">
       <p></p>
       <br>
       <Form>
         <FormItem label="报告模板">
+          <p>{{ item }}</p>
           <Select v-model="item" style="width:200px">
             <Option v-for="item_rep in template_item" :value="item_rep.value" :key="item_rep.value">{{ item_rep.label }}</Option>
           </Select>
@@ -47,6 +50,7 @@
 <script>
 import {
   getReportStart,
+  getReportList,
   exportReport,
   setReportStage
 } from '@/api/report'
@@ -64,11 +68,12 @@ export default {
       template_item: [],
       edit_val: false,
       item: '',
+      items: [],
       note: 0,
       edit_id: '',
       rep_code_mg: '',
+      selectReport: [],
       action_ir: UploadUrl + 'mutation_upload/',
-      action_ir_re: UploadUrl + 'ir_upload/',
       styles: {
         height: 'calc(100% - 55px)',
         overflow: 'auto',
@@ -78,12 +83,17 @@ export default {
       total_rep1: 0,
       report_columns1: [
         {
+          type: 'selection',
+          width: 60,
+          align: 'center'
+        },
+        {
           title: '迈景编号',
           key: 'mg_id'
         },
         {
           title: '报告名称',
-          key: 'rep_code'
+          key: 'report_item'
         },
         {
           title: '报告状态',
@@ -92,10 +102,6 @@ export default {
         {
           title: '报告人',
           key: 'report_user'
-        },
-        {
-          title: '上传',
-          slot: 'upload_ir'
         },
         {
           title: '操作',
@@ -114,9 +120,6 @@ export default {
     repId (index) {
       this.fileData.name = this.rep_start1[index].id
     },
-    repIdIr (index) {
-      this.fileData.name = this.rep_start1[index].id
-    },
     start () {
       this.$Message.info('开始制作报告...')
     },
@@ -126,18 +129,21 @@ export default {
         this.total_rep1 = res.data.total
       })
     },
-    IrEdit (index) {
+    startRun (index) {
       const mg_id = this.rep_start1[index].mg_id
       const id = this.rep_start1[index].id
       this.$router.push({
-        name: `ir_mutation`,
+        name: `mutation_list`,
         params: {
           name: id,
           mg_id: mg_id
         },
         meta: {
-          title: `${mg_id}-ir结果`
+          title: `${mg_id}-突变初审`
         }
+      })
+      getReportList(mg_id).then(res => {
+        this.$Message.success(res.data.msg)
       })
     },
     reStartRun (index) {
@@ -186,6 +192,7 @@ export default {
       this.edit_val = true
       this.edit_id = this.rep_start1[index].id
       this.rep_code_mg = this.rep_start1[index].mg_id
+      this.item = this.rep_start1[index].report_item
     },
     downloadApi () {
       const stage = '制作完成'
@@ -207,7 +214,7 @@ export default {
       document.body.appendChild(link)
       link.click()
     },
-    download1 (index) {
+    download1 () {
       this.$Message.info('开始下载')
       const baseUrl = process.env.NODE_ENV === 'development' ? config.baseUrl.dev : config.baseUrl.pro
       const path = baseUrl + 'download/' + this.edit_id + '_' + this.item + '_' + this.note + '/'
@@ -221,6 +228,31 @@ export default {
       templateItem().then(res => {
         this.template_item = res.data.item
       })
+    },
+    selectRep (selection) {
+      this.selectReport = selection
+    },
+    createAll () {
+      for (var i = 0; i < this.selectReport.length; i++) {
+        const id = this.selectReport[i].id
+        const item = this.selectReport[i].report_item
+        exportReport(id, item, 0).then(res => {
+          this.$Message.info(res.data.msg)
+        })
+      }
+    },
+    downloadAll () {
+      console.log(this.selectReport)
+      for (var i = 0; i < this.selectReport.length; i++) {
+        const id = this.selectReport[i].id
+        const item = this.selectReport[i].report_item
+        const mg = this.selectReport[i].mg_id
+        this.$Message.info(mg + '开始下载')
+        const baseUrl = process.env.NODE_ENV === 'development' ? config.baseUrl.dev : config.baseUrl.pro
+        const path = baseUrl + 'download/' + id + '_' + item + '_' + 0 + '/'
+        window.location.href = path
+        this.$Message.success(mg + '下载完成!!!')
+      }
     }
   },
   mounted () {

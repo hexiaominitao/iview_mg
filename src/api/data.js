@@ -170,3 +170,13 @@ export const clearFile = () => {
     method: 'delete'
   })
 }
+
+export const getQCAndRaw = (id) => {
+  return axios.request({
+    url: 'data/seq_qc/',
+    method: 'get',
+    params: {
+      id: id
+    }
+  })
+}

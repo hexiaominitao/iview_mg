@@ -295,14 +295,14 @@ export default [
         component: () => import('@/view/report/mutation/check-mutation.vue')
       },
       {
-        path: 'ir-mutation/:name/:mg_id',
-        name: 'ir_mutation',
+        path: 'report-qc/:name/:mg_id',
+        name: 'report_qc',
         meta: {
           icon: 'md-flower',
-          title: route => `${route.params.mg_id}-{{ ir_mutation }}`,
+          title: route => `${route.params.mg_id}-{{ QC }}`,
           hideInMenu: true
         },
-        component: () => import('@/view/report/mutation/mutation-first.vue')
+        component: () => import('@/view/report/mutation/report-qc.vue')
       },
       {
         path: 'annotate/:name/:mg_id',
@@ -325,14 +325,14 @@ export default [
         component: () => import('@/view/report/annotate/annotate-check.vue')
       },
       {
-        path: 'ir_list/:name',
-        name: 'ir_list',
+        path: 'mutation-raw/:name/:mg_id',
+        name: 'mutation_raw',
         meta: {
           icon: 'md-flower',
-          title: route => `${route.params.name}-{{ ir_list }}`,
+          title: route => `${route.params.mg_id}-{{ mutation_raw }}`,
           hideInMenu: true
         },
-        component: () => import('@/view/report/mutation/ir-list.vue')
+        component: () => import('@/view/report/mutation/mutation-raw.vue')
       },
       {
         path: 'zip_file',

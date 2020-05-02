@@ -95,3 +95,10 @@ export const setTemplate = (templates) => {
     data
   })
 }
+
+export const getRole = () => {
+  return axios.request({
+    url: 'admin/role/',
+    method: 'get'
+  })
+}

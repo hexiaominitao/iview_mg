@@ -74,6 +74,7 @@ export default {
   report_v2: '报告',
   // sample_info_record: '样本信息录入',
   sample_info_rec: '样本信息录入',
-  admin_record: '录入配置'
+  admin_record: '录入配置',
+  mutation_raw: '原始数据'
 
 }

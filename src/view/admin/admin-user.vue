@@ -1,7 +1,20 @@
 <template>
 <div>
   <Button @click="add_val = true">添加用户</Button>
-  <Table border :columns='user_col' :data="all_user"></Table>
+  <Table border :columns='user_col' :data="all_user">
+    <template slot-scope="{ row, index }" slot="role">
+        <div v-if="row.edit_able">
+          <Select v-model="sampleInfoForm.seq_type" multiple filterable>
+              <Option v-for="item in seq_items" :value="item.name" :key="item.name">{{ item.name }}
+              </Option>
+            </Select>
+        </div>
+        <div v-else>{{ row.mg_id }}</div>
+      </template>
+      <template slot-scope="{ row, index }" slot="action">
+        <Button type="info" size="small" @click="editRole(index)">编辑</Button>
+      </template>
+  </Table>
   <Drawer v-model="add_val" title="添加用户" width="520" :mask-closable="false">
     <Form>
       <FormItem label="电子邮件">
@@ -23,7 +36,7 @@
 </div>
 </template>
 <script>
-import { getUserData, addUser } from '@/api/admin'
+import { getUserData, addUser, getRole } from '@/api/admin'
 export default {
   name: 'admin-user',
   data () {
@@ -31,6 +44,7 @@ export default {
       add_val: false,
       name: '',
       passwd: '',
+      roles: [],
       mail: '',
       all_user: [],
       user_col: [
@@ -41,6 +55,14 @@ export default {
         {
           title: '邮件地址',
           key: 'mail'
+        },
+        {
+          title: '权限',
+          slot: 'role'
+        },
+        {
+          title: '操作',
+          slot: 'action'
         }
       ]
     }
@@ -57,6 +79,11 @@ export default {
       getUserData().then(res => {
         this.all_user = res.data.users
         console.log(this.all_user)
+      })
+    },
+    getRoles () {
+      getRole().then(res => {
+        this.roles = res.data.roles
       })
     }
 

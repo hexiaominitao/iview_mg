@@ -150,15 +150,15 @@ export default [
     },
     component: Main,
     children: [
-      {
-        path: 'sample_info',
-        name: 'sample_info',
-        meta: {
-          icon: 'md-arrow-dropdown-circle',
-          title: '样本信息上传'
-        },
-        component: () => import('@/view/row-data-upload/sample-info.vue')
-      },
+      // {
+      //   path: 'sample_info',
+      //   name: 'sample_info',
+      //   meta: {
+      //     icon: 'md-arrow-dropdown-circle',
+      //     title: '样本信息上传'
+      //   },
+      //   component: () => import('@/view/row-data-upload/sample-info.vue')
+      // },
       // {
       //   path: '/sample_info_record',
       //   name: 'sample_info_record',
@@ -177,16 +177,16 @@ export default [
           title: '测试1'
         },
         component: () => import('@/view/row-data-upload/sample-info-rec.vue')
-      },
-      {
-        path: 'view_sample',
-        name: 'view_sample',
-        meta: {
-          icon: 'md-arrow-dropdown-circle',
-          title: '搜索'
-        },
-        component: () => import('@/view/view-sample/view-sample.vue')
       }
+      // {
+      //   path: 'view_sample',
+      //   name: 'view_sample',
+      //   meta: {
+      //     icon: 'md-arrow-dropdown-circle',
+      //     title: '搜索'
+      //   },
+      //   component: () => import('@/view/view-sample/view-sample.vue')
+      // }
     ]
   },
   {

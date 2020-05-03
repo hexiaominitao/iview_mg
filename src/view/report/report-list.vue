@@ -10,15 +10,20 @@
       </template> -->
       <template slot-scope="{ row, index }" slot="actions">
         <!-- <Button type="primary" size="small" @click="startRun(index)">突变初审</Button> -->
-        <Button type="success" size="small" @click="reStartRun(index)">突变审核</Button>
+        <Button style="margin-right: 8px" type="info" size="small" @click="reStartRun(index)">突变审核</Button>
         <!-- <Button type="info" size="small" @click="conRun(index)">突变注释</Button> -->
         <!-- <Button type="primary" size="small">审核解释</Button> -->
         <!-- <Button type="info" size="small" @click="toOkr(index)">注释复核</Button> -->
         <Button type="success" size="small" @click="preReport(index)">导出word报告</Button>
       </template>
     </Table>
-    <Button @click="createAll">生成所有报告</Button>
-    <Button @click="downloadAll">下载所有报告</Button>
+    <Page :total="total" size="small" :page-size="page_per" show-elevator show-sizer
+    @on-page-size-change="pageSize" @on-change="setPage"
+      :page-size-opts='page_opts' />
+      <br>
+    <Button style="margin-right: 8px" type="success" @click="createAll">生成所有报告</Button>
+    <Button type="info" @click="downloadAll">下载所有报告</Button>
+    <br><br>
     <Card><p>注意：请先生成报告再下载！！！</p></Card>
     <Drawer :title="rep_code_mg" v-model="edit_val" width="520" :mask-closable="false" :styles="styles">
       <p></p>
@@ -39,8 +44,8 @@
       </Form>
       <div class="demo-drawer-footer">
         <Button style="margin-right: 8px" @click="edit_val = false">关闭</Button>
+        <Button style="margin-right: 8px" type="primary" @click="downloadApi">生成</Button>
         <Button type="primary" @click="download1">下载</Button>
-        <Button type="primary" @click="downloadApi">生成</Button>
       </div>
       <br>
       <Card><p>备注：先提交生成报告才能下载；未检测到的选择是。</p></Card>
@@ -51,8 +56,7 @@
 import {
   getReportStart,
   getReportList,
-  exportReport,
-  setReportStage
+  exportReport
 } from '@/api/report'
 import { templateItem } from '@/api/config'
 import config from '@/config'
@@ -65,6 +69,10 @@ export default {
         name: ''
       },
       rep_start1: [],
+      total: 0,
+      page: 0,
+      page_per: 10,
+      page_opts: [10, 20, 50, 100],
       template_item: [],
       edit_val: false,
       item: '',
@@ -124,7 +132,21 @@ export default {
       this.$Message.info('开始制作报告...')
     },
     getRepData1 () {
-      getReportStart().then(res => {
+      getReportStart(1, 10).then(res => {
+        this.rep_start1 = res.data.sample
+        this.total_rep1 = res.data.total
+      })
+    },
+    setPage (page) {
+      this.page = page
+      getReportStart(page, this.page_per).then(res => {
+        this.rep_start1 = res.data.sample
+        this.total_rep1 = res.data.total
+      })
+    },
+    pageSize (size) {
+      this.page_per = size
+      getReportStart(this.page, size).then(res => {
         this.rep_start1 = res.data.sample
         this.total_rep1 = res.data.total
       })
@@ -195,10 +217,13 @@ export default {
       this.item = this.rep_start1[index].report_item
     },
     downloadApi () {
-      const stage = '制作完成'
-      setReportStage(this.edit_id, stage).then(res => { })
+      // const stage = '制作完成'
       exportReport(this.edit_id, this.item, this.note).then(res => {
-        this.$Message.info(res.data.msg)
+        this.$Notice.info({
+          duration: 30,
+          desc: res.data.msg
+        })
+        // setReportStage(this.edit_id, stage).then(res => { })
       })
     },
     download (data) {
@@ -234,10 +259,15 @@ export default {
     },
     createAll () {
       for (var i = 0; i < this.selectReport.length; i++) {
+        // const stage = '制作完成'
         const id = this.selectReport[i].id
         const item = this.selectReport[i].report_item
         exportReport(id, item, 0).then(res => {
-          this.$Message.info(res.data.msg)
+          this.$Notice.info({
+            duration: 30,
+            desc: res.data.msg
+          })
+          // setReportStage(id, stage).then(res => { })
         })
       }
     },

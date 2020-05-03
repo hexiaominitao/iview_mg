@@ -72,57 +72,58 @@ export default {
       edit_value: false,
       check_mutation: [],
       selectMutations: [],
-      col_mutation: [
-        {
-          type: 'selection',
-          width: 60,
-          align: 'center'
-        },
-        {
-          title: '状态',
-          width: 100,
-          key: 'status'
-        },
-        {
-          title: '基因',
-          width: 100,
-          key: 'gene'
-        },
-        {
-          title: '功能影响',
-          width: 150,
-          key: 'function_types'
-        },
-        {
-          title: '氨基酸改变-简写',
-          key: 'pHGVS_1'
-        },
-        {
-          title: '丰度',
-          width: 100,
-          key: 'mu_af'
-        },
-        {
-          title: '深度',
-          width: 100,
-          key: 'depth'
-        },
-        {
-          title: '编码改变',
-          width: 200,
-          key: 'cHGVS'
-        },
-        {
-          title: '临床意义级别',
-          width: 120,
-          slot: 'grade'
-        },
-        {
-          title: '操作',
-          width: 100,
-          slot: 'action'
-        }
-      ],
+      // col_mutation: [
+      //   {
+      //     type: 'selection',
+      //     width: 60,
+      //     align: 'center'
+      //   },
+      //   {
+      //     title: '状态',
+      //     width: 100,
+      //     key: 'status'
+      //   },
+      //   {
+      //     title: '基因',
+      //     width: 100,
+      //     key: 'gene'
+      //   },
+      //   {
+      //     title: '功能影响',
+      //     width: 150,
+      //     key: 'function_types'
+      //   },
+      //   {
+      //     title: '氨基酸改变-简写',
+      //     key: 'pHGVS_1'
+      //   },
+      //   {
+      //     title: '丰度',
+      //     width: 100,
+      //     key: 'mu_af'
+      //   },
+      //   {
+      //     title: '深度',
+      //     width: 100,
+      //     key: 'depth'
+      //   },
+      //   {
+      //     title: '编码改变',
+      //     width: 200,
+      //     key: 'cHGVS'
+      //   },
+      //   {
+      //     title: '临床意义级别',
+      //     width: 120,
+      //     slot: 'grade'
+      //   },
+      //   {
+      //     title: '操作',
+      //     width: 100,
+      //     slot: 'action'
+      //   }
+      // ],
+      col_mutation: [],
       drug_columns: [
         {
           title: '药物名称',
@@ -163,6 +164,7 @@ export default {
       checkMtation(id).then(res => {
         this.check_mutation = res.data.mutation
         this.mg_id = res.data.mg_id
+        this.col_mutation = res.data.mu_title
       })
     },
     selectMutation (selection) {
@@ -202,7 +204,7 @@ export default {
     },
     setStage () {
       const id = this.$route.params.name
-      const stage = '突变注释'
+      const stage = '生成报告'
       setReportStage(id, stage).then(res => {
         this.$Message.success(res.data.msg)
         this.get_check_mutation()

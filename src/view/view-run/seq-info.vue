@@ -11,22 +11,33 @@
         @on-selection-change='selectRep'>
       <template slot-scope="{ row, index }" slot="action">
         <Button type="primary" size="small" @click="remove(index)">保存结果</Button>
+        <Button type="info" size="small" @click="reAnalys(index)">重新分析</Button>
         <!-- <Button type="error" size="small" @click="remove(index)">终止</Button> -->
       </template>
     </Table>
-    <Button type="primary" @click="startRep">保存所有结果</Button>
+    <Modal
+        v-model="view_run"
+        fullscreen
+        title="Common Modal dialog box title"
+        @on-ok="ok"
+        @on-cancel="cancel">
+        <Table :columns='seq_columns' :data='seq_data'></Table>
+    </Modal>
+    <Button type="primary" size="small" @click="startRep">保存所有结果</Button>
+    <Button type="info" size="small" @click="reAnalysAll">重新分析</Button>
     <!-- <Button type="error" @click="remove(index)">终止</Button> -->
   </div>
 </template>
 <script>
 import {
-  getSeqInfo, startMakeRep
+  getSeqInfo, startMakeRep, reAnalysSeq
 } from '@/api/data'
 export default {
   name: 'seq_info',
   data () {
     return {
       title: [],
+      view_run: false,
       seq_data: [],
       selectSam: [],
       seq_columns: [
@@ -108,13 +119,67 @@ export default {
       console.log(this.selectSam)
       this.startRep()
     },
+    reAnalys (index) {
+      // this.view_run = true
+      this.$Modal.confirm({
+        title: '确定重新分析所选样本!!!!',
+        content: '<p>点击确定将重分析所选样本!!!</p><p>请慎重操作!!!!</p>',
+        onOk: () => {
+          const sams = [this.seq_data[index]]
+          reAnalysSeq(sams).then(res => {
+            this.$Message.info(res.data.msg)
+          })
+          this.getSeq()
+        },
+        onCancel: () => { this.$Message.info('取消') }
+      })
+    },
+    reAnalysAll () {
+      this.$Modal.confirm({
+        title: '确定重新分析所选样本!!!!',
+        content: '<p>点击确定将重分析所选样本!!!</p><p>请慎重操作!!!!</p>',
+        onOk: () => {
+          const sams = this.selectSam
+          reAnalysSeq(sams).then(res => {
+            this.$Message.info(res.data.msg)
+          })
+          this.getSeq()
+        },
+        onCancel: () => { this.$Message.info('取消') }
+      })
+    },
     selectRep (selection) {
       this.selectSam = selection
     },
     startRep () {
       this.$Modal.confirm({
-        title: '确定承包这片鱼塘吗?',
-        content: '<p>承包后其他人将失去承包的机会,请谨慎承包!!!!!</p>',
+        title: '确定保存所选样本结果?',
+        // content: '<p>承包后其他人将失去承包的机会,请谨慎承包!!!!!</p>',
+        render: (h) => {
+          return h('Table', {
+            props: {
+              columns: [
+                {
+                  title: '迈景编号',
+                  key: 'sample_name'
+                },
+                {
+                  title: '检测项目',
+                  key: 'item'
+                },
+                {
+                  title: 'Barcode',
+                  key: 'barcode'
+                }
+              ],
+              data: this.selectSam
+            },
+            on: {
+              input: (val) => {
+                this.value = val
+              }
+            } })
+        },
         onOk: () => {
           const sams = this.selectSam
           console.log(sams)
@@ -145,11 +210,7 @@ export default {
     }
   },
   mounted () {
-    getSeqInfo(this.$route.params.name).then(res => {
-      this.seq_data = res.data.seq
-      this.title = res.data.run
-      console.log(res.data.seq)
-    })
+    this.getSeq()
   }
 }
 

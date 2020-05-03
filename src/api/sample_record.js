@@ -33,6 +33,17 @@ export const updataSampleRecord = (samples) => {
   })
 }
 
+export const delSampleRecord = (samples) => {
+  const data = {
+    samples
+  }
+  return axios.request({
+    url: '/sample_record/',
+    method: 'delete',
+    data
+  })
+}
+
 export const getrSampleRecordConfig = () => {
   return axios.request({
     url: '/sample_record_config/',

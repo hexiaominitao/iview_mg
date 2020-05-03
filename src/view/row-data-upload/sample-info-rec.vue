@@ -29,7 +29,7 @@
       </Row>
     </div>
     <br>
-    <Table border :columns="columns_sample" :data="data_sample">
+    <Table border height='520' :columns="columns_sample" :data="data_sample">
       <template slot-scope="{ row }" slot="mg_id">
         <div v-if="row.edit_able">
           <Input v-model="row.mg_id" placeholder="输入迈景编号" style="width:100px"></Input>
@@ -41,9 +41,12 @@
         <!-- <Button type="primary" size="small" style="margin-right: 5px" @click="edit_add_info(index)">样本信息</Button> -->
         <!-- <Button @click="row.edit_able = true" type="primary" size="small" style="margin-right: 5px">行内编辑</Button>
         <Button @click="row.edit_able = false" type="error" size="small" style="margin-right: 5px">取消</Button> -->
-        <!-- <Button type="error" size="small" @click="remove(index)">Delete</Button> -->
+        <Button type="error" size="small" @click="remove(index)">删除</Button>
       </template>
     </Table>
+    <Page :total="total" size="small" :page-size="page_per" show-elevator show-sizer
+    @on-page-size-change="pageSize1" @on-change="setPage1"
+      :page-size-opts='page_opts' />
     <Drawer title="样本信息录入" v-model="val_edit" width="1100" :mask-closable="false" @on-close='getDataSample'>
       <Button type="error" @click="handleReset">重置</Button>
       <Form ref="sampleInfoForm" :model="sampleInfoForm" :label-width="100">
@@ -104,16 +107,16 @@
             </Col>
           </Row>
           <Row>
+            <Col span='12'>
+            <FormItem label="籍贯" :prop="'patient_info.nation'">
+              <Input v-model="sampleInfoForm.patient_info.origo" placeholder="籍贯" style="width: 200px"></Input>
+            </FormItem>
+            </Col>
             <Col span='8'>
             <FormItem label="民族" :prop="'patient_info.nation'">
               <Select v-model="sampleInfoForm.patient_info.nation" filterable clearable style="width: 150px">
                 <Option v-for="item in nation_data" :value="item.name" :key="item.index">{{ item.name }}</Option>
               </Select>
-            </FormItem>
-            </Col>
-            <Col span='12'>
-            <FormItem label="籍贯" :prop="'patient_info.nation'">
-              <Input v-model="sampleInfoForm.patient_info.origo" placeholder="籍贯" style="width: 200px"></Input>
             </FormItem>
             </Col>
             <!-- <Col span='12'>
@@ -465,8 +468,15 @@
         </Card>
         <Card>
           <p slot="title">申请检测项目</p>
+          <FormItem label="检测类型" prop="seq_type">
+            <Select v-model="sampleInfoForm.seq_type">
+                <Option value="临床">临床</Option>
+                <Option value="科研">科研</Option>
+                <Option value="科研+临床">科研+临床</Option>
+            </Select>
+          </FormItem>
           <FormItem label="检测项目" prop="seq_type">
-            <Select v-model="sampleInfoForm.seq_type" multiple filterable>
+            <Select v-model="sampleInfoForm.rep_item" multiple filterable>
               <Option v-for="item in seq_items" :value="item.name" :key="item.name">{{ item.name }}
               </Option>
             </Select>
@@ -488,7 +498,8 @@ import {
   getrSampleRecord,
   getrSampleRecordConfig,
   saveSampleRecord,
-  updataSampleRecord
+  updataSampleRecord,
+  delSampleRecord
 } from '@/api/sample_record'
 import config from '@/config'
 const UploadUrl = process.env.NODE_ENV === 'development' ? config.UploadUrl.dev : config.UploadUrl.pro
@@ -539,6 +550,10 @@ export default {
     }
     return {
       val_edit: false,
+      total: 0,
+      page: 1,
+      page_per: 10,
+      page_opts: [10, 20, 50, 100],
       val_put: false,
       valeu_upload: false,
       data_sample: [],
@@ -610,13 +625,14 @@ export default {
         outpatient_id: '',
         doctor: '',
         hosptial: '',
+        seq_type: '临床',
         room: '',
         cancer_d: '',
         original: '',
         metastasis: '',
         pathological: '',
         pathological_date: '',
-        seq_type: [],
+        rep_item: [],
         samplinfos: [
           {
             sample_type: '',
@@ -971,6 +987,21 @@ export default {
     }
   },
   methods: {
+    setPage1 (page) {
+      this.page = page
+      getrSampleRecord(page, this.page_per).then(res => {
+        this.data_sample = res.data.sample
+        this.total = res.data.total
+      })
+    },
+    pageSize1 (size) {
+      this.page_per = size
+      this.$Message.info(size)
+      getrSampleRecord(this.page, size).then(res => {
+        this.data_sample = res.data.sample
+        this.total = res.data.total
+      })
+    },
     getSale () {
       const code = this.sampleInfoForm.req_mg.slice(4, 8)
       const sale = this.sales.filter(item => item.code.indexOf(code) > -1)
@@ -1118,9 +1149,10 @@ export default {
     },
     // 获取数据
     getDataSample () {
-      getrSampleRecord(1, 10).then(res => {
+      getrSampleRecord(this.page, this.page_per).then(res => {
         this.data_sample = res.data.sample
         this.samples = res.data.all_sample
+        this.total = res.data.total
       })
     },
     getSampleType (query) {
@@ -1148,6 +1180,21 @@ export default {
       const samples = [this.sampleInfoForm]
       saveSampleRecord(samples).then(res => {
         this.$Message.info(res.data.msg)
+      })
+    },
+    remove (index) {
+      this.$Modal.confirm({
+        title: '确定删除所选内容!!!!',
+        content: '<p>点击确定将删除整个这条样本信息!!!</p><p>删除后无法恢复,请慎重操作!!!!</p>',
+        onOk: () => {
+          const samples = [this.data_sample[index]]
+          delSampleRecord(samples).then(res => {
+            this.$Message.info(res.data.msg)
+          })
+          this.data_sample.splice(index, 1)
+          // this.getDataSample()
+        },
+        onCancel: () => { this.$Message.info('取消') }
       })
     },
     updata () {

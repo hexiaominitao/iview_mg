@@ -1,9 +1,13 @@
 import axios from '@/libs/api.request'
 
-export const getReportStart = () => {
+export const getReportStart = (page, page_per) => {
   return axios.request({
     url: 'report/start/',
-    method: 'get'
+    method: 'get',
+    params: {
+      page: page,
+      page_per: page_per
+    }
   })
 }
 

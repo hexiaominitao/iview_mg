@@ -131,6 +131,17 @@ export const startMakeRep = (sams) => {
   })
 }
 
+export const reAnalysSeq = (sams) => {
+  const data = {
+    sams
+  }
+  return axios.request({
+    url: 'data/get_seq_info/',
+    method: 'put',
+    data
+  })
+}
+
 export const getMGId = () => {
   return axios.request({
     url: 'data/get_mg_id/',

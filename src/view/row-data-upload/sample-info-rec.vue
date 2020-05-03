@@ -499,7 +499,8 @@ import {
   getrSampleRecordConfig,
   saveSampleRecord,
   updataSampleRecord,
-  delSampleRecord
+  delSampleRecord,
+  getrSampleById
 } from '@/api/sample_record'
 import config from '@/config'
 const UploadUrl = process.env.NODE_ENV === 'development' ? config.UploadUrl.dev : config.UploadUrl.pro
@@ -996,7 +997,6 @@ export default {
     },
     pageSize1 (size) {
       this.page_per = size
-      this.$Message.info(size)
       getrSampleRecord(this.page, size).then(res => {
         this.data_sample = res.data.sample
         this.total = res.data.total
@@ -1218,12 +1218,17 @@ export default {
     },
     searchItem (value) {
       const item = this.search_item
+      var sam = {}
       if (value !== '') {
         if (item === 'mg_id') {
-          this.data_sample = this.samples.filter(item => item.mg_id.indexOf(value) > -1)
+          sam = this.samples.filter(item => item.mg_id.indexOf(value) > -1)[0]
         } else if (item === 'req_mg') {
-          this.data_sample = this.samples.filter(item => item.req_mg.indexOf(value) > -1)
+          sam = this.samples.filter(item => item.req_mg.indexOf(value) > -1)[0]
         }
+        // this.data_sample
+        getrSampleById(sam.id).then(res => {
+          this.data_sample = res.data.sample
+        })
       }
     }
   },

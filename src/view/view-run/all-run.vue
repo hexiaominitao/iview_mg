@@ -33,7 +33,7 @@ export default {
     return {
       data: [],
       total: 0,
-      page: 0,
+      page: 1,
       page_per: 10,
       page_opts: [10, 20, 50, 100],
       columns: [
@@ -84,6 +84,7 @@ export default {
       this.page = page
       getRunInfo(page, this.page_per).then(res => {
         this.data = res.data.run
+        this.total = res.data.total
       })
     },
     dateToString (str) {
@@ -116,6 +117,7 @@ export default {
       this.page_per = size
       getRunInfo(this.page, size).then(res => {
         this.data = res.data.run
+        this.total = res.data.total
       })
     },
     remove1 (index) {
@@ -134,7 +136,7 @@ export default {
       })
     },
     getDataRun () {
-      getRunInfo(1, 10).then(res => {
+      getRunInfo(this.page, this.page_per).then(res => {
         this.data = res.data.run
         this.total = res.data.total
       })

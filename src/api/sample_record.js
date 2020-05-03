@@ -11,6 +11,16 @@ export const getrSampleRecord = (page, page_per) => {
   })
 }
 
+export const getrSampleById = (apply_id) => {
+  return axios.request({
+    url: '/sample_record/search/',
+    method: 'get',
+    params: {
+      apply_id: apply_id
+    }
+  })
+}
+
 export const saveSampleRecord = (samples) => {
   const data = {
     samples

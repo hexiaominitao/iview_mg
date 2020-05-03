@@ -134,21 +134,21 @@ export default {
     getRepData1 () {
       getReportStart(1, 10).then(res => {
         this.rep_start1 = res.data.sample
-        this.total_rep1 = res.data.total
+        this.total = res.data.total
       })
     },
     setPage (page) {
       this.page = page
       getReportStart(page, this.page_per).then(res => {
         this.rep_start1 = res.data.sample
-        this.total_rep1 = res.data.total
+        this.total = res.data.total
       })
     },
     pageSize (size) {
       this.page_per = size
       getReportStart(this.page, size).then(res => {
         this.rep_start1 = res.data.sample
-        this.total_rep1 = res.data.total
+        this.total = res.data.total
       })
     },
     startRun (index) {

@@ -3,6 +3,21 @@
     <Button @click="valeu_upload = true" type="primary">文件上传</Button>
     <Button @click="getDataSample" type="success">刷新</Button>
     <Button @click="addSample">添加</Button>
+    <Button @click="exportData">导出数据</Button>
+    <Modal
+        title="Title"
+        v-model="export_val"
+        :mask-closable="false"
+        @on-ok="downloadExcel">
+        <Row>
+        <Col span="12">
+            <DatePicker type="date" placeholder="开始时间" v-model="export_s" style="width: 200px"></DatePicker>
+        </Col>
+        <Col span="12">
+            <DatePicker type="date" placeholder="结束时间" v-model="export_e" style="width: 200px"></DatePicker>
+        </Col>
+        </Row>
+    </Modal>
     <Drawer title="文件上传" v-model="valeu_upload" width="720" :mask-closable="false">
       <Upload multiple type="drag" :action="action_sample"
       :on-success="handSuccess"
@@ -24,12 +39,12 @@
             </Select>
         </Col>
         <Col span="20">
-          <Input search enter-button placeholder="输入销售名称/医院名称/样本类型" @on-search="searchItem"/>
+          <Input search enter-button placeholder="输入迈景编号/申请单号" @on-search="searchItem"/>
         </Col>
       </Row>
     </div>
     <br>
-    <Table border height='520' :columns="columns_sample" :data="data_sample">
+    <Table border height='520' :columns="columns_sample" :data="data_sample" @on-selection-change='selectSam'>
       <template slot-scope="{ row }" slot="mg_id">
         <div v-if="row.edit_able">
           <Input v-model="row.mg_id" placeholder="输入迈景编号" style="width:100px"></Input>
@@ -47,6 +62,8 @@
     <Page :total="total" size="small" :page-size="page_per" show-elevator show-sizer
     @on-page-size-change="pageSize1" @on-change="setPage1"
       :page-size-opts='page_opts' />
+    <br>
+    <Button type="error" size="small" @click="removeAll">删除所选</Button>
     <Drawer title="样本信息录入" v-model="val_edit" width="1100" :mask-closable="false" @on-close='getDataSample'>
       <Button type="error" @click="handleReset">重置</Button>
       <Form ref="sampleInfoForm" :model="sampleInfoForm" :label-width="100">
@@ -551,6 +568,9 @@ export default {
     }
     return {
       val_edit: false,
+      export_val: false,
+      export_s: '',
+      export_e: '',
       total: 0,
       page: 1,
       page_per: 10,
@@ -563,29 +583,36 @@ export default {
       samples: [],
       search_item: 'req_mg',
       action_sample: UploadUrl + 'sample_record/',
-      columns_sample: [{
-        title: '迈景编号',
-        slot: 'mg_id',
-        width: 200
-      },
-      {
-        title: '申请单号',
-        key: 'req_mg',
-        width: 200
-      },
-      {
-        title: '销售',
-        key: 'sales',
-        width: 200
-      },
-      {
-        title: 'Action',
-        slot: 'action',
-        align: 'center'
-      }
+      columns_sample: [
+        {
+          type: 'selection',
+          width: 60,
+          align: 'center'
+        },
+        {
+          title: '迈景编号',
+          slot: 'mg_id',
+          width: 200
+        },
+        {
+          title: '申请单号',
+          key: 'req_mg',
+          width: 200
+        },
+        {
+          title: '销售',
+          key: 'sales',
+          width: 200
+        },
+        {
+          title: 'Action',
+          slot: 'action',
+          align: 'center'
+        }
       ],
       test_date: '',
       sample_types: [],
+      selectSample: [],
       sample_type: [],
       cancers: [],
       seq_items: [],
@@ -1176,10 +1203,65 @@ export default {
       this.val_edit = true
       this.val_put = false
     },
+    dateToString (str) {
+      var date = new Date(str + '+0800')
+      if (date instanceof Date) {
+        var year = date.getFullYear()
+        var month = (date.getMonth() + 1).toString()
+        var day = (date.getDate()).toString()
+        var hour = (date.getHours()).toString()
+        var min = (date.getMinutes()).toString()
+        if (month.length === 1) {
+          month = '0' + month
+        }
+        if (day.length === 1) {
+          day = '0' + day
+        }
+        if (hour.length === 1) {
+          hour = '0' + hour
+        }
+        if (min.length === 1) {
+          min = '0' + min
+        }
+        var dateTime = year + '.' + month + '.' + day
+        return dateTime
+      } else {
+        return date
+      }
+    },
     submit () {
       const samples = [this.sampleInfoForm]
       saveSampleRecord(samples).then(res => {
         this.$Message.info(res.data.msg)
+      })
+    },
+    exportData () {
+      this.export_val = true
+    },
+    downloadExcel () {
+      this.$Message.info('开始导出')
+      const statr = this.dateToString(this.export_s)
+      const end = this.dateToString(this.export_e)
+      const baseUrl = process.env.NODE_ENV === 'development' ? config.baseUrl.dev : config.baseUrl.pro
+      const path = baseUrl + 'export/sampleinfo/' + statr + '_' + end + '/'
+      window.location.href = path
+      this.$Message.success('下载完成!!!')
+    },
+    removeAll () {
+      this.$Modal.confirm({
+        title: '确定删除所选内容!!!!',
+        content: '<p>点击确定将删除整个这条样本信息!!!</p><p>删除后无法恢复,请慎重操作!!!!</p>',
+        onOk: () => {
+          const samples = this.selectSample
+          delSampleRecord(samples).then(res => {
+            this.$Notice.info({
+              duration: 30,
+              desc: res.data.msg
+            })
+            this.getDataSample()
+          })
+        },
+        onCancel: () => { this.$Message.info('取消') }
       })
     },
     remove (index) {
@@ -1189,10 +1271,13 @@ export default {
         onOk: () => {
           const samples = [this.data_sample[index]]
           delSampleRecord(samples).then(res => {
-            this.$Message.info(res.data.msg)
+            this.$Notice.info({
+              duration: 30,
+              desc: res.data.msg
+            })
           })
           this.data_sample.splice(index, 1)
-          // this.getDataSample()
+          this.getDataSample()
         },
         onCancel: () => { this.$Message.info('取消') }
       })
@@ -1212,6 +1297,9 @@ export default {
         duration: 30,
         desc: res.msg
       })
+    },
+    selectSam (selection) {
+      this.selectSample = selection
     },
     handErro (errors, file, fileList) {
       this.$Message.error('文件存在问题检查文件内容，再重试')

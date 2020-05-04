@@ -88,6 +88,17 @@ export const getRunInfo = (page, page_per) => {
   })
 }
 
+export const editSeqInfo = (sams) => {
+  const data = {
+    sams
+  }
+  return axios.request({
+    url: 'data/get_run_info/',
+    method: 'put',
+    data
+  })
+}
+
 export const delRunInfo = (id) => {
   const data = {
     id

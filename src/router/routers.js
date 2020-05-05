@@ -135,7 +135,8 @@ export default [
         name: 'okr_575',
         meta: {
           icon: 'md-arrow-dropdown-circle',
-          title: '575OKR'
+          title: '575OKR',
+          access: ['admin']
         },
         component: () => import('@/view/report/okr/okr-575.vue')
       }

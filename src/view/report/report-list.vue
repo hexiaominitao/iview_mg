@@ -43,7 +43,7 @@
         </FormItem>
       </Form>
       <div class="demo-drawer-footer">
-        <Button style="margin-right: 8px" @click="edit_val = false">关闭</Button>
+        <Button style="margin-right: 8px" @click="closeDownload">关闭</Button>
         <Button style="margin-right: 8px" type="primary" @click="downloadApi">生成</Button>
         <Button type="primary" @click="download1">下载</Button>
       </div>
@@ -70,7 +70,7 @@ export default {
       },
       rep_start1: [],
       total: 0,
-      page: 0,
+      page: 1,
       page_per: 10,
       page_opts: [10, 20, 50, 100],
       template_item: [],
@@ -132,7 +132,7 @@ export default {
       this.$Message.info('开始制作报告...')
     },
     getRepData1 () {
-      getReportStart(1, 10).then(res => {
+      getReportStart(this.page, this.size).then(res => {
         this.rep_start1 = res.data.sample
         this.total = res.data.total
       })
@@ -225,6 +225,10 @@ export default {
         })
         // setReportStage(this.edit_id, stage).then(res => { })
       })
+    },
+    closeDownload () {
+      this.getRepData1()
+      this.edit_val = false
     },
     download (data) {
       if (!data) {

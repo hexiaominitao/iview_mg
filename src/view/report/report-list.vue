@@ -283,10 +283,18 @@ export default {
       if (this.selectReport.length > 0) {
         var allRep = ''
         for (var i = 0; i < this.selectReport.length; i++) {
+          const stage = this.selectReport[i].stage
           const id = this.selectReport[i].id
           const item = this.selectReport[i].report_item
           // const mg = this.selectReport[i].mg_id
-          allRep += (id + '_' + item + ',')
+          if (stage !== '制作完成') {
+            allRep += (id + '_' + item + ',')
+          } else {
+            this.$Notice.error({
+              duration: 30,
+              desc: mg + '未制作完成，无法下载'
+            })
+          }
         }
         this.$Message.info('开始下载')
         const baseUrl = process.env.NODE_ENV === 'development' ? config.baseUrl.dev : config.baseUrl.pro

@@ -125,23 +125,23 @@ export default [
   //     }
   //   ]
   // },
-  {
-    path: '/okr',
-    name: 'okr',
-    component: Main,
-    children: [
-      {
-        path: '/okr_575',
-        name: 'okr_575',
-        meta: {
-          icon: 'md-arrow-dropdown-circle',
-          title: '575OKR',
-          access: ['admin']
-        },
-        component: () => import('@/view/report/okr/okr-575.vue')
-      }
-    ]
-  },
+  // {
+  //   path: '/okr',
+  //   name: 'okr',
+  //   component: Main,
+  //   children: [
+  //     {
+  //       path: '/okr_575',
+  //       name: 'okr_575',
+  //       meta: {
+  //         icon: 'md-arrow-dropdown-circle',
+  //         title: '575OKR',
+  //         access: ['admin']
+  //       },
+  //       component: () => import('@/view/report/okr/okr-575.vue')
+  //     }
+  //   ]
+  // },
   {
     path: '/upload',
     name: 'upload',

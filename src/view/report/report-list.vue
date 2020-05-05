@@ -262,33 +262,40 @@ export default {
       this.selectReport = selection
     },
     createAll () {
-      for (var i = 0; i < this.selectReport.length; i++) {
+      if (this.selectReport.length > 0) {
+        for (var i = 0; i < this.selectReport.length; i++) {
         // const stage = '制作完成'
-        const id = this.selectReport[i].id
-        const item = this.selectReport[i].report_item
-        exportReport(id, item, 0).then(res => {
-          this.$Notice.info({
-            duration: 30,
-            desc: res.data.msg
-          })
+          const id = this.selectReport[i].id
+          const item = this.selectReport[i].report_item
+          exportReport(id, item, 0).then(res => {
+            this.$Notice.info({
+              duration: 30,
+              desc: res.data.msg
+            })
           // setReportStage(id, stage).then(res => { })
-        })
+          })
+        }
+      } else {
+        this.$Message.info('未选择报告，请选择报告')
       }
     },
     downloadAll () {
-      console.log(this.selectReport)
-      var allRep = ''
-      for (var i = 0; i < this.selectReport.length; i++) {
-        const id = this.selectReport[i].id
-        const item = this.selectReport[i].report_item
-        // const mg = this.selectReport[i].mg_id
-        allRep += (id + '_' + item + ',')
+      if (this.selectReport.length > 0) {
+        var allRep = ''
+        for (var i = 0; i < this.selectReport.length; i++) {
+          const id = this.selectReport[i].id
+          const item = this.selectReport[i].report_item
+          // const mg = this.selectReport[i].mg_id
+          allRep += (id + '_' + item + ',')
+        }
+        this.$Message.info('开始下载')
+        const baseUrl = process.env.NODE_ENV === 'development' ? config.baseUrl.dev : config.baseUrl.pro
+        const path = baseUrl + 'download/all/' + allRep + '/'
+        window.location.href = path
+        this.$Message.success('下载完成!!!')
+      } else {
+        this.$Message.info('未选择报告，请选择报告')
       }
-      this.$Message.info('开始下载')
-      const baseUrl = process.env.NODE_ENV === 'development' ? config.baseUrl.dev : config.baseUrl.pro
-      const path = baseUrl + 'download/all/' + allRep + '/'
-      window.location.href = path
-      this.$Message.success('下载完成!!!')
     }
   },
   mounted () {

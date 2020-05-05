@@ -22,7 +22,7 @@
       :page-size-opts='page_opts' />
       <br>
     <Button style="margin-right: 8px" type="success" @click="createAll">生成所有报告</Button>
-    <Button type="info" @click="downloadAll">下载所有报告</Button>
+    <Button type="info" @click="downloadAll">下载所选报告</Button>
     <br><br>
     <Card><p>注意：请先生成报告再下载！！！</p></Card>
     <Drawer :title="rep_code_mg" v-model="edit_val" width="520" :mask-closable="false" :styles="styles">
@@ -277,16 +277,18 @@ export default {
     },
     downloadAll () {
       console.log(this.selectReport)
+      var allRep = ''
       for (var i = 0; i < this.selectReport.length; i++) {
         const id = this.selectReport[i].id
         const item = this.selectReport[i].report_item
-        const mg = this.selectReport[i].mg_id
-        this.$Message.info(mg + '开始下载')
-        const baseUrl = process.env.NODE_ENV === 'development' ? config.baseUrl.dev : config.baseUrl.pro
-        const path = baseUrl + 'download/' + id + '_' + item + '_' + 0 + '/'
-        window.location.href = path
-        this.$Message.success(mg + '下载完成!!!')
+        // const mg = this.selectReport[i].mg_id
+        allRep += (id + '_' + item + ',')
       }
+      this.$Message.info('开始下载')
+      const baseUrl = process.env.NODE_ENV === 'development' ? config.baseUrl.dev : config.baseUrl.pro
+      const path = baseUrl + 'download/all/' + allRep + '/'
+      window.location.href = path
+      this.$Message.success('下载完成!!!')
     }
   },
   mounted () {

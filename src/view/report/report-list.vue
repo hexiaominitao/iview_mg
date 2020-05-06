@@ -286,7 +286,7 @@ export default {
           const stage = this.selectReport[i].stage
           const id = this.selectReport[i].id
           const item = this.selectReport[i].report_item
-          // const mg = this.selectReport[i].mg_id
+          const mg = this.selectReport[i].mg_id
           if (stage === '制作完成') {
             allRep += (id + '_' + item + ',')
           } else {

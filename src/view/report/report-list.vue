@@ -296,11 +296,15 @@ export default {
             })
           }
         }
-        this.$Message.info('开始下载')
-        const baseUrl = process.env.NODE_ENV === 'development' ? config.baseUrl.dev : config.baseUrl.pro
-        const path = baseUrl + 'download/all/' + allRep + '/'
-        window.location.href = path
-        this.$Message.success('下载完成!!!')
+        if (allRep) {
+          this.$Message.info('开始下载')
+          const baseUrl = process.env.NODE_ENV === 'development' ? config.baseUrl.dev : config.baseUrl.pro
+          const path = baseUrl + 'download/all/' + allRep + '/'
+          window.location.href = path
+          this.$Message.success('下载完成!!!')
+        } else {
+          this.$Message.info('没有可生成的报告,请重新选择')
+        }
       } else {
         this.$Message.info('未选择报告，请选择报告')
       }

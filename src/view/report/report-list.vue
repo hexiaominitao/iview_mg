@@ -5,14 +5,14 @@
     <Table border height='520' :columns='report_columns1' :data="rep_start1" @on-selection-change='selectRep'>
       <!-- <template slot-scope="{ row, index }" slot="upload">
         <Upload :action="action_ir" :data=fileData :show-upload-list="false">
-          <Button icon="ios-cloud-upload-outline" @click="repId(index)">上传结果</Button>
+          <Button icon="ios-cloud-upload-outline" @click="repId(index)">上传OKR</Button>
         </Upload>
       </template> -->
       <template slot-scope="{ row, index }" slot="actions">
         <!-- <Button type="primary" size="small" @click="startRun(index)">突变初审</Button> -->
         <Button style="margin-right: 8px" type="info" size="small" @click="reStartRun(index)">突变审核</Button>
         <!-- <Button type="info" size="small" @click="conRun(index)">突变注释</Button> -->
-        <!-- <Button type="primary" size="small">审核解释</Button> -->
+        <Button type="primary" size="small" @click="okrUpload(index)">上传OKR</Button>
         <!-- <Button type="info" size="small" @click="toOkr(index)">注释复核</Button> -->
         <Button type="success" size="small" @click="preReport(index)">导出word报告</Button>
       </template>
@@ -25,6 +25,20 @@
     <Button type="info" @click="downloadAll">下载所选报告</Button>
     <br><br>
     <Card><p>注意：请先生成报告再下载！！！</p></Card>
+    <Drawer :title='rep_code_mg' v-model="upload_val" width="520" :mask-closable="false" :styles="styles">
+        <Upload
+        multiple
+        type="drag"
+        :data=fileData
+        :action="action_ir"
+        :on-success="handSuccess"
+        :on-error="handErro">
+        <div style="padding: 20px 0">
+            <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
+            <p>点击或拖拽到此处上传</p>
+        </div>
+    </Upload>
+    </Drawer>
     <Drawer :title="rep_code_mg" v-model="edit_val" width="520" :mask-closable="false" :styles="styles">
       <p></p>
       <br>
@@ -56,7 +70,8 @@
 import {
   getReportStart,
   getReportList,
-  exportReport
+  exportReport,
+  getOkrCSV
 } from '@/api/report'
 import { templateItem } from '@/api/config'
 import config from '@/config'
@@ -69,6 +84,7 @@ export default {
         name: ''
       },
       rep_start1: [],
+      upload_val: false,
       total: 0,
       page: 1,
       page_per: 10,
@@ -81,7 +97,7 @@ export default {
       edit_id: '',
       rep_code_mg: '',
       selectReport: [],
-      action_ir: UploadUrl + 'mutation_upload/',
+      action_ir: UploadUrl + 'ir_upload/',
       styles: {
         height: 'calc(100% - 55px)',
         overflow: 'auto',
@@ -208,6 +224,12 @@ export default {
         meta: {
           title: `${mg_id}-okr`
         }
+      })
+    },
+    okrUpload (index) {
+      const id = this.rep_start1[index].id
+      getOkrCSV(id).then(res => {
+        this.$Message.info(res.data.msg)
       })
     },
     preReport (index) {

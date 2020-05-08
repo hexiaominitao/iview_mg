@@ -132,6 +132,17 @@ export const deleteMutation = (sams) => {
   })
 }
 
+export const getOkrCSV = (id) => {
+  const data = {
+    id
+  }
+  return axios.request({
+    url: 'report/okr/',
+    method: 'post',
+    data
+  })
+}
+
 export const getOkrData = (mg_id) => {
   return axios.request({
     url: 'report/get_okr/',

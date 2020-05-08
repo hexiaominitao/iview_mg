@@ -4,8 +4,7 @@
 
 <template>
   <div class="login">
-    <div class="login-company"><b class="com">迈景</b>报告自动化系统</div>
-    <div class="login-slogan">让繁琐的工作简单化</div>
+    <div class="login-company"><b class="com">迈景基因</b>报告自动化系统</div>
     <div class="login-con">
       <Card icon="log-in" title="欢迎登录" :bordered="false">
         <div class="form-con">

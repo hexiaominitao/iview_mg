@@ -154,6 +154,21 @@ export default {
         {
           value: 'IV类',
           label: 'IV类'
+        }, {
+          value: 'IA',
+          label: 'IA'
+        },
+        {
+          value: 'IB',
+          label: 'IB'
+        },
+        {
+          value: 'IIA',
+          label: 'IIA'
+        },
+        {
+          value: 'IIB',
+          label: 'IIB'
         }
       ]
     }

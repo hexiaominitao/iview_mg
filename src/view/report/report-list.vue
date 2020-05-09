@@ -12,7 +12,7 @@
         <!-- <Button type="primary" size="small" @click="startRun(index)">突变初审</Button> -->
         <Button style="margin-right: 8px" type="info" size="small" @click="reStartRun(index)">突变审核</Button>
         <!-- <Button type="info" size="small" @click="conRun(index)">突变注释</Button> -->
-        <Button type="primary" size="small" @click="okrUpload(index)">上传OKR</Button>
+        <!-- <Button type="primary" size="small" @click="okrUpload(index)">上传OKR</Button> -->
         <!-- <Button type="info" size="small" @click="toOkr(index)">注释复核</Button> -->
         <Button type="success" size="small" @click="preReport(index)">导出word报告</Button>
       </template>
@@ -240,12 +240,15 @@ export default {
     },
     downloadApi () {
       // const stage = '制作完成'
-      exportReport(this.edit_id, this.item, this.note).then(res => {
-        this.$Notice.info({
-          duration: 30,
-          desc: res.data.msg
+      const id = this.edit_id
+      getOkrCSV(id).then(res => {
+        this.$Message.info(res.data.msg)
+        exportReport(this.edit_id, this.item, this.note).then(res => {
+          this.$Notice.info({
+            duration: 30,
+            desc: res.data.msg
+          })
         })
-        // setReportStage(this.edit_id, stage).then(res => { })
       })
     },
     closeDownload () {
@@ -289,12 +292,14 @@ export default {
         // const stage = '制作完成'
           const id = this.selectReport[i].id
           const item = this.selectReport[i].report_item
-          exportReport(id, item, 0).then(res => {
-            this.$Notice.info({
-              duration: 30,
-              desc: res.data.msg
+          getOkrCSV(id).then(res => {
+            this.$Message.info(res.data.msg)
+            exportReport(id, item, 0).then(res => {
+              this.$Notice.info({
+                duration: 30,
+                desc: res.data.msg
+              })
             })
-          // setReportStage(id, stage).then(res => { })
           })
         }
       } else {

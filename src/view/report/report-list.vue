@@ -22,6 +22,7 @@
       :page-size-opts='page_opts' />
       <br>
     <Button style="margin-right: 8px" type="success" @click="createAll">生成所有报告</Button>
+    <Button style="margin-right: 8px" @click="refreshRep">刷新</Button>
     <Button type="info" @click="downloadAll">下载所选报告</Button>
     <br><br>
     <Card><p>注意：请先生成报告再下载！！！</p></Card>
@@ -306,6 +307,8 @@ export default {
       } else {
         this.$Message.info('未选择报告，请选择报告')
       }
+    },
+    refreshRep () {
       this.getRepData1()
     },
     downloadAll () {

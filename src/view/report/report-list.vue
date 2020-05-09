@@ -250,6 +250,7 @@ export default {
           })
         })
       })
+      this.getRepData1()
     },
     closeDownload () {
       this.getRepData1()
@@ -305,6 +306,7 @@ export default {
       } else {
         this.$Message.info('未选择报告，请选择报告')
       }
+      this.getRepData1()
     },
     downloadAll () {
       if (this.selectReport.length > 0) {

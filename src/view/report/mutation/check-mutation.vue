@@ -140,35 +140,20 @@ export default {
       ],
       grades: [
         {
-          value: 'I类',
-          label: 'I类'
+          value: 'I',
+          label: 'I'
         },
         {
-          value: 'II类',
-          label: 'II类'
+          value: 'II',
+          label: 'II'
         },
         {
-          value: 'III类',
-          label: 'III类'
+          value: 'III',
+          label: 'III'
         },
         {
-          value: 'IV类',
-          label: 'IV类'
-        }, {
-          value: 'IA',
-          label: 'IA'
-        },
-        {
-          value: 'IB',
-          label: 'IB'
-        },
-        {
-          value: 'IIA',
-          label: 'IIA'
-        },
-        {
-          value: 'IIB',
-          label: 'IIB'
+          value: 'IV',
+          label: 'IV'
         }
       ]
     }

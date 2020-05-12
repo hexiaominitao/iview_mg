@@ -11,6 +11,11 @@
         </div>
         <div v-else>{{ row.mg_id }}</div>
       </template> -->
+      <template slot-scope="{ row, index }" slot="roles">
+        <div v-for="item in row.roles.split(',')" :key="item">
+          <Tag color="purple">{{ item }}</Tag>
+        </div>
+      </template>
       <template slot-scope="{ row, index }" slot="action">
         <Button type="info" size="small" @click="editRole(index)">编辑</Button>
       </template>
@@ -66,7 +71,8 @@ export default {
         },
         {
           title: '权限',
-          key: 'roles'
+          slot: 'roles',
+          width: 400
         },
         {
           title: '操作',

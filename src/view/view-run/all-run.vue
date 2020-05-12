@@ -41,7 +41,13 @@ export default {
           title: 'Run',
           key: 'name',
           render: (h, params) => {
-            return h('div', [
+            return h('Tooltip', {
+              props: {
+                placement: 'top',
+                content: '点击查看该run详细信息'
+              }
+            },
+            [
               h('div', {
                 on: {
                   click: () => {

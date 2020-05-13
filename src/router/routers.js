@@ -337,6 +337,16 @@ export default [
         component: () => import('@/view/report/mutation/mutation-raw.vue')
       },
       {
+        path: 'mutation-w-list/:name/:mg_id',
+        name: 'mutation_w_list',
+        meta: {
+          icon: 'md-flower',
+          title: route => `${route.params.mg_id}-{{ mutation_w_list }}`,
+          hideInMenu: true
+        },
+        component: () => import('@/view/report/mutation/mutation-w-list.vue')
+      },
+      {
         path: 'zip_file',
         name: 'zip_file',
         meta: {

@@ -2,6 +2,7 @@
   <div>
     <Button @click="reportQc">QC</Button>
     <Button @click="reportRow">原始数据</Button>
+    <Button @click="reportWList">白名单</Button>
     <Table border height='460' :columns='col_mutation' :data="check_mutation" @on-selection-change='selectMutation'>
       <template slot-scope="{ row, index }" slot="grade">
         <Select v-model="row.grade" style="width:80px" @on-change="slectGrade($event, index)">
@@ -218,7 +219,7 @@ export default {
         this.get_check_mutation()
       })
     },
-    reportQc (index) {
+    reportQc () {
       const mg_id = this.$route.params.mg_id
       const id = this.$route.params.name
       this.$router.push({
@@ -232,7 +233,7 @@ export default {
         }
       })
     },
-    reportRow (index) {
+    reportRow () {
       const mg_id = this.$route.params.mg_id
       const id = this.$route.params.name
       this.$router.push({
@@ -243,6 +244,20 @@ export default {
         },
         meta: {
           title: `${mg_id}-原始结果`
+        }
+      })
+    },
+    reportWList () {
+      const mg_id = this.$route.params.mg_id
+      const id = this.$route.params.name
+      this.$router.push({
+        name: `mutation_w_list`,
+        params: {
+          name: id,
+          mg_id: mg_id
+        },
+        meta: {
+          title: `${mg_id}-白名单`
         }
       })
     }

@@ -37,10 +37,16 @@
           <Input v-model="edit_data[index].barcode"></Input>
         </template>
         <template slot-scope="{ row, index }" slot="cancer">
-          <Input v-model="edit_data[index].cancer"></Input>
+          <Select v-model="edit_data[index].cancer" filterable>
+            <Option v-for="item_rep in cancers_item" :value="item_rep.name" :key="item_rep.id">{{ item_rep.name }}</Option>
+          </Select>
+          <!-- <Input v-model="edit_data[index].cancer"></Input> -->
         </template>
         <template slot-scope="{ row, index }" slot="report_item">
-          <Input v-model="edit_data[index].report_item"></Input>
+          <Select v-model="edit_data[index].report_item" filterable>
+            <Option v-for="item_rep in template_item" :value="item_rep.value" :key="item_rep.value">{{ item_rep.label }}</Option>
+          </Select>
+          <!-- <Input v-model="edit_data[index].report_item"></Input> -->
         </template>
         <template slot-scope="{ row, index }" slot="note">
           <Input v-model="edit_data[index].note"></Input>
@@ -62,6 +68,8 @@ import {
   reAnalysSeq,
   editSeqInfo
 } from '@/api/data'
+import { templateItem } from '@/api/config'
+import { getCancerTypes } from '@/api/admin'
 export default {
   name: 'seq_info',
   data () {
@@ -73,7 +81,9 @@ export default {
       selectSam: [],
       seq_columns: [],
       edit_title: [],
-      edit_data: []
+      edit_data: [],
+      template_item: [],
+      cancers_item: []
     }
   },
   computed: {
@@ -255,10 +265,23 @@ export default {
         this.title = res.data.run
         this.seq_columns = res.data.seq_title
       })
+    },
+    getTemplateItem () {
+      templateItem().then(res => {
+        this.template_item = res.data.item
+      })
+    },
+    getCancers () {
+      getCancerTypes().then(res => {
+        this.cancers_item = res.data.cancers
+        // console.log(res.data.cancers)
+      })
     }
   },
   mounted () {
     this.getSeq()
+    this.getTemplateItem()
+    this.getCancers()
   }
 }
 

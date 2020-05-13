@@ -1,8 +1,13 @@
 <template>
   <div>
     <h3>制作列表</h3>
+    <br>
+    <div>
+      <Input search enter-button placeholder="输入迈景编号" @on-search="searchItem"/>
+    </div>
+    <br>
     <!-- <Button type="info" @click="upload_ir_result">上传突变结果文件</Button> -->
-    <Table border height='520' :columns='report_columns1' :data="rep_start1" @on-selection-change='selectRep'>
+    <Table border height='620' :columns='report_columns1' :data="rep_start1" @on-selection-change='selectRep'>
       <!-- <template slot-scope="{ row, index }" slot="upload">
         <Upload :action="action_ir" :data=fileData :show-upload-list="false">
           <Button icon="ios-cloud-upload-outline" @click="repId(index)">上传OKR</Button>
@@ -53,7 +58,7 @@
             <Option v-for="item_rep in template_item" :value="item_rep.value" :key="item_rep.value">{{ item_rep.label }}</Option>
           </Select>
         </FormItem>
-        <FormItem label="是否使用自动下载的okr">
+        <FormItem label="是否强制使用自动下载的okr">
           <RadioGroup v-model="note">
             <Radio :label="1">是</Radio>
             <Radio :label="0">否</Radio>

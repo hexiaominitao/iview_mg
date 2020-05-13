@@ -103,3 +103,10 @@ export const getRole = () => {
     method: 'get'
   })
 }
+
+export const getCancerTypes = () => {
+  return axios.request({
+    url: 'admin/config/',
+    method: 'get'
+  })
+}

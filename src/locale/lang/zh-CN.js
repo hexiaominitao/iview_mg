@@ -75,6 +75,7 @@ export default {
   // sample_info_record: '样本信息录入',
   sample_info_rec: '样本信息录入',
   admin_record: '录入配置',
-  mutation_raw: '原始数据'
+  mutation_raw: '原始数据',
+  mutation_w_list: '白名单'
 
 }

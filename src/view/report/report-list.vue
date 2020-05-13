@@ -1,11 +1,11 @@
 <template>
   <div>
     <h3>制作列表</h3>
-    <br>
+    <!-- <br>
     <div>
       <Input search enter-button placeholder="输入迈景编号" @on-search="searchItem"/>
     </div>
-    <br>
+    <br> -->
     <!-- <Button type="info" @click="upload_ir_result">上传突变结果文件</Button> -->
     <Table border height='620' :columns='report_columns1' :data="rep_start1" @on-selection-change='selectRep'>
       <!-- <template slot-scope="{ row, index }" slot="upload">

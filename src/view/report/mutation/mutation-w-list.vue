@@ -19,6 +19,7 @@ export default {
       getQCAndRaw(id).then(res => {
         this.w_list_title = res.data.w_list_title
         this.w_list = res.data.w_list
+        console.log(res.data.w_list_title)
       })
     }
   },

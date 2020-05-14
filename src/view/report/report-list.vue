@@ -17,7 +17,7 @@
         <!-- <Button type="primary" size="small" @click="startRun(index)">突变初审</Button> -->
         <Button style="margin-right: 8px" type="info" size="small" @click="reStartRun(index)">突变审核</Button>
         <!-- <Button type="info" size="small" @click="conRun(index)">突变注释</Button> -->
-        <Button style="margin-right: 8px" type="primary" size="small" @click="okrUpload(index)">上传载OKR</Button>
+        <Button style="margin-right: 8px" type="primary" size="small" @click="okrUpload(index)">上传OKR</Button>
         <!-- <Button type="info" size="small" @click="toOkr(index)">注释复核</Button> -->
         <Button style="margin-right: 8px" type="success" size="small" @click="preReport(index)">导出word报告</Button>
         <Button style="margin-right: 8px" type="primary" size="small" @click="exportBam(index)">bam</Button>

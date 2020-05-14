@@ -17,9 +17,11 @@
         <!-- <Button type="primary" size="small" @click="startRun(index)">突变初审</Button> -->
         <Button style="margin-right: 8px" type="info" size="small" @click="reStartRun(index)">突变审核</Button>
         <!-- <Button type="info" size="small" @click="conRun(index)">突变注释</Button> -->
-        <Button type="primary" size="small" @click="okrUpload(index)">上传载OKR</Button>
+        <Button style="margin-right: 8px" type="primary" size="small" @click="okrUpload(index)">上传载OKR</Button>
         <!-- <Button type="info" size="small" @click="toOkr(index)">注释复核</Button> -->
-        <Button type="success" size="small" @click="preReport(index)">导出word报告</Button>
+        <Button style="margin-right: 8px" type="success" size="small" @click="preReport(index)">导出word报告</Button>
+        <Button style="margin-right: 8px" type="primary" size="small" @click="exportBam(index)">bam</Button>
+        <Button type="info" size="small" @click="exportBai(index)">bai</Button>
       </template>
     </Table>
     <Page :total="total" size="small" :page-size="page_per" show-elevator show-sizer
@@ -351,6 +353,20 @@ export default {
       } else {
         this.$Message.info('未选择报告，请选择报告')
       }
+    },
+    exportBam (index) {
+      const id = this.rep_start1[index].id
+      this.$Message.info('开始导出')
+      const baseUrl = process.env.NODE_ENV === 'development' ? config.baseUrl.dev : config.baseUrl.pro
+      const path = baseUrl + 'download_raw/' + id + '_bam' + '/'
+      window.location.href = path
+    },
+    exportBai (index) {
+      const id = this.rep_start1[index].id
+      this.$Message.info('开始导出')
+      const baseUrl = process.env.NODE_ENV === 'development' ? config.baseUrl.dev : config.baseUrl.pro
+      const path = baseUrl + 'download_raw/' + id + '_bai' + '/'
+      window.location.href = path
     }
   },
   mounted () {

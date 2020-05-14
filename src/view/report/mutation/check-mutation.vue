@@ -3,6 +3,7 @@
     <Button @click="reportQc">QC</Button>
     <Button @click="reportRow">原始数据</Button>
     <Button @click="reportWList">白名单</Button>
+    <Button type="primary" @click="exportRaw">导出原始结果</Button>
     <Table border height='460' :columns='col_mutation' :data="check_mutation" @on-selection-change='selectMutation'>
       <template slot-scope="{ row, index }" slot="grade">
         <Select v-model="row.grade" style="width:80px" @on-change="slectGrade($event, index)">
@@ -59,6 +60,7 @@ import {
   deleteMutation,
   setReportStage
 } from '@/api/report'
+import config from '@/config'
 export default {
   name: 'check_mutation',
   data () {
@@ -260,6 +262,14 @@ export default {
           title: `${mg_id}-白名单`
         }
       })
+    },
+    exportRaw () {
+      const id = this.$route.params.name
+      this.$Message.info('开始导出')
+      const baseUrl = process.env.NODE_ENV === 'development' ? config.baseUrl.dev : config.baseUrl.pro
+      const path = baseUrl + 'download_raw/' + id + '_result' + '/'
+      window.location.href = path
+      this.$Message.success('导出完成!!!')
     }
   },
   mounted () {

@@ -1,11 +1,11 @@
 <template>
   <div>
     <h3>制作列表</h3>
-    <!-- <br>
+    <br>
     <div>
-      <Input search enter-button placeholder="输入迈景编号" @on-search="searchItem"/>
+      <Input search enter-button placeholder="输入迈景编号" @on-search="searchRep"/>
     </div>
-    <br> -->
+    <br>
     <!-- <Button type="info" @click="upload_ir_result">上传突变结果文件</Button> -->
     <Table border height='620' :columns='report_columns1' :data="rep_start1" @on-selection-change='selectRep'>
       <!-- <template slot-scope="{ row, index }" slot="upload">
@@ -96,6 +96,7 @@ export default {
       },
       rep_start1: [],
       upload_val: false,
+      rep_all: [],
       total: 0,
       page: 1,
       page_per: 10,
@@ -162,6 +163,7 @@ export default {
       getReportStart(this.page, this.size).then(res => {
         this.rep_start1 = res.data.sample
         this.total = res.data.total
+        this.rep_all = res.data.all_rep
       })
     },
     setPage (page) {
@@ -353,6 +355,15 @@ export default {
       } else {
         this.$Message.info('未选择报告，请选择报告')
       }
+    },
+    searchRep (value) {
+      var sam = []
+      if (value !== '') {
+        sam = this.rep_all.filter(item => item.mg_id.indexOf(value) > -1)
+      } else {
+        sam = this.rep_start1
+      }
+      this.rep_start1 = sam
     },
     exportBam (index) {
       const id = this.rep_start1[index].id

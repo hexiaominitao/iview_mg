@@ -160,7 +160,7 @@ export default {
       this.$Message.info('开始制作报告...')
     },
     getRepData1 () {
-      getReportStart(this.page, this.size).then(res => {
+      getReportStart(this.page, this.page_per).then(res => {
         this.rep_start1 = res.data.sample
         this.total = res.data.total
         this.rep_all = res.data.all_rep

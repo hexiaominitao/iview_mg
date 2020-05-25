@@ -397,6 +397,15 @@ export default [
         component: () => import('@/view/admin/admin-patient.vue')
       },
       {
+        path: 'report',
+        name: 'admin_report',
+        meta: {
+          icon: 'md-arrow-dropdown-circle',
+          title: '报告'
+        },
+        component: () => import('@/view/admin/report/index.vue')
+      },
+      {
         path: 'record',
         name: 'admin_record',
         meta: {

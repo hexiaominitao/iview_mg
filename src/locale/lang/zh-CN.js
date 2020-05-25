@@ -63,6 +63,7 @@ export default {
   admin_report_template: '报告模板',
   admin_template_upload: '增加配置',
   admin_okr: 'OKR',
+  admin_report: '报告',
   all_report: '所有报告',
   report_list: '报告制作',
   report: 'PGM报告',

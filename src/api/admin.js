@@ -110,3 +110,25 @@ export const getCancerTypes = () => {
     method: 'get'
   })
 }
+
+export const getReport = (page, page_per) => {
+  return axios.request({
+    url: 'admin/report/',
+    method: 'get',
+    params: {
+      page: page,
+      page_per: page_per
+    }
+  })
+}
+
+export const delReport = (id) => {
+  const data = {
+    id
+  }
+  return axios.request({
+    url: 'admin/report/',
+    method: 'delete',
+    data
+  })
+}

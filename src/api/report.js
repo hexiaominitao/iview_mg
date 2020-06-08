@@ -196,14 +196,15 @@ export const getAnnotateCheck = (id) => {
   })
 }
 
-export const exportReport = (id, item, note) => {
+export const exportReport = (id, item, note, hospital) => {
   return axios.request({
     url: 'report/export_report/',
     method: 'post',
     params: {
       id: id,
       item: item,
-      note: note
+      note: note,
+      hospital: hospital
     }
   })
 }

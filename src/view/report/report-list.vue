@@ -7,7 +7,7 @@
     </div>
     <br>
     <!-- <Button type="info" @click="upload_ir_result">上传突变结果文件</Button> -->
-    <Table border height='620' :columns='report_columns1' :data="rep_start1" @on-selection-change='selectRep'>
+    <Table border height='520' :columns='report_columns1' :data="rep_start1" @on-selection-change='selectRep'>
       <!-- <template slot-scope="{ row, index }" slot="upload">
         <Upload :action="action_ir" :data=fileData :show-upload-list="false">
           <Button icon="ios-cloud-upload-outline" @click="repId(index)">上传OKR</Button>
@@ -60,6 +60,13 @@
             <Option v-for="item_rep in template_item" :value="item_rep.value" :key="item_rep.value">{{ item_rep.label }}</Option>
           </Select>
         </FormItem>
+        <FormItem label="医院">
+          <RadioGroup v-model="hospital">
+            <Radio label="nk">农垦</Radio>
+            <Radio label="mg">迈景</Radio>
+            <Radio label="zsy" disabled>中山一</Radio>
+          </RadioGroup>
+        </FormItem>
         <FormItem label="是否强制使用自动下载的okr">
           <RadioGroup v-model="note">
             <Radio :label="1">是</Radio>
@@ -97,6 +104,7 @@ export default {
       rep_start1: [],
       upload_val: false,
       rep_all: [],
+      hospital: 'mg',
       total: 0,
       page: 1,
       page_per: 10,
@@ -259,7 +267,7 @@ export default {
       const id = this.edit_id
       getOkrCSV(id).then(res => {
         this.$Message.info(res.data.msg)
-        exportReport(this.edit_id, this.item, this.note).then(res => {
+        exportReport(this.edit_id, this.item, this.note, this.hospital).then(res => {
           this.$Notice.info({
             duration: 30,
             desc: res.data.msg

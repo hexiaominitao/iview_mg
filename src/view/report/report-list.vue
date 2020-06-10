@@ -64,7 +64,7 @@
           <RadioGroup v-model="hospital">
             <Radio label="nk">农垦</Radio>
             <Radio label="mg">迈景</Radio>
-            <Radio label="zsy" disabled>中山一</Radio>
+            <Radio label="zsy">中山一</Radio>
           </RadioGroup>
         </FormItem>
         <FormItem label="是否强制使用自动下载的okr">
@@ -265,7 +265,7 @@ export default {
     downloadApi () {
       // const stage = '制作完成'
       const id = this.edit_id
-      getOkrCSV(id).then(res => {
+      getOkrCSV(id, this.item).then(res => {
         this.$Message.info(res.data.msg)
         exportReport(this.edit_id, this.item, this.note, this.hospital).then(res => {
           this.$Notice.info({
@@ -317,9 +317,9 @@ export default {
         // const stage = '制作完成'
           const id = this.selectReport[i].id
           const item = this.selectReport[i].report_item
-          getOkrCSV(id).then(res => {
+          getOkrCSV(id, item).then(res => {
             this.$Message.info(res.data.msg)
-            exportReport(id, item, 0).then(res => {
+            exportReport(id, item, 0, 'mg').then(res => {
               this.$Notice.info({
                 duration: 30,
                 desc: res.data.msg

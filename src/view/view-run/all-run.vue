@@ -3,11 +3,22 @@
     <Row gutter="16" class="heard">
       <Col span="5"><Input search enter-button placeholder="输入样本编号" /></Col>
       <Col span="3">
-      <!-- <Select v-model="model1">
-        <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-      </Select> -->
+      <Button @click="upload_apply = true">申请单上传</Button>
       </Col>
     </Row>
+    <Drawer title='申请单上传' v-model="upload_apply" width="520" :mask-closable="false">
+        <Upload
+        multiple
+        type="drag"
+        :action="action_ir"
+        :on-success="handSuccess"
+        :on-error="handErro">
+        <div style="padding: 20px 0">
+            <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
+            <p>点击或拖拽到此处上传</p>
+        </div>
+    </Upload>
+    </Drawer>
     <Table border height='520' :columns='columns' :data='data'>
         <template slot-scope="{ row }" slot="start_T">
           <div>{{ dateToString(row.start_T) }}</div>
@@ -27,6 +38,8 @@
 </template>
 <script>
 import { getRunInfo, delRunInfo, reportStart } from '@/api/data'
+import config from '@/config'
+const UploadUrl = process.env.NODE_ENV === 'development' ? config.UploadUrl.dev : config.UploadUrl.pro
 export default {
   name: 'all_run',
   data () {
@@ -34,7 +47,9 @@ export default {
       data: [],
       total: 0,
       page: 1,
+      upload_apply: false,
       page_per: 10,
+      action_ir: UploadUrl + 'apply/',
       page_opts: [10, 20, 50, 100],
       columns: [
         {
